@@ -31,3 +31,11 @@ docker-compose -f docker-compose.local.yml down -v
 Run:
 
 docker-compose -f docker-compose.local.yml up -d
+
+# Run migrations
+
+npx prisma migrate dev --name init
+
+# Generate Prisma client
+
+npx prisma generate
