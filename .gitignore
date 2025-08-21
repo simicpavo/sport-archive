@@ -1,0 +1,17 @@
+# Ignore local environment files
+.env
+.env.local
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+
+# Ignore node_modules if you install something at root later
+node_modules/
+
+# Ignore Docker artifacts
+*.pid
+*.sock
