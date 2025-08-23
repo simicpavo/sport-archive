@@ -7,3 +7,72 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Person {
+  id         Int    @id @default(autoincrement())
+  first_name String
+  last_name  String
+  nickname   String?
+  birth_date DateTime
+  nationality String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  records    Record[]
+}
+
+model Club {
+  id         Int    @id @default(autoincrement())
+  name      String
+  sport     Sport   @relation(fields: [sport_id], references: [id])
+  sport_id  Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  records    Record[]
+}
+
+model Sport {
+  id         Int    @id @default(autoincrement())
+  name      String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  clubs    Club[]
+  nationalTeams NationalTeam[]
+  records    Record[]
+}
+
+model NationalTeam {
+  id         Int    @id @default(autoincrement())
+  name      String
+  sport     Sport   @relation(fields: [sport_id], references: [id])
+  sport_id  Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  records    Record[]
+}
+
+model ContentType {
+  id         Int    @id @default(autoincrement())
+  name      String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  records    Record[]
+}
+
+model Record {
+  id         Int    @id @default(autoincrement())
+  title     String
+  description   String
+  date      DateTime?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  popularityScore Float?
+  sport     Sport   @relation(fields: [sport_id], references: [id])
+  sport_id  Int
+  content_type   ContentType   @relation(fields: [content_type_id], references: [id])
+  content_type_id  Int
+  national_team   NationalTeam?   @relation(fields: [national_team_id], references: [id])
+  national_team_id  Int?
+  persons    Person[]
+  clubs     Club[]
+
+}
