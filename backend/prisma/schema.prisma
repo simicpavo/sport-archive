@@ -9,7 +9,7 @@ datasource db {
 }
 
 model Person {
-  id         Int    @id @default(autoincrement())
+  id         String    @id @default(cuid())
   first_name String
   last_name  String
   nickname   String?
@@ -21,17 +21,17 @@ model Person {
 }
 
 model Club {
-  id         Int    @id @default(autoincrement())
+  id         String    @id @default(cuid())
   name      String
   sport     Sport   @relation(fields: [sport_id], references: [id])
-  sport_id  Int
+  sport_id  String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   records    Record[]
 }
 
 model Sport {
-  id         Int    @id @default(autoincrement())
+  id         String    @id @default(cuid())
   name      String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -41,17 +41,17 @@ model Sport {
 }
 
 model NationalTeam {
-  id         Int    @id @default(autoincrement())
+  id         String    @id @default(cuid())
   name      String
   sport     Sport   @relation(fields: [sport_id], references: [id])
-  sport_id  Int
+  sport_id  String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   records    Record[]
 }
 
 model ContentType {
-  id         Int    @id @default(autoincrement())
+  id         String    @id @default(cuid())
   name      String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -59,19 +59,19 @@ model ContentType {
 }
 
 model Record {
-  id         Int    @id @default(autoincrement())
+  id         String    @id @default(cuid())
   title     String
   description   String
   date      DateTime?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  popularityScore Float?
+  popularityScore Float? @default(0)
   sport     Sport   @relation(fields: [sport_id], references: [id])
-  sport_id  Int
+  sport_id  String
   content_type   ContentType   @relation(fields: [content_type_id], references: [id])
-  content_type_id  Int
+  content_type_id  String
   national_team   NationalTeam?   @relation(fields: [national_team_id], references: [id])
-  national_team_id  Int?
+  national_team_id  String?
   persons    Person[]
   clubs     Club[]
 

@@ -15,3 +15,7 @@ node_modules/
 # Ignore Docker artifacts
 *.pid
 *.sock
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
