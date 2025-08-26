@@ -19,3 +19,4 @@ node_modules/
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json
+.vscode
