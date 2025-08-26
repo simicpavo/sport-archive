@@ -9,70 +9,75 @@ datasource db {
 }
 
 model Person {
-  id         String    @id @default(cuid())
-  first_name String
-  last_name  String
-  nickname   String?
-  birth_date DateTime
+  id          String   @id @default(cuid())
+  first_name  String
+  last_name   String
+  nickname    String?
+  birth_date  DateTime
   nationality String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  records    Record[]
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  records Record[]
 }
 
 model Club {
-  id         String    @id @default(cuid())
-  name      String
-  sport     Sport   @relation(fields: [sport_id], references: [id])
-  sport_id  String
+  id         String   @id @default(cuid())
+  name       String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  records    Record[]
+
+  sport    Sport    @relation(fields: [sport_id], references: [id])
+  sport_id String
+  records  Record[]
 }
 
 model Sport {
-  id         String    @id @default(cuid())
-  name      String
+  id         String   @id @default(cuid())
+  name       String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  clubs    Club[]
+
+  clubs         Club[]
   nationalTeams NationalTeam[]
-  records    Record[]
+  records       Record[]
 }
 
 model NationalTeam {
-  id         String    @id @default(cuid())
-  name      String
-  sport     Sport   @relation(fields: [sport_id], references: [id])
-  sport_id  String
+  id         String   @id @default(cuid())
+  name       String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  records    Record[]
+
+  sport    Sport    @relation(fields: [sport_id], references: [id])
+  sport_id String
+  records  Record[]
 }
 
 model ContentType {
-  id         String    @id @default(cuid())
-  name      String
+  id         String   @id @default(cuid())
+  name       String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  records    Record[]
+
+  records Record[]
 }
 
 model Record {
-  id         String    @id @default(cuid())
-  title     String
-  description   String
-  date      DateTime?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  popularityScore Float? @default(0)
-  sport     Sport   @relation(fields: [sport_id], references: [id])
-  sport_id  String
-  content_type   ContentType   @relation(fields: [content_type_id], references: [id])
-  content_type_id  String
-  national_team   NationalTeam?   @relation(fields: [national_team_id], references: [id])
-  national_team_id  String?
-  persons    Person[]
-  clubs     Club[]
+  id              String    @id @default(cuid())
+  title           String
+  description     String
+  date            DateTime?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  popularityScore Float?    @default(0)
 
+  sport            Sport         @relation(fields: [sport_id], references: [id])
+  sport_id         String
+  content_type     ContentType   @relation(fields: [content_type_id], references: [id])
+  content_type_id  String
+  national_team    NationalTeam? @relation(fields: [national_team_id], references: [id])
+  national_team_id String?
+  persons          Person[]
+  clubs            Club[]
 }
