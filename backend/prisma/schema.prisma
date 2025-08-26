@@ -41,6 +41,7 @@ model Sport {
   clubs         Club[]
   nationalTeams NationalTeam[]
   records       Record[]
+  competitions  Competition[]
 }
 
 model NationalTeam {
@@ -48,6 +49,20 @@ model NationalTeam {
   name       String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  sport    Sport    @relation(fields: [sport_id], references: [id])
+  sport_id String
+  records  Record[]
+}
+
+model Competition {
+  id         String    @id @default(cuid())
+  name       String
+  season     String?
+  start_date DateTime?
+  end_date   DateTime?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
 
   sport    Sport    @relation(fields: [sport_id], references: [id])
   sport_id String
@@ -76,8 +91,41 @@ model Record {
   sport_id         String
   content_type     ContentType   @relation(fields: [content_type_id], references: [id])
   content_type_id  String
+  competition      Competition?  @relation(fields: [competition_id], references: [id])
+  competition_id   String?
   national_team    NationalTeam? @relation(fields: [national_team_id], references: [id])
   national_team_id String?
   persons          Person[]
   clubs            Club[]
+}
+
+model MediaSource {
+  id        String   @id @default(cuid())
+  baseUrl   String
+  urlPath   String?
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  posts MediaNews[]
+}
+
+model MediaNews {
+  id         String   @id @default(cuid())
+  title      String
+  content    String
+  urlPath    String
+  externalId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  MediaSource   MediaSource? @relation(fields: [mediaSourceId], references: [id])
+  mediaSourceId String?
+
+  likeCount        Int @default(0)
+  shareCount       Int @default(0)
+  commentCount     Int @default(0)
+  totalEngagements Int @default(0)
+
+  @@unique([externalId, mediaSourceId])
 }
