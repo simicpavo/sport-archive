@@ -14,13 +14,14 @@ export class SportsService {
 
   async create(dto: CreateSportDto) {
     const name = dto.name.trim();
-    try {
-      return await this.prisma.sport.create({ data: { name } });
-    } catch (e) {
-      if (this.isUnique(e))
-        throw new ConflictException('Sport name already exists');
-      throw e;
+    const existing = await this.prisma.sport.findFirst({
+      where: { name: { equals: name, mode: 'insensitive' } },
+      select: { id: true },
+    });
+    if (existing) {
+      throw new ConflictException('Sport name already exists');
     }
+    return this.prisma.sport.create({ data: { name } });
   }
 
   findAll() {
@@ -40,14 +41,18 @@ export class SportsService {
   async update(id: string, dto: UpdateSportDto) {
     await this.ensureExists(id);
     const data: Prisma.SportUpdateInput = {};
-    if (dto.name !== undefined) data.name = dto.name.trim();
-    try {
-      return await this.prisma.sport.update({ where: { id }, data });
-    } catch (e) {
-      if (this.isUnique(e))
+    if (dto.name !== undefined) {
+      const trimmed = dto.name.trim();
+      const dup = await this.prisma.sport.findFirst({
+        where: { name: { equals: trimmed, mode: 'insensitive' }, NOT: { id } },
+        select: { id: true },
+      });
+      if (dup) {
         throw new ConflictException('Sport name already exists');
-      throw e;
+      }
+      data.name = trimmed;
     }
+    return this.prisma.sport.update({ where: { id }, data });
   }
 
   async remove(id: string) {
@@ -62,14 +67,5 @@ export class SportsService {
       select: { id: true },
     });
     if (!exists) throw new NotFoundException('Sport not found');
-  }
-
-  private isUnique(e: unknown): boolean {
-    return (
-      typeof e === 'object' &&
-      e !== null &&
-      'code' in e &&
-      (e as { code?: unknown }).code === 'P2002'
-    );
   }
 }
