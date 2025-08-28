@@ -28,15 +28,6 @@ export class SportsController {
     summary: 'List all sports',
     description: 'Returns all sports ordered by name.',
   })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string', example: 'Football' },
-      },
-      required: ['name'],
-    },
-  })
   @ApiResponse({ status: 200, description: 'List of sports returned.' })
   findAll() {
     return this.sportsService.findAll();
@@ -58,6 +49,15 @@ export class SportsController {
   @ApiOperation({
     summary: 'Create a sport',
     description: 'Creates a new sport with the given name.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', example: 'Football' },
+      },
+      required: ['name'],
+    },
   })
   @ApiResponse({ status: 201, description: 'Sport created.' })
   @ApiResponse({ status: 409, description: 'Sport name already exists.' })
