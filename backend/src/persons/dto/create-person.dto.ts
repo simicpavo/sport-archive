@@ -7,17 +7,17 @@ import {
 } from 'class-validator';
 
 export class CreatePersonDto {
-  @ApiProperty()
+  @ApiProperty({ example: 'Roger' })
   @IsString()
   @IsNotEmpty()
   firstName: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Federer' })
   @IsString()
   @IsNotEmpty()
   lastName: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: 'Fed' })
   @IsString()
   @IsOptional()
   nickname?: string;
@@ -28,7 +28,7 @@ export class CreatePersonDto {
   @IsNotEmpty()
   birthDate: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Swiss' })
   @IsString()
   @IsNotEmpty()
   nationality: string;

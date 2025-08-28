@@ -10,7 +10,7 @@ import {
 import { PersonsService } from './persons.service';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Persons')
 @Controller('persons')
@@ -21,6 +21,19 @@ export class PersonsController {
   @ApiOperation({
     summary: 'Create a new person',
     description: 'Create a new person with the given data',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        firstName: { type: 'string', example: 'Roger' },
+        lastName: { type: 'string', example: 'Federer' },
+        nickname: { type: 'string', example: 'Fed' },
+        birthDate: { type: 'string', format: 'date', example: '1981-08-08' },
+        nationality: { type: 'string', example: 'Swiss' },
+      },
+      required: ['firstName', 'lastName', 'birthDate', 'nationality'],
+    },
   })
   @ApiResponse({
     status: 201,
@@ -59,6 +72,18 @@ export class PersonsController {
   @ApiOperation({
     summary: 'Update a person by ID',
     description: 'Update a person by their unique identifier',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        firstName: { type: 'string', example: 'Roger' },
+        lastName: { type: 'string', example: 'Federer' },
+        nickname: { type: 'string', example: 'Fed' },
+        birthDate: { type: 'string', format: 'date', example: '1981-08-08' },
+        nationality: { type: 'string', example: 'Swiss' },
+      },
+    },
   })
   @ApiResponse({
     status: 200,
