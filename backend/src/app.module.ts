@@ -7,6 +7,7 @@ import { PersonsModule } from './persons/persons.module';
 import { ClubsModule } from './clubs/clubs.module';
 import { NationalTeamsModule } from './national-teams/national-teams.module';
 import { CompetitionsModule } from './competitions/competitions.module';
+import { ContentTypesModule } from './content-types/content-types.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CompetitionsModule } from './competitions/competitions.module';
     ClubsModule,
     NationalTeamsModule,
     CompetitionsModule,
+    ContentTypesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
