@@ -10,33 +10,33 @@ datasource db {
 
 model Person {
   id          String   @id @default(cuid())
-  first_name  String
-  last_name   String
+  firstName   String
+  lastName    String
   nickname    String?
-  birth_date  DateTime
+  birthDate   DateTime
   nationality String
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   records Record[]
 }
 
 model Club {
-  id         String   @id @default(cuid())
-  name       String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  sport    Sport    @relation(fields: [sport_id], references: [id])
-  sport_id String
-  records  Record[]
+  sport   Sport    @relation(fields: [sportId], references: [id])
+  sportId String
+  records Record[]
 }
 
 model Sport {
-  id         String   @id @default(cuid())
-  name       String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   clubs         Club[]
   nationalTeams NationalTeam[]
@@ -45,35 +45,35 @@ model Sport {
 }
 
 model NationalTeam {
-  id         String   @id @default(cuid())
-  name       String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  sport    Sport    @relation(fields: [sport_id], references: [id])
-  sport_id String
-  records  Record[]
+  sport   Sport    @relation(fields: [sportId], references: [id])
+  sportId String
+  records Record[]
 }
 
 model Competition {
-  id         String    @id @default(cuid())
-  name       String
-  season     String?
-  start_date DateTime?
-  end_date   DateTime?
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
+  id        String    @id @default(cuid())
+  name      String
+  season    String?
+  startDate DateTime?
+  endDate   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-  sport    Sport    @relation(fields: [sport_id], references: [id])
-  sport_id String
-  records  Record[]
+  sport   Sport    @relation(fields: [sportId], references: [id])
+  sportId String
+  records Record[]
 }
 
 model ContentType {
-  id         String   @id @default(cuid())
-  name       String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   records Record[]
 }
@@ -83,20 +83,20 @@ model Record {
   title           String
   description     String
   date            DateTime?
-  created_at      DateTime  @default(now())
-  updated_at      DateTime  @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
   popularityScore Float?    @default(0)
 
-  sport            Sport         @relation(fields: [sport_id], references: [id])
-  sport_id         String
-  content_type     ContentType   @relation(fields: [content_type_id], references: [id])
-  content_type_id  String
-  competition      Competition?  @relation(fields: [competition_id], references: [id])
-  competition_id   String?
-  national_team    NationalTeam? @relation(fields: [national_team_id], references: [id])
-  national_team_id String?
-  persons          Person[]
-  clubs            Club[]
+  sport          Sport         @relation(fields: [sportId], references: [id])
+  sportId        String
+  contentType    ContentType   @relation(fields: [contentTypeId], references: [id])
+  contentTypeId  String
+  competition    Competition?  @relation(fields: [competitionId], references: [id])
+  competitionId  String?
+  nationalTeam   NationalTeam? @relation(fields: [nationalTeamId], references: [id])
+  nationalTeamId String?
+  persons        Person[]
+  clubs          Club[]
 }
 
 model MediaSource {
