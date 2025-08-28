@@ -36,12 +36,19 @@ export class SportsService {
     });
 
     if (!sport) {
-      throw new NotFoundException('Sport not found');
+      throw new NotFoundException(`Sport with ID ${id} not found`);
     }
     return sport;
   }
 
   async update(id: string, dto: UpdateSportDto) {
+    const existing = await this.prisma.sport.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`Sport with ID ${id} not found`);
+    }
     const data: Prisma.SportUpdateInput = {};
 
     if (dto.name !== undefined) {
@@ -61,7 +68,14 @@ export class SportsService {
   }
 
   async remove(id: string) {
-    await this.prisma.sport.delete({ where: { id } });
-    return { id, deleted: true };
+    const existing = await this.prisma.sport.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`Sport with ID ${id} not found`);
+    }
+
+    return this.prisma.sport.delete({ where: { id } });
   }
 }
