@@ -8,6 +8,7 @@ import { ClubsModule } from './clubs/clubs.module';
 import { NationalTeamsModule } from './national-teams/national-teams.module';
 import { CompetitionsModule } from './competitions/competitions.module';
 import { ContentTypesModule } from './content-types/content-types.module';
+import { RecordsModule } from './records/records.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ContentTypesModule } from './content-types/content-types.module';
     NationalTeamsModule,
     CompetitionsModule,
     ContentTypesModule,
+    RecordsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
