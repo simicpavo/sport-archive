@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateClubDto } from './dto/create-club.dto';
 import { UpdateClubDto } from './dto/update-club.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -11,14 +11,6 @@ export class ClubsService {
   async create(dto: CreateClubDto) {
     const name = dto.name.trim();
 
-    const existing = await this.prisma.club.findFirst({
-      where: { name: { equals: name, mode: 'insensitive' } },
-      select: { id: true },
-    });
-
-    if (existing) {
-      throw new ConflictException('Club name already exists');
-    }
     return this.prisma.club.create({
       data: { name, sportId: dto.sportId },
     });
@@ -38,14 +30,6 @@ export class ClubsService {
     if (dto.name !== undefined) {
       const trimmed = dto.name.trim();
 
-      const dup = await this.prisma.club.findFirst({
-        where: { name: { equals: trimmed, mode: 'insensitive' }, NOT: { id } },
-        select: { id: true },
-      });
-
-      if (dup) {
-        throw new ConflictException('Club name already exists');
-      }
       data.name = trimmed;
     }
 
