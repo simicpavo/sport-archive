@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateNationalTeamDto } from './dto/create-national-team.dto';
 import { UpdateNationalTeamDto } from './dto/update-national-team.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -21,12 +21,24 @@ export class NationalTeamsService {
   }
 
   async findOne(id: string) {
-    return this.prisma.nationalTeam.findUnique({
+    const existing = await this.prisma.nationalTeam.findUnique({
       where: { id },
     });
+
+    if (!existing) {
+      throw new NotFoundException(`NationalTeam with ID ${id} not found`);
+    }
+    return this.prisma.nationalTeam.findUnique({ where: { id } });
   }
 
   async update(id: string, dto: UpdateNationalTeamDto) {
+    const existing = await this.prisma.nationalTeam.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`NationalTeam with ID ${id} not found`);
+    }
     const data: Prisma.NationalTeamUpdateInput = {};
 
     if (dto.name !== undefined) {
@@ -42,7 +54,14 @@ export class NationalTeamsService {
   }
 
   async remove(id: string) {
-    await this.prisma.nationalTeam.delete({ where: { id } });
-    return { id, deleted: true };
+    const existing = await this.prisma.nationalTeam.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`NationalTeam with ID ${id} not found`);
+    }
+
+    return this.prisma.nationalTeam.delete({ where: { id } });
   }
 }
