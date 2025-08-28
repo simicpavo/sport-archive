@@ -10,7 +10,13 @@ import {
 import { SportsService } from './sports.service';
 import { CreateSportDto } from './dto/create-sport.dto';
 import { UpdateSportDto } from './dto/update-sport.dto';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('Sports')
 @Controller('sports')
@@ -21,6 +27,15 @@ export class SportsController {
   @ApiOperation({
     summary: 'List all sports',
     description: 'Returns all sports ordered by name.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', example: 'Football' },
+      },
+      required: ['name'],
+    },
   })
   @ApiResponse({ status: 200, description: 'List of sports returned.' })
   findAll() {
@@ -54,6 +69,14 @@ export class SportsController {
   @ApiOperation({
     summary: 'Update a sport',
     description: 'Updates a sport by its id with the given name.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', example: 'Football Updated' },
+      },
+    },
   })
   @ApiParam({ name: 'id', description: 'Sport ID (cuid string)' })
   @ApiResponse({ status: 200, description: 'Sport updated.' })

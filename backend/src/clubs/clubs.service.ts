@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateClubDto } from './dto/create-club.dto';
 import { UpdateClubDto } from './dto/update-club.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -21,10 +21,24 @@ export class ClubsService {
   }
 
   async findOne(id: string) {
+    const existing = await this.prisma.club.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`Club with ID ${id} not found`);
+    }
     return this.prisma.club.findUnique({ where: { id } });
   }
 
   async update(id: string, dto: UpdateClubDto) {
+    const existing = await this.prisma.club.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`Club with ID ${id} not found`);
+    }
     const data: Prisma.ClubUpdateInput = {};
 
     if (dto.name !== undefined) {
@@ -40,7 +54,13 @@ export class ClubsService {
   }
 
   async remove(id: string) {
-    await this.prisma.club.delete({ where: { id } });
-    return { id, deleted: true };
+    const existing = await this.prisma.club.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new NotFoundException(`Club with ID ${id} not found`);
+    }
+    return this.prisma.club.delete({ where: { id } });
   }
 }
