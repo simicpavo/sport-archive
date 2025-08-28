@@ -10,12 +10,12 @@ export class CreatePersonDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  first_name: string;
+  firstName: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  last_name: string;
+  lastName: string;
 
   @ApiPropertyOptional()
   @IsString()
@@ -26,7 +26,7 @@ export class CreatePersonDto {
   @ApiProperty({ type: String, format: 'date', example: '1981-08-28' })
   @IsDateString()
   @IsNotEmpty()
-  birth_date: string;
+  birthDate: string;
 
   @ApiProperty()
   @IsString()

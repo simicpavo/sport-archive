@@ -10,10 +10,10 @@ export class PersonsService {
   async create(dto: CreatePersonDto) {
     return this.prisma.person.create({
       data: {
-        first_name: dto.first_name,
-        last_name: dto.last_name,
+        firstName: dto.firstName,
+        lastName: dto.lastName,
         nickname: dto.nickname ?? null,
-        birth_date: new Date(dto.birth_date),
+        birthDate: new Date(dto.birthDate),
         nationality: dto.nationality,
       },
     });
@@ -28,20 +28,19 @@ export class PersonsService {
   }
 
   async update(id: string, dto: UpdatePersonDto) {
-    const { first_name, last_name, nickname, birth_date, nationality } = dto;
+    const { firstName, lastName, nickname, birthDate, nationality } = dto;
 
     return this.prisma.person.update({
       where: { id },
       data: {
-        ...(first_name !== undefined && { first_name }),
-        ...(last_name !== undefined && { last_name }),
+        ...(firstName !== undefined && { firstName }),
+        ...(lastName !== undefined && { lastName }),
         ...(nickname !== undefined && { nickname }),
-        ...(birth_date !== undefined && {
-          // Accepts "YYYY-MM-DD" and converts to Date
-          birth_date:
-            typeof birth_date === 'string'
-              ? new Date(birth_date)
-              : (birth_date as Date),
+        ...(birthDate !== undefined && {
+          birthDate:
+            typeof birthDate === 'string'
+              ? new Date(birthDate)
+              : (birthDate as Date),
         }),
         ...(nationality !== undefined && { nationality }),
       },
