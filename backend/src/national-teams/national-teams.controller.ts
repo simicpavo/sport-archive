@@ -79,7 +79,6 @@ export class NationalTeamsController {
       type: 'object',
       properties: {
         name: { type: 'string', example: 'Updated National Team Name' },
-        sportId: { type: 'string', example: 'newSportId' },
       },
     },
   })
