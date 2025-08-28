@@ -28,6 +28,9 @@ export class CompetitionsController {
       properties: {
         name: { type: 'string', example: 'Wimbledon' },
         sportId: { type: 'string', example: 'sportId' },
+        season: { type: 'string', example: '2023' },
+        startDate: { type: 'string', format: 'date', example: '2023-06-26' },
+        endDate: { type: 'string', format: 'date', example: '2023-07-10' },
       },
       required: ['name', 'sportId'],
     },
@@ -79,6 +82,9 @@ export class CompetitionsController {
       properties: {
         name: { type: 'string', example: 'New Wimbledon' },
         sportId: { type: 'string', example: 'sportId' },
+        season: { type: 'string', example: '2024' },
+        startDate: { type: 'string', format: 'date', example: '2024-06-26' },
+        endDate: { type: 'string', format: 'date', example: '2024-07-10' },
       },
     },
   })

@@ -1,5 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsDateString,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateCompetitionDto {
   @ApiProperty({ example: 'Wimbledon' })
@@ -9,18 +14,18 @@ export class CreateCompetitionDto {
 
   @ApiPropertyOptional({ example: '2023' })
   @IsString()
-  @IsNotEmpty()
-  season: string;
+  @IsOptional()
+  season?: string;
 
   @ApiPropertyOptional({ type: String, format: 'date', example: '1981-08-28' })
   @IsDateString()
-  @IsNotEmpty()
-  startDate: string;
+  @IsOptional()
+  startDate?: string;
 
   @ApiPropertyOptional({ type: String, format: 'date', example: '1981-08-28' })
   @IsDateString()
-  @IsNotEmpty()
-  endDate: string;
+  @IsOptional()
+  endDate?: string;
 
   @ApiProperty({ example: 'sportId' })
   @IsString()
