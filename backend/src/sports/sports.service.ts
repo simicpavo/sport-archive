@@ -14,10 +14,12 @@ export class SportsService {
 
   async create(dto: CreateSportDto) {
     const name = dto.name.trim();
+
     const existing = await this.prisma.sport.findFirst({
       where: { name: { equals: name, mode: 'insensitive' } },
       select: { id: true },
     });
+
     if (existing) {
       throw new ConflictException('Sport name already exists');
     }
@@ -32,6 +34,7 @@ export class SportsService {
     const sport = await this.prisma.sport.findUnique({
       where: { id },
     });
+
     if (!sport) {
       throw new NotFoundException('Sport not found');
     }
@@ -39,14 +42,16 @@ export class SportsService {
   }
 
   async update(id: string, dto: UpdateSportDto) {
-    await this.ensureExists(id);
     const data: Prisma.SportUpdateInput = {};
+
     if (dto.name !== undefined) {
       const trimmed = dto.name.trim();
+
       const dup = await this.prisma.sport.findFirst({
         where: { name: { equals: trimmed, mode: 'insensitive' }, NOT: { id } },
         select: { id: true },
       });
+
       if (dup) {
         throw new ConflictException('Sport name already exists');
       }
@@ -56,16 +61,7 @@ export class SportsService {
   }
 
   async remove(id: string) {
-    await this.ensureExists(id);
     await this.prisma.sport.delete({ where: { id } });
     return { id, deleted: true };
-  }
-
-  private async ensureExists(id: string) {
-    const exists = await this.prisma.sport.findUnique({
-      where: { id },
-      select: { id: true },
-    });
-    if (!exists) throw new NotFoundException('Sport not found');
   }
 }
