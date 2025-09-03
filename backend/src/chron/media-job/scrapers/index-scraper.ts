@@ -68,7 +68,6 @@ export const fetchIndexArticles = async (
   // Then visit each article and get its comment count
   const articlesWithComments: Article[] = [];
   for (const article of validArticles) {
-    console.log('Articles for scan count:', validArticles.length);
     try {
       const articleUrl = article.urlPath.startsWith('http')
         ? article.urlPath
@@ -76,37 +75,47 @@ export const fetchIndexArticles = async (
 
       console.log(`Fetching comments for article: ${articleUrl}`);
 
-      await page.goto(articleUrl, {
-        waitUntil: 'domcontentloaded',
-        timeout: 15000,
-      });
+      try {
+        await page.goto(articleUrl, {
+          waitUntil: 'domcontentloaded',
+          timeout: 10000,
+        });
+      } catch (navigationError: unknown) {
+        console.warn(
+          navigationError,
+          `Navigation timeout for article: ${article.title.substring(0, 50)}...`,
+        );
+        // Add article without comment count if navigation fails
+        articlesWithComments.push({
+          ...article,
+          commentCount: 0,
+          totalEngagements: 0,
+        });
+        continue; // Skip to next article
+      }
 
-      // Handle cookie consent popup if it appears
       try {
         const acceptButton = await page.waitForSelector(
           '#didomi-notice-agree-button',
           {
-            timeout: 5000,
+            timeout: 3000,
           },
         );
         if (acceptButton) {
           await acceptButton.click();
-          await page.waitForTimeout(1000);
-          console.log('Cookie popup accepted');
+          await page.waitForTimeout(500);
         }
       } catch (error: unknown) {
-        // Cookie popup might not appear if already accepted
         console.log(error, 'No cookie popup found or already accepted');
       }
 
       let commentCount = 0;
       try {
-        // Wait for comments container to be in the DOM with timeout
         const commentsContainer = await page.waitForSelector(
           '#comments-container',
           {
-            timeout: 8000,
-            state: 'attached', // Wait for element to be attached to DOM
+            timeout: 5000,
+            state: 'attached',
           },
         );
 
@@ -118,14 +127,14 @@ export const fetchIndexArticles = async (
                 behavior: 'smooth',
                 block: 'center',
               });
-              await new Promise((resolve) => setTimeout(resolve, 2000));
+              await new Promise((resolve) => setTimeout(resolve, 1000));
             }
           });
 
-          // Wait for the total count element to appear with timeout
+          // Wait for the total count element with shorter timeout
           try {
             await page.waitForSelector('.total-count', {
-              timeout: 5000,
+              timeout: 3000,
               state: 'visible',
             });
 
@@ -141,19 +150,19 @@ export const fetchIndexArticles = async (
 
             commentCount = count;
             console.log(
-              `Found comment count: ${commentCount} for article: ${article.title}`,
+              `Found ${commentCount} comments for: ${article.title.substring(0, 50)}...`,
             );
           } catch (totalCountError: unknown) {
             console.log(
               totalCountError,
-              'Total count element not found within timeout, using count 0',
+              `Total count element timeout for: ${article.title.substring(0, 50)}...`,
             );
           }
         }
       } catch (commentsError: unknown) {
         console.log(
           commentsError,
-          'Comments container not found within timeout, using count 0',
+          `Comments container timeout for: ${article.title.substring(0, 50)}...`,
         );
       }
 
@@ -164,10 +173,10 @@ export const fetchIndexArticles = async (
       });
     } catch (error: unknown) {
       console.error(
-        `Error processing article: ${article.title}`,
+        `Error processing article: ${article.title.substring(0, 50)}...`,
         error instanceof Error ? error.message : 'Unknown error',
       );
-      // Still add the article without comment count
+      // Always add the article, even if processing fails
       articlesWithComments.push({
         ...article,
         commentCount: 0,
@@ -177,7 +186,7 @@ export const fetchIndexArticles = async (
   }
 
   console.log(
-    `Processed ${articlesWithComments.length} articles with comments`,
+    `Processed ${articlesWithComments.length}/${validArticles.length} articles`,
   );
   return articlesWithComments;
 };
