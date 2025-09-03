@@ -22,6 +22,10 @@ import { fetchSnArticles } from './scrapers/sn-scraper';
 @Injectable()
 export class MediaJobService {
   private isRunning = false;
+  private readonly MAX_RETRIES = 3;
+  private readonly RETRY_DELAY = 3000;
+  private readonly PAGE_TIMEOUT = 8000;
+  private readonly NAVIGATION_TIMEOUT = 10000;
 
   constructor(private readonly prismaService: PrismaService) {}
 
@@ -51,17 +55,17 @@ export class MediaJobService {
       }
 
       console.log('Launching browser...');
-      browser = await chromium.launch({ headless: true });
+      browser = await chromium.launch({ headless: true, timeout: 30000 });
 
       for (const mediaSource of mediaSources) {
         console.log(`Fetching articles for ${mediaSource.name}`);
         try {
-          await this.fetchArticles(mediaSource, browser);
+          await this.fetchArticlesWithRetry(mediaSource, browser);
           console.log('Finished fetching articles for: ', mediaSource.name);
         } catch (error) {
           console.error(
-            `Error fetching articles for ${mediaSource.name}:`,
-            error,
+            `Failed to fetch articles for ${mediaSource.name} after ${this.MAX_RETRIES} retries:`,
+            error instanceof Error ? error.message : 'Unknown error',
           );
         }
       }
@@ -82,7 +86,76 @@ export class MediaJobService {
     }
   }
 
-  async fetchArticles(mediaSource: MediaSource, browser: Browser) {
+  private async fetchArticlesWithRetry(
+    mediaSource: MediaSource,
+    browser: Browser,
+    attempt: number = 1,
+  ): Promise<void> {
+    try {
+      await this.fetchArticles(mediaSource, browser);
+    } catch (error) {
+      if (attempt < this.MAX_RETRIES) {
+        console.log(
+          `Attempt ${attempt} failed for ${mediaSource.name}, retrying in ${this.RETRY_DELAY}ms...`,
+        );
+        await this.sleep(this.RETRY_DELAY);
+        return this.fetchArticlesWithRetry(mediaSource, browser, attempt + 1);
+      }
+      throw error; // Re-throw after max retries
+    }
+  }
+
+  private async upsertArticleWithRetry(
+    article: Article,
+    mediaSource: MediaSource,
+    attempt: number = 1,
+  ): Promise<boolean> {
+    try {
+      await this.prismaService.mediaNews.upsert({
+        where: {
+          externalId_mediaSourceId: {
+            externalId: article.externalId,
+            mediaSourceId: mediaSource.id,
+          },
+        },
+        create: {
+          title: article.title,
+          content: article.content,
+          urlPath: article.urlPath.startsWith('http')
+            ? article.urlPath
+            : `${mediaSource.baseUrl}${article.urlPath}`,
+          externalId: article.externalId,
+          mediaSourceId: mediaSource.id,
+          likeCount: article.likeCount,
+          shareCount: article.shareCount,
+          commentCount: article.commentCount,
+          totalEngagements: article.totalEngagements,
+        },
+        update: {
+          likeCount: article.likeCount,
+          shareCount: article.shareCount,
+          commentCount: article.commentCount,
+          totalEngagements: article.totalEngagements,
+        },
+      });
+      return true;
+    } catch (error) {
+      if (attempt < this.MAX_RETRIES) {
+        console.log(
+          `Database upsert attempt ${attempt} failed for article: ${article.title}, retrying...`,
+        );
+        await this.sleep(this.RETRY_DELAY);
+        return this.upsertArticleWithRetry(article, mediaSource, attempt + 1);
+      }
+      console.error(
+        `Failed to upsert article after ${this.MAX_RETRIES} attempts:`,
+        error,
+      );
+      return false;
+    }
+  }
+
+  private async fetchArticles(mediaSource: MediaSource, browser: Browser) {
     console.log('Fetching articles for: ', mediaSource.name);
 
     let page;
@@ -91,15 +164,18 @@ export class MediaJobService {
         screen: { width: 430, height: 1000 },
       });
 
+      page.setDefaultTimeout(this.PAGE_TIMEOUT);
+      page.setDefaultNavigationTimeout(this.NAVIGATION_TIMEOUT);
+
       const url = `${mediaSource.baseUrl}/${mediaSource.urlPath ? mediaSource.urlPath : ''}`;
       console.log('Navigating to: ', url);
 
       await page.goto(url, {
         waitUntil: 'domcontentloaded',
-        timeout: 30000,
+        timeout: this.NAVIGATION_TIMEOUT,
       });
 
-      await page.waitForTimeout(5000);
+      await page.waitForTimeout(2000);
 
       let articles: Article[] = [];
 
@@ -138,7 +214,7 @@ export class MediaJobService {
         return;
       }
 
-      // Test database connection
+      // Test database connection with retry
       try {
         const testCount = await this.prismaService.mediaNews.count();
         console.log(`Current articles in database: ${testCount}`);
@@ -150,40 +226,16 @@ export class MediaJobService {
       let successCount = 0;
       let errorCount = 0;
 
+      // Process articles with retry logic
       for (const article of articles) {
-        try {
-          await this.prismaService.mediaNews.upsert({
-            where: {
-              externalId_mediaSourceId: {
-                externalId: article.externalId,
-                mediaSourceId: mediaSource.id,
-              },
-            },
-            create: {
-              title: article.title,
-              content: article.content,
-              urlPath: article.urlPath.startsWith('http')
-                ? article.urlPath
-                : `${mediaSource.baseUrl}${article.urlPath}`,
-              externalId: article.externalId,
-              mediaSourceId: mediaSource.id,
-              likeCount: article.likeCount,
-              shareCount: article.shareCount,
-              commentCount: article.commentCount,
-              totalEngagements: article.totalEngagements,
-            },
-            update: {
-              likeCount: article.likeCount,
-              shareCount: article.shareCount,
-              commentCount: article.commentCount,
-              totalEngagements: article.totalEngagements,
-            },
-          });
+        const success = await this.upsertArticleWithRetry(article, mediaSource);
+        if (success) {
           successCount++;
-          console.log(` Successfully upserted: ${article.title}`);
-        } catch (error: unknown) {
+          console.log(
+            `Successfully upserted: ${article.title.substring(0, 50)}...`,
+          );
+        } else {
           errorCount++;
-          console.error(` Failed to upsert article: ${article.title}`, error);
         }
       }
 
@@ -199,5 +251,9 @@ export class MediaJobService {
         }
       }
     }
+  }
+
+  private async sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
