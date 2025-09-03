@@ -65,6 +65,9 @@ export const fetchIndexArticles = async (
 
   console.log(`${validArticles.length} valid articles after filtering`);
 
+  // Track cookie popup state to avoid repeated attempts
+  let cookiePopupHandled = false;
+
   // Then visit each article and get its comment count
   const articlesWithComments: Article[] = [];
   for (const article of validArticles) {
@@ -78,7 +81,7 @@ export const fetchIndexArticles = async (
       try {
         await page.goto(articleUrl, {
           waitUntil: 'domcontentloaded',
-          timeout: 10000,
+          timeout: 8000,
         });
       } catch (navigationError: unknown) {
         console.warn(
@@ -91,22 +94,27 @@ export const fetchIndexArticles = async (
           commentCount: 0,
           totalEngagements: 0,
         });
-        continue; // Skip to next article
+        continue;
       }
 
-      try {
-        const acceptButton = await page.waitForSelector(
-          '#didomi-notice-agree-button',
-          {
-            timeout: 3000,
-          },
-        );
-        if (acceptButton) {
-          await acceptButton.click();
-          await page.waitForTimeout(500);
+      if (!cookiePopupHandled) {
+        try {
+          const acceptButton = await page.waitForSelector(
+            '#didomi-notice-agree-button',
+            {
+              timeout: 2000,
+            },
+          );
+          if (acceptButton) {
+            await acceptButton.click();
+            await page.waitForTimeout(500);
+            cookiePopupHandled = true;
+            console.log('Cookie popup accepted');
+          }
+        } catch (error: unknown) {
+          console.log(error, 'No cookie popup found or already accepted');
+          cookiePopupHandled = true; // Don't try again for subsequent articles
         }
-      } catch (error: unknown) {
-        console.log(error, 'No cookie popup found or already accepted');
       }
 
       let commentCount = 0;
