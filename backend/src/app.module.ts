@@ -9,6 +9,7 @@ import { NationalTeamsModule } from './national-teams/national-teams.module';
 import { CompetitionsModule } from './competitions/competitions.module';
 import { ContentTypesModule } from './content-types/content-types.module';
 import { RecordsModule } from './records/records.module';
+import { CronModule } from './chron/chron.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { RecordsModule } from './records/records.module';
     CompetitionsModule,
     ContentTypesModule,
     RecordsModule,
+    CronModule,
   ],
   controllers: [AppController],
   providers: [AppService],

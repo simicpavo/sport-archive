@@ -1,73 +1,111 @@
-## Running Postgres with Docker Compose (Local Development)
+# 🏆 Sport Archive
 
-### Startup
+<div align="center">
 
-Run the following command to start the Postgres container:
+![NestJS](https://img.shields.io/badge/NestJS-10.0+-red?style=for-the-badge&logo=nestjs)
+![Angular](https://img.shields.io/badge/Angular-20.2.0-red?style=for-the-badge&logo=angular)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue?style=for-the-badge&logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue?style=for-the-badge&logo=docker)
+
+**Automated Croatian Sports News Aggregation Platform**
+
+</div>
+
+## 📖 Overview
+
+Automated platform that scrapes Croatian sports portals every 5 minutes, aggregates content, and tracks engagement metrics.
+
+**Sources**: Index.hr • 24sata.hr • Sportnet.hr • Gol.hr • Germanijak.hr
+
+## 🚀 Quick Start
 
 ```bash
+# Setup environment
+cp .env.example .env.local
+
+# Start services
 docker-compose -f docker-compose.local.yml up -d
 
-### Shutdown
--To stop and remove containers (without deleting data):
-
-docker-compose -f docker-compose.local.yml down
-
-
--To also remove the database volume (delete all data):
-
-docker-compose -f docker-compose.local.yml down -v
-```
-
-## Environment Variables
-
-- Copy `.env.example` to `.env.local`:
-
-  ```bash
-  cp .env.example .env.local
-
-  Update .env.local with your local credentials (or leave defaults).
-  ```
-
-Run:
-
-docker-compose -f docker-compose.local.yml up -d
-
-# Run migrations
-
+# Setup database
+cd backend
 npx prisma migrate dev --name init
-
-# Generate Prisma client
-
 npx prisma generate
 
-### pgAdmin (Database UI)
+# Install dependencies
+npm install
+cd ../frontend && npm install
 
-Access: http://localhost:5050
+# Start development
+npm run start:dev  # Backend :3000
+ng serve          # Frontend :4200
+```
 
-Login credentials come from `.env.local`:
+## 🐳 Services
 
-- Email: value of `PGADMIN_DEFAULT_EMAIL`
-- Password: value of `PGADMIN_DEFAULT_PASSWORD`
+| Service         | URL                     | Credentials                      |
+| --------------- | ----------------------- | -------------------------------- |
+| **PostgreSQL**  | `:5432`                 | From `.env.local`                |
+| **pgAdmin**     | `http://localhost:5050` | `PGADMIN_DEFAULT_EMAIL/PASSWORD` |
+| **Backend API** | `http://localhost:3000` | -                                |
+| **Frontend**    | `http://localhost:4200` | -                                |
 
-Preconfigured server: A connection named "Local Postgres" should appear automatically (loaded from `pgadmin-servers.json`).
+## 🔧 Commands
 
-If it does not appear, add it manually:
+```bash
+# Docker management
+docker-compose -f docker-compose.local.yml up -d     # Start
+docker-compose -f docker-compose.local.yml down      # Stop
+docker-compose -f docker-compose.local.yml down -v   # Stop + delete data
 
-1. Right‑click "Servers" → Register → Server.
-2. General tab → Name: Local Postgres (any name you like).
-3. Connection tab:
+# Database operations
+npx prisma migrate dev    # Run migrations
+npx prisma studio        # Database browser
+npx prisma generate      # Update client
 
-- Host: `postgres` (container hostname on the Docker network)
-- Port: `5432`
-- Maintenance DB: `postgres` (or your DB name)
-- Username: value of `POSTGRES_USER`
-- Password: value of `POSTGRES_PASSWORD` (tick "Save password").
+# Development
+npm run start:dev        # Backend with hot reload
+ng serve                # Frontend development server
+npm test                # Run tests
+```
 
-4. Save.
+## 🛠️ pgAdmin Setup
 
-Troubleshooting:
+1. Access `http://localhost:5050`
+2. Login with credentials from `.env.local`
+3. Server should auto-appear as "Local Postgres"
+4. **Manual setup** (if needed):
+   - Host: `postgres`
+   - Port: `5432`
+   - Username/Password: from `.env.local`
 
-- Wrong login: verify `.env.local` values and recreate pgAdmin container (`docker compose down pgadmin && docker compose up -d pgadmin`).
-- Connection refused: ensure the Postgres container is running: `docker ps` should list it as Up.
-- Env vars not applied: ensure `env_file: - .env.local` exists for the pgAdmin service and you did not override them with empty `${VAR}` entries.
-- Inspect container env: `docker exec sport-archive-pgadmin-1 env | findstr PGADMIN`.
+## 📊 Features
+
+- 🤖 **Auto-scraping** every 5 minutes
+- 📊 **Engagement tracking** (likes, shares, comments)
+- 🏃‍♂️ **Sports management** (athletes, clubs, competitions)
+- 🔍 **Search & filtering**
+- 📱 **Responsive UI**
+
+## 🐛 Troubleshooting
+
+```bash
+# Check container status
+docker ps
+
+# View logs
+docker-compose -f docker-compose.local.yml logs -f
+
+# Reset database
+npx prisma migrate reset
+
+# Rebuild containers
+docker-compose -f docker-compose.local.yml build --no-cache
+```
+
+---
+
+<div align="center">
+
+**Built with ❤️ for Croatian Sports**
+
+</div>
