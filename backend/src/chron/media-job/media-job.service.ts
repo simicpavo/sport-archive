@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Browser, chromium } from 'playwright';
@@ -23,7 +21,6 @@ import { fetchSnArticles } from './scrapers/sn-scraper';
 
 @Injectable()
 export class MediaJobService {
-  private browser: Browser;
   private isRunning = false;
 
   constructor(private readonly prismaService: PrismaService) {}
@@ -31,10 +28,13 @@ export class MediaJobService {
   @Cron(CronExpression.EVERY_5_MINUTES)
   async handleCron() {
     console.log('=== CRON JOB TRIGGERED ===', new Date().toISOString());
+
     if (this.isRunning) {
       console.log('Previous job still running, skipping this execution');
       return;
     }
+
+    let browser: Browser | null = null;
 
     try {
       this.isRunning = true;
@@ -42,7 +42,6 @@ export class MediaJobService {
 
       const mediaSources = await this.prismaService.mediaSource.findMany();
       console.log(`Found ${mediaSources.length} media sources in database`);
-      console.log('Media sources:', mediaSources);
 
       if (mediaSources.length === 0) {
         console.log(
@@ -50,121 +49,155 @@ export class MediaJobService {
         );
         return;
       }
+
+      console.log('Launching browser...');
+      browser = await chromium.launch({ headless: true });
+
       for (const mediaSource of mediaSources) {
         console.log(`Fetching articles for ${mediaSource.name}`);
-        await this.fetchArticles(mediaSource);
-        console.log('Finished fetching articles for: ', mediaSource.name);
+        try {
+          await this.fetchArticles(mediaSource, browser);
+          console.log('Finished fetching articles for: ', mediaSource.name);
+        } catch (error) {
+          console.error(
+            `Error fetching articles for ${mediaSource.name}:`,
+            error,
+          );
+        }
       }
 
       console.log('Media job finished.');
     } catch (error) {
       console.error('Error in cron job:', error);
     } finally {
+      if (browser) {
+        try {
+          await browser.close();
+          console.log('Browser closed successfully');
+        } catch (error) {
+          console.error('Error closing browser:', error);
+        }
+      }
       this.isRunning = false;
     }
   }
 
-  async fetchArticles(mediaSource: MediaSource) {
+  async fetchArticles(mediaSource: MediaSource, browser: Browser) {
     console.log('Fetching articles for: ', mediaSource.name);
-    this.browser = await chromium.launch({ headless: true });
 
-    const page = await this.browser.newPage({
-      screen: { width: 430, height: 1000 },
-    });
-
-    const url = `${mediaSource.baseUrl}/${mediaSource.urlPath ? mediaSource.urlPath : ''}`;
-
-    console.log('Navigating to: ', url);
-
-    await page.goto(url, {
-      waitUntil: 'domcontentloaded',
-    });
-
-    await page.waitForTimeout(3000);
-
-    let articles: Article[] = [];
-
-    switch (mediaSource.name) {
-      case INDEX_HR:
-        articles = await fetchIndexArticles(
-          this.browser,
-          mediaSource.baseUrl,
-          url,
-          page,
-        );
-        break;
-      case _24SATA:
-        articles = await fetch24SataArticles(page);
-        break;
-      case SN:
-        articles = await fetchSnArticles(page);
-        break;
-      case GOL_HR:
-        articles = await fetchGolHrArticles(this.browser, url, page);
-        break;
-      case GERMANIJAK:
-        articles = await fetchGermanijakArticles(page);
-        break;
-    }
-
-    console.log(`Scraped ${articles.length} articles before filtering`);
-    articles = articles.slice(0, FETCHING_COUNT);
-    console.log(`Processing ${articles.length} articles after filtering`);
-
-    if (articles.length === 0) {
-      console.log('No articles found to process');
-      await page.close();
-      this.browser.close();
-      return;
-    }
-
+    let page;
     try {
-      const testCount = await this.prismaService.mediaNews.count();
-      console.log(`Current articles in database: ${testCount}`);
-    } catch (error) {
-      console.error('Database connection test failed:', error);
-    }
+      page = await browser.newPage({
+        screen: { width: 430, height: 1000 },
+      });
 
-    articles = articles.slice(0, FETCHING_COUNT);
+      const url = `${mediaSource.baseUrl}/${mediaSource.urlPath ? mediaSource.urlPath : ''}`;
+      console.log('Navigating to: ', url);
 
-    for (const article of articles) {
+      await page.goto(url, {
+        waitUntil: 'domcontentloaded',
+        timeout: 30000,
+      });
+
+      await page.waitForTimeout(5000);
+
+      let articles: Article[] = [];
+
+      switch (mediaSource.name) {
+        case INDEX_HR:
+          articles = await fetchIndexArticles(
+            browser,
+            mediaSource.baseUrl,
+            url,
+            page,
+          );
+          break;
+        case _24SATA:
+          articles = await fetch24SataArticles(page);
+          break;
+        case SN:
+          articles = await fetchSnArticles(page);
+          break;
+        case GOL_HR:
+          articles = await fetchGolHrArticles(browser, url, page);
+          break;
+        case GERMANIJAK:
+          articles = await fetchGermanijakArticles(page);
+          break;
+        default:
+          console.warn(`Unknown media source: ${mediaSource.name}`);
+          return;
+      }
+
+      console.log(`Scraped ${articles.length} articles before filtering`);
+      articles = articles.slice(0, FETCHING_COUNT);
+      console.log(`Processing ${articles.length} articles after filtering`);
+
+      if (articles.length === 0) {
+        console.log('No articles found to process');
+        return;
+      }
+
+      // Test database connection
       try {
-        await this.prismaService.mediaNews.upsert({
-          where: {
-            externalId_mediaSourceId: {
+        const testCount = await this.prismaService.mediaNews.count();
+        console.log(`Current articles in database: ${testCount}`);
+      } catch (error) {
+        console.error('Database connection test failed:', error);
+        throw error;
+      }
+
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (const article of articles) {
+        try {
+          await this.prismaService.mediaNews.upsert({
+            where: {
+              externalId_mediaSourceId: {
+                externalId: article.externalId,
+                mediaSourceId: mediaSource.id,
+              },
+            },
+            create: {
+              title: article.title,
+              content: article.content,
+              urlPath: article.urlPath.startsWith('http')
+                ? article.urlPath
+                : `${mediaSource.baseUrl}${article.urlPath}`,
               externalId: article.externalId,
               mediaSourceId: mediaSource.id,
+              likeCount: article.likeCount,
+              shareCount: article.shareCount,
+              commentCount: article.commentCount,
+              totalEngagements: article.totalEngagements,
             },
-          },
-          create: {
-            title: article.title,
-            content: article.content,
-            urlPath: `${mediaSource.baseUrl}${article.urlPath}`,
-            externalId: article.externalId,
-            mediaSourceId: mediaSource.id,
-            likeCount: article.likeCount,
-            shareCount: article.shareCount,
-            commentCount: article.commentCount,
-            totalEngagements: article.totalEngagements,
-          },
-          update: {
-            likeCount: article.likeCount,
-            shareCount: article.shareCount,
-            commentCount: article.commentCount,
-            totalEngagements: article.totalEngagements,
-          },
-        });
-        console.log(`Successfully upserted article: ${article.title}`);
-      } catch (error: unknown) {
-        console.log('Prisma error while upserting article:');
-        console.log(error);
-        console.error(`Failed to upsert article: ${article.title}`);
+            update: {
+              likeCount: article.likeCount,
+              shareCount: article.shareCount,
+              commentCount: article.commentCount,
+              totalEngagements: article.totalEngagements,
+            },
+          });
+          successCount++;
+          console.log(` Successfully upserted: ${article.title}`);
+        } catch (error: unknown) {
+          errorCount++;
+          console.error(` Failed to upsert article: ${article.title}`, error);
+        }
+      }
+
+      console.log(
+        `Results for ${mediaSource.name}: ${successCount} success, ${errorCount} errors`,
+      );
+    } finally {
+      if (page) {
+        try {
+          await page.close();
+        } catch (error) {
+          console.error('Error closing page:', error);
+        }
       }
     }
-
-    console.log(`Fetched ${articles.length} articles for ${mediaSource.name}`);
-
-    await page.close();
-    this.browser.close();
   }
 }
