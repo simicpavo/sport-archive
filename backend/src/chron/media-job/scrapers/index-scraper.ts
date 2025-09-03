@@ -32,7 +32,7 @@ export const fetchIndexArticles = async (
     const items = Array.from(document.querySelectorAll('.grid-item')).slice(
       0,
       9,
-    ); // 9 + 1 first article = 10 total
+    );
 
     const nextArticles = items.map((item) => {
       const titleElement = item.querySelector('.title');
@@ -68,9 +68,8 @@ export const fetchIndexArticles = async (
   // Then visit each article and get its comment count
   const articlesWithComments: Article[] = [];
   for (const article of validArticles) {
-    console.log('Articles for scan count:', articles.length);
+    console.log('Articles for scan count:', validArticles.length);
     try {
-      // Construct proper URL - check if urlPath is already full URL or relative
       const articleUrl = article.urlPath.startsWith('http')
         ? article.urlPath
         : `${baseUrl}${article.urlPath}`;
@@ -79,7 +78,7 @@ export const fetchIndexArticles = async (
 
       await page.goto(articleUrl, {
         waitUntil: 'domcontentloaded',
-        timeout: 8000,
+        timeout: 15000,
       });
 
       // Handle cookie consent popup if it appears
@@ -87,56 +86,75 @@ export const fetchIndexArticles = async (
         const acceptButton = await page.waitForSelector(
           '#didomi-notice-agree-button',
           {
-            timeout: 3000,
+            timeout: 5000,
           },
         );
         if (acceptButton) {
           await acceptButton.click();
-          // Wait a bit for the popup to disappear
           await page.waitForTimeout(1000);
+          console.log('Cookie popup accepted');
         }
-      } catch (error) {
+      } catch (error: unknown) {
         // Cookie popup might not appear if already accepted
         console.log(error, 'No cookie popup found or already accepted');
       }
 
       let commentCount = 0;
       try {
-        // Wait for comments container to be in the DOM
-        await page.waitForSelector('#comments-container', { timeout: 10000 });
-
-        // Scroll to the comments container
-        await page.evaluate(async () => {
-          const commentsContainer = document.querySelector(
-            '#comments-container',
-          );
-          if (commentsContainer) {
-            commentsContainer.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center',
-            });
-            // Additional wait to ensure content loads
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-          }
-        });
-
-        // Now try to get the comment count
-        const count = await page.evaluate(() => {
-          const totalCountElement = document.querySelector('.total-count');
-          if (totalCountElement) {
-            const countText = totalCountElement.textContent;
-            const match = countText.match(/\((\d+)\)/);
-            return match ? parseInt(match[1]) : 0;
-          }
-          return 0;
-        });
-
-        commentCount = count;
-        console.log(
-          `Found comment count: ${commentCount} for article: ${article.title}`,
+        // Wait for comments container to be in the DOM with timeout
+        const commentsContainer = await page.waitForSelector(
+          '#comments-container',
+          {
+            timeout: 8000,
+            state: 'attached', // Wait for element to be attached to DOM
+          },
         );
-      } catch (error: unknown) {
-        console.log('Failed to get comments, using count 0:', error);
+
+        if (commentsContainer) {
+          await page.evaluate(async () => {
+            const container = document.querySelector('#comments-container');
+            if (container) {
+              container.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+              });
+              await new Promise((resolve) => setTimeout(resolve, 2000));
+            }
+          });
+
+          // Wait for the total count element to appear with timeout
+          try {
+            await page.waitForSelector('.total-count', {
+              timeout: 5000,
+              state: 'visible',
+            });
+
+            const count = await page.evaluate(() => {
+              const totalCountElement = document.querySelector('.total-count');
+              if (totalCountElement && totalCountElement.textContent) {
+                const countText = totalCountElement.textContent;
+                const match = countText.match(/\((\d+)\)/);
+                return match ? parseInt(match[1], 10) : 0;
+              }
+              return 0;
+            });
+
+            commentCount = count;
+            console.log(
+              `Found comment count: ${commentCount} for article: ${article.title}`,
+            );
+          } catch (totalCountError: unknown) {
+            console.log(
+              totalCountError,
+              'Total count element not found within timeout, using count 0',
+            );
+          }
+        }
+      } catch (commentsError: unknown) {
+        console.log(
+          commentsError,
+          'Comments container not found within timeout, using count 0',
+        );
       }
 
       articlesWithComments.push({
@@ -146,12 +164,18 @@ export const fetchIndexArticles = async (
       });
     } catch (error: unknown) {
       console.error(
-        `Error fetching comment count for article: ${article.urlPath}`,
-        error,
+        `Error processing article: ${article.title}`,
+        error instanceof Error ? error.message : 'Unknown error',
       );
-      articlesWithComments.push(article);
+      // Still add the article without comment count
+      articlesWithComments.push({
+        ...article,
+        commentCount: 0,
+        totalEngagements: 0,
+      });
     }
   }
+
   console.log(
     `Processed ${articlesWithComments.length} articles with comments`,
   );
