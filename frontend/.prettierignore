@@ -1,0 +1,8 @@
+package.json
+package-lock.json
+
+# Compiled output
+dist
+
+# Ignore node_modules if you install something at root later
+node_modules
