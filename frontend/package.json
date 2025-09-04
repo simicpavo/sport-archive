@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
-    "lint": "ng lint"
+    "pretty-quick": "pretty-quick --staged",
+    "lint": "ng lint --fix"
   },
   "prettier": {
     "printWidth": 100,
