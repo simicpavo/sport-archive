@@ -10,6 +10,8 @@ import { CompetitionsModule } from './competitions/competitions.module';
 import { ContentTypesModule } from './content-types/content-types.module';
 import { RecordsModule } from './records/records.module';
 import { CronModule } from './chron/chron.module';
+import { MediaSourceModule } from './media-source/media-source.module';
+import { MediaNewsModule } from './media-news/media-news.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { CronModule } from './chron/chron.module';
     ContentTypesModule,
     RecordsModule,
     CronModule,
+    MediaSourceModule,
+    MediaNewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
