@@ -7,6 +7,7 @@ const prettierConfig = require('eslint-config-prettier');
 
 module.exports = tseslint.config(
   {
+    ignores: ['.angular/', 'dist/', 'node_modules/'],
     files: ['**/*.ts'],
     extends: [
       eslint.configs.recommended,
@@ -36,7 +37,8 @@ module.exports = tseslint.config(
           style: 'kebab-case',
         },
       ],
-      'prettier/prettier': 'error', // Enforce Prettier formatting as lint errors
+      'linebreak-style': ['error', 'windows'],
+      'prettier/prettier': ['error', { endOfLine: 'crlf' }], // Enforce Prettier formatting as lint errors
       '@typescript-eslint/no-explicit-any': 'error', // Forbid usage of 'any'
     },
   },

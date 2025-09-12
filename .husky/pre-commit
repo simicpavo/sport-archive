@@ -3,4 +3,4 @@
 
 cd frontend || exit 1
 npx pretty-quick --staged
-npm run lint
+npx lint-staged
