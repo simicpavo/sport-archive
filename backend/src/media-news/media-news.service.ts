@@ -6,6 +6,7 @@ import {
 import { Prisma } from 'generated/prisma';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMediaNewsDto } from './dto/create-media-new.dto';
+import { PaginationDto } from './dto/pagination.dto';
 import { UpdateMediaNewsDto } from './dto/update-media-new.dto';
 
 @Injectable()
@@ -46,15 +47,48 @@ export class MediaNewsService {
     }
   }
 
-  async findAll() {
-    return this.prisma.mediaNews.findMany({
-      include: {
-        MediaSource: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+  async findAll(paginationDto: PaginationDto) {
+    const { page, take, sortBy, sortOrder, startDate, endDate } = paginationDto;
+    const skip = (page - 1) * take;
+
+    // Build date filters only if dates are provided
+    const dateFilters: { gte?: Date; lte?: Date } = {};
+    if (startDate) {
+      dateFilters.gte = new Date(startDate);
+    }
+    if (endDate) {
+      dateFilters.lte = new Date(endDate);
+    }
+
+    // Only include createdAt in where clause if we have date filters
+    const where =
+      Object.keys(dateFilters).length > 0 ? { createdAt: dateFilters } : {};
+
+    const [news, total] = await this.prisma.$transaction([
+      this.prisma.mediaNews.findMany({
+        skip,
+        take,
+        where,
+        orderBy: {
+          [sortBy]: sortOrder,
+        },
+        include: {
+          MediaSource: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      }),
+      this.prisma.mediaNews.count({ where }),
+    ]);
+
+    return {
+      data: news,
+      total,
+      page,
+      take,
+    };
   }
 
   async findOne(id: string) {

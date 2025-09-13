@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -15,6 +16,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateMediaNewsDto } from './dto/create-media-new.dto';
+import { PaginationDto } from './dto/pagination.dto';
 import { UpdateMediaNewsDto } from './dto/update-media-new.dto';
 import { MediaNewsService } from './media-news.service';
 
@@ -57,12 +59,16 @@ export class MediaNewsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get news articles',
-    description: 'Retrieves news articles ',
+    summary: 'Get news articles with pagination and filtering',
+    description:
+      'Retrieves news articles with pagination and filtering options',
   })
-  @ApiResponse({ status: 200, description: 'List of news articles' })
-  findAll() {
-    return this.mediaNewsService.findAll();
+  @ApiResponse({
+    status: 200,
+    description: 'List of news articles with pagination and filtering',
+  })
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.mediaNewsService.findAll(paginationDto);
   }
 
   @Get(':id')
