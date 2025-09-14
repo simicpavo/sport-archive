@@ -10,7 +10,7 @@ fi
 # Check for staged backend TypeScript files
 if git diff --cached --name-only | grep -q "^backend/.*\.ts$"; then
   echo "🔍 Running backend linting..."
-  npm run lint --workspace=backend
+  npm run lint-staged --workspace=backend
 fi
 
 echo "✅ Pre-commit checks completed!"
