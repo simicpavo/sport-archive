@@ -21,7 +21,8 @@
     "backend:dev": "npm run start:dev --workspace=backend",
     "frontend:dev": "npm run start --workspace=frontend",
     "backend:build": "npm run build --workspace=backend",
-    "frontend:build": "npm run build --workspace=frontend"
+    "frontend:build": "npm run build --workspace=frontend",
+    "backend:seed": "npm run db:seed --workspace=backend"
   },
   "repository": {
     "type": "git",

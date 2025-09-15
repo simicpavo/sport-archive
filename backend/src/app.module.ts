@@ -6,6 +6,8 @@ import { CronModule } from './chron/chron.module';
 import { ClubsModule } from './clubs/clubs.module';
 import { CompetitionsModule } from './competitions/competitions.module';
 import { ContentTypesModule } from './content-types/content-types.module';
+import { MediaNewsModule } from './media-news/media-news.module';
+import { MediaSourceModule } from './media-source/media-source.module';
 import { NationalTeamsModule } from './national-teams/national-teams.module';
 import { PersonsModule } from './persons/persons.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -24,6 +26,8 @@ import { SportsModule } from './sports/sports.module';
     ContentTypesModule,
     RecordsModule,
     CronModule,
+    MediaSourceModule,
+    MediaNewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
