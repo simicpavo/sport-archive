@@ -44,6 +44,16 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Database setup
+
+```bash
+# run database migrations
+$ npx prisma migrate dev
+
+# seed database with sample data
+$ npm run db:seed
+```
+
 ## Run tests
 
 ```bash
