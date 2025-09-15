@@ -1,6 +1,16 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-cd frontend || exit 1
-npx pretty-quick --staged
-npm run lint
+# Check for staged frontend files
+if git diff --cached --name-only | grep -q "^frontend/"; then
+  echo "🔍 Running frontend lint-staged..."
+  npm run lint-staged --workspace=frontend --if-present
+fi
+
+# Check for staged backend TypeScript files
+if git diff --cached --name-only | grep -q "^backend/.*\.ts$"; then
+  echo "🔍 Running backend linting..."
+  npm run lint-staged --workspace=backend
+fi
+
+echo "✅ Pre-commit checks completed!"

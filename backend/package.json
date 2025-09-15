@@ -13,22 +13,26 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint-staged": "lint-staged",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "db:seed": "ts-node src/utils/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/schedule": "^6.0.0",
     "@nestjs/swagger": "^11.2.0",
-    "@prisma/client": "^6.14.0",
+    "@prisma/client": "^6.16.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "dotenv": "^17.2.2",
     "playwright": "^1.55.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
@@ -49,7 +53,7 @@
     "globals": "^16.0.0",
     "jest": "^30.0.0",
     "prettier": "^3.4.2",
-    "prisma": "^6.14.0",
+    "prisma": "^6.16.1",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
@@ -58,6 +62,12 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.20.0"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --max-warnings=0 --fix",
+      "prettier --write"
+    ]
   },
   "jest": {
     "moduleFileExtensions": [

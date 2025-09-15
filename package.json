@@ -1,24 +1,47 @@
 {
   "name": "sport-archive",
   "version": "1.0.0",
-  "description": "<div align=\"center\">",
+  "description": "Sport Archive - Full Stack Application",
   "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "devDependencies": {
     "husky": "^8.0.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
+    "test": "npm run test --workspaces",
+    "prepare": "husky install",
+    "install:all": "npm install",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "start:dev": "concurrently \"npm run start:dev --workspace=backend\" \"npm run start --workspace=frontend\"",
+    "backend:dev": "npm run start:dev --workspace=backend",
+    "frontend:dev": "npm run start --workspace=frontend",
+    "backend:build": "npm run build --workspace=backend",
+    "frontend:build": "npm run build --workspace=frontend",
+    "backend:seed": "npm run db:seed --workspace=backend"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/simicpavo/sport-archive.git"
   },
-  "keywords": [],
+  "keywords": [
+    "sport",
+    "archive",
+    "nestjs",
+    "angular",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/simicpavo/sport-archive/issues"
   },
-  "homepage": "https://github.com/simicpavo/sport-archive#readme"
+  "homepage": "https://github.com/simicpavo/sport-archive#readme",
+  "dependencies": {
+    "concurrently": "^7.6.0"
+  }
 }
