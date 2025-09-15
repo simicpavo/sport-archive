@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../generated/prisma';
+import { _24SATA, GERMANIJAK, GOL_HR, INDEX_HR, SN } from './constants';
 
 const prisma = new PrismaClient();
 
@@ -16,27 +17,27 @@ async function seedMediaSources() {
 
   const mediaSources = [
     {
-      name: 'index.hr',
+      name: INDEX_HR,
       baseUrl: 'https://www.index.hr',
       urlPath: 'sport/rubrika/nogomet/1638.aspx',
     },
     {
-      name: '24sata',
+      name: _24SATA,
       baseUrl: 'https://www.24sata.hr',
       urlPath: 'nogomet',
     },
     {
-      name: 'Sportske Novosti',
+      name: SN,
       baseUrl: 'https://sportske.jutarnji.hr/sn',
       urlPath: 'nogomet',
     },
     {
-      name: 'gol.hr',
+      name: GOL_HR,
       baseUrl: 'https://www.gol.dnevnik.hr',
       urlPath: '',
     },
     {
-      name: 'Germanijak',
+      name: GERMANIJAK,
       baseUrl: 'https://www.germanijak.hr',
       urlPath: 'nogomet/1',
     },
@@ -52,24 +53,24 @@ async function seedMediaSources() {
         const mediaSource = await prisma.mediaSource.create({
           data: mediaSourceData,
         });
-        console.log(`✓ Created MediaSource: ${mediaSource.name}`);
+        console.log(`Created MediaSource: ${mediaSource.name}`);
       } else {
-        console.log(`⚠ MediaSource already exists: ${mediaSourceData.name}`);
+        console.log(`MediaSource already exists: ${mediaSourceData.name}`);
       }
     } catch (error) {
       console.error(
-        `❌ Error creating MediaSource ${mediaSourceData.name}:`,
+        `Error creating MediaSource ${mediaSourceData.name}:`,
         error,
       );
     }
   }
 
-  console.log('📰 MediaSource seeding completed!');
+  console.log('MediaSource seeding completed!');
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Seeding failed:', e);
+    console.error('Seeding failed:', e);
     process.exit(1);
   })
   .finally(() => {
