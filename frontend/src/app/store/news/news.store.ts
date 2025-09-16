@@ -83,16 +83,22 @@ export const newsReducer = createReducer(
     filters: { ...state.filters, page: state.currentPage + 1 },
   })),
 
-  on(NewsActions.loadMoreNewsSuccess, (state, { response }) => ({
-    ...state,
-    loadingMore: false,
-    news: [...state.news, ...response.data],
-    hasMore: response.data.length >= (state.filters.take || 10),
-    total: response.meta?.total ?? state.total,
-    totalPages: response.meta?.totalPages ?? state.totalPages,
-    currentPage: response.meta?.page ?? state.currentPage,
-    error: null,
-  })),
+  on(NewsActions.loadMoreNewsSuccess, (state, { response }) => {
+    // Filter out duplicates by checking existing news IDs
+    const existingIds = new Set(state.news.map((item) => item.id));
+    const newUniqueNews = response.data.filter((item) => !existingIds.has(item.id));
+
+    return {
+      ...state,
+      loadingMore: false,
+      news: [...state.news, ...newUniqueNews],
+      hasMore: response.data.length >= (state.filters.take || 10),
+      total: response.meta?.total ?? state.total,
+      totalPages: response.meta?.totalPages ?? state.totalPages,
+      currentPage: response.meta?.page ?? state.currentPage,
+      error: null,
+    };
+  }),
 
   on(NewsActions.loadMoreNewsFailure, (state, { error }) => ({
     ...state,
