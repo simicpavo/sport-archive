@@ -21,8 +21,20 @@
     </div>
   </div>
 
+  <!-- Error state -->
+  @if (error()) {
+    <div class="max-w-4xl mx-auto mb-6">
+      <div class="bg-red-900/50 border border-red-700 rounded-lg p-4 text-red-200">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-exclamation-triangle text-red-400"></i>
+          <span>Failed to load news. Please try again.</span>
+        </div>
+      </div>
+    </div>
+  }
+
   <!-- Loading skeletons -->
-  @if (isLoadingInitial()) {
+  @if (loading()) {
     <div class="max-w-4xl mx-auto space-y-4">
       @for (item of [1, 2, 3, 4, 5]; track item) {
         <div class="bg-gray-800 rounded-lg p-6">
@@ -42,7 +54,7 @@
   }
 
   <!-- News list -->
-  @if (!isLoadingInitial() && displayNews().length > 0) {
+  @if (!loading() && displayNews().length > 0) {
     <div class="max-w-4xl mx-auto space-y-6">
       @for (newsItem of displayNews(); track newsItem.id) {
         <article class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors">
@@ -119,28 +131,36 @@
     </div>
   }
 
-  <!-- Load more trigger -->
-  @if (!isLoadingInitial() && hasMore()) {
+  <!-- Load more trigger - Only show when there's actually more to load -->
+  @if (!loading() && hasMore() && displayNews().length > 0) {
     <div id="scroll-trigger" class="py-6">
-      @if (isLoadingMore()) {
+      @if (loadingMore()) {
         <div class="max-w-4xl mx-auto">
           <div class="bg-gray-800 rounded-lg p-6">
-            <p-skeleton height="4rem" width="100%"></p-skeleton>
+            <div class="flex items-center justify-center gap-3 text-gray-400">
+              <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-teal-500"></div>
+              <span>Loading more news...</span>
+            </div>
           </div>
         </div>
       }
     </div>
   }
 
-  <!-- No more content message -->
-  @if (!isLoadingInitial() && !hasMore() && displayNews().length > 0) {
+  <!-- End of content message -->
+  @if (!loading() && !hasMore() && displayNews().length > 0) {
     <div class="my-12 text-center">
       <div class="text-gray-500">🎯 You've reached the end! That's all the news for now.</div>
+      @if (total() > 0) {
+        <div class="text-sm text-gray-600 mt-2">
+          Showing {{ displayNews().length }} of {{ total() }} articles
+        </div>
+      }
     </div>
   }
 
   <!-- Empty state -->
-  @if (!isLoadingInitial() && displayNews().length === 0) {
+  @if (!loading() && displayNews().length === 0) {
     <div class="max-w-4xl mx-auto text-center py-12">
       <div class="bg-gray-800 rounded-lg p-12">
         <div class="text-6xl mb-4">📭</div>
@@ -152,7 +172,11 @@
         <button
           class="bg-teal-500 hover:bg-teal-600 text-white font-medium py-2 px-4 rounded transition-colors"
           (click)="loadInitialNews()"
+          [disabled]="loading()"
         >
+          @if (loading()) {
+            <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+          }
           🔄 Refresh
         </button>
       </div>

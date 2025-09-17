@@ -7,9 +7,9 @@ import {
   PLATFORM_ID,
   ViewChild,
   computed,
+  effect,
   inject,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -19,14 +19,7 @@ import { TagModule } from 'primeng/tag';
 import { Subscription } from 'rxjs';
 import { MediaNews, TimeFilter } from '../models/media-news.interface';
 import * as NewsActions from '../store/news/news.actions';
-import {
-  selectHasMore,
-  selectIsLoadingInitial,
-  selectLoading,
-  selectLoadingMore,
-  selectNews,
-  selectSelectedFilter,
-} from '../store/news/news.selectors';
+import { newsFeature } from '../store/news/news.store';
 
 @Component({
   selector: 'app-media-news',
@@ -40,22 +33,19 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private store = inject(Store);
   private platformId = inject(PLATFORM_ID);
+  private observer?: IntersectionObserver;
+  private lastLoadTime = 0;
+  private readonly LOAD_THROTTLE_MS = 1000;
 
-  news$ = this.store.select(selectNews);
-  loading$ = this.store.select(selectLoading);
-  loadingMore$ = this.store.select(selectLoadingMore);
-  hasMore$ = this.store.select(selectHasMore);
-  selectedFilter$ = this.store.select(selectSelectedFilter);
-  isLoadingInitial$ = this.store.select(selectIsLoadingInitial);
-
-  news = toSignal(this.news$, { initialValue: [] as MediaNews[] });
-  loading = toSignal(this.loading$, { initialValue: false });
-  hasMore = toSignal(this.hasMore$, { initialValue: true });
-  selectedFilter = toSignal(this.selectedFilter$, { initialValue: 'all' as TimeFilter });
+  news = this.store.selectSignal(newsFeature.selectNews);
+  loading = this.store.selectSignal(newsFeature.selectLoading);
+  loadingMore = this.store.selectSignal(newsFeature.selectLoadingMore);
+  hasMore = this.store.selectSignal(newsFeature.selectHasMore);
+  selectedFilter = this.store.selectSignal(newsFeature.selectSelectedFilter);
+  error = this.store.selectSignal(newsFeature.selectError);
+  total = this.store.selectSignal(newsFeature.selectTotal);
 
   displayNews = computed(() => this.news());
-  isLoadingInitial = computed(() => this.loading() && this.news().length === 0);
-  isLoadingMore = computed(() => this.loading() && this.news().length > 0);
 
   timeFilters: { label: string; value: TimeFilter }[] = [
     { label: 'All', value: 'all' },
@@ -65,15 +55,8 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
+    this.store.dispatch(NewsActions.setSelectedFilter({ selectedFilter: 'all' }));
     this.loadInitialNews();
-
-    this.news$.subscribe((news) => {
-      console.log('News data:', news);
-      if (news.length > 0) {
-        console.log('First news item:', news[0]);
-        console.log('Media source of first item:', news[0].mediaSource);
-      }
-    });
 
     // Only setup infinite scroll in browser environment
     if (isPlatformBrowser(this.platformId)) {
@@ -83,19 +66,27 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    this.observer?.disconnect();
   }
 
   loadInitialNews(): void {
-    this.store.dispatch(NewsActions.loadInitialNews({ filters: {} }));
+    this.store.dispatch(NewsActions.loadInitialNews({ filters: { page: 1, take: 10 } }));
   }
 
   onTimeFilterChange(filter: TimeFilter): void {
-    this.store.dispatch(NewsActions.setSelectedFilter({ selectedFilter: filter }));
     this.store.dispatch(NewsActions.applyTimeFilter({ timeFilter: filter }));
   }
 
   loadMoreNews(): void {
-    if (!this.loading() && this.hasMore()) {
+    const now = Date.now();
+
+    if (now - this.lastLoadTime < this.LOAD_THROTTLE_MS) {
+      console.log('Load more throttled');
+      return;
+    }
+
+    if (!this.loading() && !this.loadingMore() && this.hasMore()) {
+      this.lastLoadTime = now;
       this.store.dispatch(NewsActions.loadMoreNews());
     }
   }
@@ -107,10 +98,18 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
     }
 
     // Set up intersection observer for infinite scroll
-    const observer = new IntersectionObserver(
+    this.observer = new IntersectionObserver(
       (entries) => {
         const target = entries[0];
-        if (target.isIntersecting && !this.loading() && this.hasMore()) {
+        if (
+          target.isIntersecting &&
+          !this.loading() &&
+          !this.loadingMore() &&
+          this.hasMore() &&
+          this.news().length > 0 &&
+          target.intersectionRatio > 0
+        ) {
+          console.log('Triggering loadMoreNews');
           this.loadMoreNews();
         }
       },
@@ -121,17 +120,43 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
       },
     );
 
-    // Observe the scroll trigger element
-    setTimeout(() => {
-      const scrollTrigger = document.getElementById('scroll-trigger');
-      if (scrollTrigger) {
-        observer.observe(scrollTrigger);
-      }
-    }, 100);
+    this.observeScrollTrigger();
+  }
 
-    // Clean up observer on destroy
-    this.subscriptions.add({
-      unsubscribe: () => observer.disconnect(),
+  private observeScrollTrigger(): void {
+    if (!this.observer) return;
+
+    const scrollTrigger = document.getElementById('scroll-trigger');
+    if (scrollTrigger) {
+      this.observer.observe(scrollTrigger);
+    } else {
+      console.warn('scroll-trigger element not found');
+      setTimeout(() => this.observeScrollTrigger(), 100);
+    }
+  }
+
+  constructor() {
+    effect(() => {
+      this.news();
+      const hasMore = this.hasMore();
+      const loading = this.loading();
+      const loadingMore = this.loadingMore();
+
+      console.log('📊 State changed:', {
+        newsCount: this.news().length,
+        hasMore,
+        loading,
+        loadingMore,
+        currentPage: this.store.selectSignal(newsFeature.selectCurrentPage)(),
+      });
+
+      // Only re-observe when we're not in a loading state
+      if (this.observer && !loading && !loadingMore) {
+        setTimeout(() => {
+          this.observer?.disconnect();
+          this.observeScrollTrigger();
+        }, 100);
+      }
     });
   }
 

@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import { MediaNews, MediaNewsFilters, TimeFilter } from '../../models/media-news.interface';
 import * as NewsActions from './news.actions';
 
@@ -60,7 +60,7 @@ export const newsReducer = createReducer(
     ...state,
     loading: false,
     news: response.data,
-    hasMore: response.data.length >= (state.filters.take || 10),
+    hasMore: response.data.length === (state.filters.take || 10),
     total: response.meta?.total ?? 0,
     totalPages: response.meta?.totalPages ?? 0,
     currentPage: response.meta?.page ?? 1,
@@ -79,8 +79,6 @@ export const newsReducer = createReducer(
     ...state,
     loadingMore: true,
     error: null,
-    currentPage: state.currentPage + 1,
-    filters: { ...state.filters, page: state.currentPage + 1 },
   })),
 
   on(NewsActions.loadMoreNewsSuccess, (state, { response }) => {
@@ -92,10 +90,11 @@ export const newsReducer = createReducer(
       ...state,
       loadingMore: false,
       news: [...state.news, ...newUniqueNews],
-      hasMore: response.data.length >= (state.filters.take || 10),
+      hasMore: response.data.length === (state.filters.take || 10) && newUniqueNews.length > 0,
       total: response.meta?.total ?? state.total,
       totalPages: response.meta?.totalPages ?? state.totalPages,
-      currentPage: response.meta?.page ?? state.currentPage,
+      currentPage: state.currentPage + 1,
+      filters: { ...state.filters, page: state.currentPage + 1 },
       error: null,
     };
   }),
@@ -155,3 +154,8 @@ export const newsReducer = createReducer(
     selectedFilter,
   })),
 );
+
+export const newsFeature = createFeature({
+  name: 'news',
+  reducer: newsReducer,
+});

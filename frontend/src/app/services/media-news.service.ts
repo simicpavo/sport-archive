@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   MediaNews,
@@ -15,17 +15,6 @@ import {
 export class MediaNewsService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment?.apiUrl || 'http://localhost:3000'}/media-news`;
-
-  private readonly loadingSubject = new BehaviorSubject<boolean>(false);
-  private readonly newsSubject = new BehaviorSubject<MediaNews[]>([]);
-  private readonly hasMoreSubject = new BehaviorSubject<boolean>(true);
-
-  public readonly loading$ = this.loadingSubject.asObservable();
-  public readonly news$ = this.newsSubject.asObservable();
-  public readonly hasMore$ = this.hasMoreSubject.asObservable();
-
-  private currentPage = 1;
-  private currentFilters: MediaNewsFilters = {};
 
   getMediaNews(filters: MediaNewsFilters = {}): Observable<PaginatedMediaNews> {
     let params = new HttpParams();
@@ -56,96 +45,64 @@ export class MediaNewsService {
     return this.http.get<MediaNews>(`${this.baseUrl}/${id}`);
   }
 
-  loadInitialNews(filters: MediaNewsFilters = {}): void {
-    this.currentFilters = { ...filters, page: 1, take: 10 };
-    this.currentPage = 1;
-    this.loadingSubject.next(true);
+  getMediaNewsWithTimeFilter(
+    timeFilter: TimeFilter,
+    filters: Omit<MediaNewsFilters, 'startDate' | 'endDate'> = {},
+  ): Observable<PaginatedMediaNews> {
+    const timeFilters = this.getTimeFilterDates(timeFilter);
+    const sortingFilters = this.getSortingForTimeFilter(timeFilter);
 
-    this.getMediaNews(this.currentFilters).subscribe({
-      next: (response: PaginatedMediaNews) => {
-        this.newsSubject.next(response.data);
-        const takeAmount = this.currentFilters.take || 10;
-        this.hasMoreSubject.next(response.data.length >= takeAmount);
-        this.loadingSubject.next(false);
-      },
-      error: (error: unknown) => {
-        console.error('Error loading news:', error);
-        this.newsSubject.next([]);
-        this.hasMoreSubject.next(false);
-        this.loadingSubject.next(false);
-      },
-    });
+    const combinedFilters: MediaNewsFilters = {
+      ...filters,
+      ...timeFilters,
+      ...sortingFilters,
+    };
+
+    return this.getMediaNews(combinedFilters);
   }
 
-  loadMoreNews(): void {
-    if (this.loadingSubject.value || !this.hasMoreSubject.value) {
-      return;
-    }
-
-    this.currentPage++;
-    this.loadingSubject.next(true);
-
-    const filters = { ...this.currentFilters, page: this.currentPage };
-
-    this.getMediaNews(filters).subscribe({
-      next: (response: PaginatedMediaNews) => {
-        const currentNews = this.newsSubject.value;
-        const newNews = [...currentNews, ...response.data];
-        this.newsSubject.next(newNews);
-        const takeAmount = this.currentFilters.take || 10;
-        this.hasMoreSubject.next(response.data.length >= takeAmount);
-        this.loadingSubject.next(false);
-      },
-      error: (error: unknown) => {
-        console.error('Error loading more news:', error);
-        this.hasMoreSubject.next(false);
-        this.loadingSubject.next(false);
-      },
-    });
-  }
-
-  applyTimeFilter(timeFilter: TimeFilter): void {
+  getTimeFilterDates(timeFilter: TimeFilter): Pick<MediaNewsFilters, 'startDate' | 'endDate'> {
     const now = new Date();
-    let startDate: string | undefined;
 
     switch (timeFilter) {
       case '6h':
-        startDate = new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString();
-        break;
+        return {
+          startDate: new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString(),
+          endDate: now.toISOString(),
+        };
       case '12h':
-        startDate = new Date(now.getTime() - 12 * 60 * 60 * 1000).toISOString();
-        break;
+        return {
+          startDate: new Date(now.getTime() - 12 * 60 * 60 * 1000).toISOString(),
+          endDate: now.toISOString(),
+        };
       case '24h':
-        startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
-        break;
+        return {
+          startDate: new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString(),
+          endDate: now.toISOString(),
+        };
       case 'all':
       default:
-        startDate = undefined;
-        break;
+        return {};
     }
-
-    const filters: MediaNewsFilters = {
-      ...this.currentFilters,
-      startDate,
-      sortBy: 'createdAt',
-      sortOrder: 'desc',
-    };
-
-    this.loadInitialNews(filters);
   }
 
-  clearNews(): void {
-    this.newsSubject.next([]);
-    this.hasMoreSubject.next(true);
-    this.currentPage = 1;
-  }
-
-  refreshNews(): void {
-    this.clearNews();
-    this.loadInitialNews(this.currentFilters);
-  }
-
-  getCurrentFilters(): MediaNewsFilters {
-    return { ...this.currentFilters };
+  private getSortingForTimeFilter(
+    timeFilter: TimeFilter,
+  ): Pick<MediaNewsFilters, 'sortBy' | 'sortOrder'> {
+    switch (timeFilter) {
+      case '6h':
+      case '12h':
+      case '24h':
+        return {
+          sortBy: 'totalEngagements',
+          sortOrder: 'desc',
+        };
+      case 'all':
+      default:
+        return {
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+        };
+    }
   }
 }
