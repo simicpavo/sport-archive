@@ -33,18 +33,30 @@ export class MediaNewsService {
           [sortBy]: sortOrder,
         },
         include: {
-          MediaSource: {
-            select: {
-              name: true,
-            },
-          },
+          MediaSource: true,
         },
       }),
       this.prisma.mediaNews.count({ where }),
     ]);
 
+    // Map the MediaSource to mediaSource for frontend compatibility
+    const mappedNews = news.map((item) => ({
+      ...item,
+      mediaSource: item.MediaSource
+        ? {
+            id: item.MediaSource.id,
+            name: item.MediaSource.name,
+            url: item.MediaSource.baseUrl,
+            logoUrl: null,
+            createdAt: item.MediaSource.createdAt,
+            updatedAt: item.MediaSource.updatedAt,
+          }
+        : null,
+      MediaSource: undefined, // Remove the original field
+    }));
+
     return {
-      data: news,
+      data: mappedNews,
       total,
       page,
       take,
@@ -63,7 +75,21 @@ export class MediaNewsService {
       throw new NotFoundException(`Media news with ID ${id} not found`);
     }
 
-    return mediaNews;
+    // Map the MediaSource to mediaSource for frontend compatibility
+    return {
+      ...mediaNews,
+      mediaSource: mediaNews.MediaSource
+        ? {
+            id: mediaNews.MediaSource.id,
+            name: mediaNews.MediaSource.name,
+            url: mediaNews.MediaSource.baseUrl,
+            logoUrl: null,
+            createdAt: mediaNews.MediaSource.createdAt,
+            updatedAt: mediaNews.MediaSource.updatedAt,
+          }
+        : null,
+      MediaSource: undefined, // Remove the original field
+    };
   }
 
   async remove(id: string) {
