@@ -1,26 +1,37 @@
-# Stage 1: Build Angular Universal app
+# Stage 1: Build Angular Universal (SSR)
 FROM node:20-alpine AS build
 
 WORKDIR /app
 
-COPY package*.json ./
+# Copy root package.json and frontend package.json
+COPY ../package*.json ./
+COPY ./package*.json ./frontend/
+
+# Install dependencies for the workspace
 RUN npm install
 
-COPY . .
+# Copy frontend source code
+COPY . ./frontend
+WORKDIR /app/frontend
 
-# Build Angular app with SSR
+# Build the Angular app
 RUN npm run build
 
-# Stage 2: Run the SSR server
-FROM node:20-alpine AS runtime
+# Stage 2: Run SSR with Node
+FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install --omit=dev --legacy-peer-deps
+# Copy package files
+COPY ../package*.json ./
+COPY ./package*.json ./frontend/
 
-COPY --from=build /app/dist ./dist
+# Install only production dependencies
+RUN npm install --omit=dev
+
+# Copy the built application
+COPY --from=build /app/frontend/dist ./frontend/dist
 
 EXPOSE 4000
 
-CMD ["node", "dist/frontend/server/server.mjs"]
+CMD ["node", "frontend/dist/frontend/server/server.mjs"]
