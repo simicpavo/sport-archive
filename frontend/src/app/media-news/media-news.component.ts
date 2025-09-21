@@ -6,7 +6,6 @@ import {
   OnInit,
   PLATFORM_ID,
   ViewChild,
-  computed,
   effect,
   inject,
 } from '@angular/core';
@@ -18,7 +17,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { Subscription } from 'rxjs';
 import { MediaNews, TimeFilter } from '../models/media-news.interface';
-import * as NewsActions from '../store/news/news.actions';
+import { NewsActions } from '../store/news/news.actions';
 import { newsFeature } from '../store/news/news.store';
 
 @Component({
@@ -44,8 +43,6 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   selectedFilter = this.store.selectSignal(newsFeature.selectSelectedFilter);
   error = this.store.selectSignal(newsFeature.selectError);
   total = this.store.selectSignal(newsFeature.selectTotal);
-
-  displayNews = computed(() => this.news());
 
   timeFilters: { label: string; value: TimeFilter }[] = [
     { label: 'All', value: 'all' },
@@ -81,7 +78,6 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
     const now = Date.now();
 
     if (now - this.lastLoadTime < this.LOAD_THROTTLE_MS) {
-      console.log('Load more throttled');
       return;
     }
 
@@ -109,7 +105,6 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
           this.news().length > 0 &&
           target.intersectionRatio > 0
         ) {
-          console.log('Triggering loadMoreNews');
           this.loadMoreNews();
         }
       },
@@ -137,18 +132,8 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      this.news();
-      const hasMore = this.hasMore();
       const loading = this.loading();
       const loadingMore = this.loadingMore();
-
-      console.log('📊 State changed:', {
-        newsCount: this.news().length,
-        hasMore,
-        loading,
-        loadingMore,
-        currentPage: this.store.selectSignal(newsFeature.selectCurrentPage)(),
-      });
 
       // Only re-observe when we're not in a loading state
       if (this.observer && !loading && !loadingMore) {
@@ -192,6 +177,5 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
     if (newsItem.urlPath) {
       window.open(newsItem.urlPath, '_blank');
     }
-    console.log('Read more clicked:', newsItem.title);
   }
 }

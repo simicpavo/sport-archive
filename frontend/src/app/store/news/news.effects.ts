@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { MediaNewsService } from '../../services/media-news.service';
-import * as NewsActions from './news.actions';
+import { NewsActions } from './news.actions';
 import { newsFeature, NewsState } from './news.store';
 
 @Injectable()

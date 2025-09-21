@@ -54,9 +54,9 @@
   }
 
   <!-- News list -->
-  @if (!loading() && displayNews().length > 0) {
+  @if (!loading() && news().length > 0) {
     <div class="max-w-4xl mx-auto space-y-6">
-      @for (newsItem of displayNews(); track newsItem.id) {
+      @for (newsItem of news(); track newsItem.id) {
         <article class="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors">
           <!-- Article header -->
           <div class="flex items-center gap-3 mb-4">
@@ -132,7 +132,7 @@
   }
 
   <!-- Load more trigger - Only show when there's actually more to load -->
-  @if (!loading() && hasMore() && displayNews().length > 0) {
+  @if (!loading() && hasMore() && news().length > 0) {
     <div id="scroll-trigger" class="py-6">
       @if (loadingMore()) {
         <div class="max-w-4xl mx-auto">
@@ -148,19 +148,19 @@
   }
 
   <!-- End of content message -->
-  @if (!loading() && !hasMore() && displayNews().length > 0) {
+  @if (!loading() && !hasMore() && news().length > 0) {
     <div class="my-12 text-center">
       <div class="text-gray-500">🎯 You've reached the end! That's all the news for now.</div>
       @if (total() > 0) {
         <div class="text-sm text-gray-600 mt-2">
-          Showing {{ displayNews().length }} of {{ total() }} articles
+          Showing {{ news().length }} of {{ total() }} articles
         </div>
       }
     </div>
   }
 
   <!-- Empty state -->
-  @if (!loading() && displayNews().length === 0) {
+  @if (!loading() && news().length === 0) {
     <div class="max-w-4xl mx-auto text-center py-12">
       <div class="bg-gray-800 rounded-lg p-12">
         <div class="text-6xl mb-4">📭</div>

@@ -1,6 +1,6 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { MediaNews, MediaNewsFilters, TimeFilter } from '../../models/media-news.interface';
-import * as NewsActions from './news.actions';
+import { NewsActions } from './news.actions';
 
 export interface NewsState {
   news: MediaNews[];
