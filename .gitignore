@@ -1,6 +1,6 @@
-# Ignore local environment files
-.env
-.env.local
+# Ignore all .env files except those that contain "example" in the name
+.env*
+!.env*example*
 
 # Ignore OS files
 .DS_Store
