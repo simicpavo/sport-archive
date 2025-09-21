@@ -120,39 +120,6 @@ export const newsReducer = createReducer(
       sortOrder: 'desc',
     },
   })),
-
-  on(NewsActions.clearNews, (state) => ({
-    ...state,
-    news: [],
-    hasMore: true,
-    currentPage: 1,
-    filters: { ...state.filters, page: 1 },
-    error: null,
-  })),
-
-  on(NewsActions.refreshNews, (state) => ({
-    ...state,
-    loading: true,
-    currentPage: 1,
-    filters: { ...state.filters, page: 1 },
-    error: null,
-  })),
-
-  on(NewsActions.updateFilters, (state, { filters }) => ({
-    ...state,
-    filters: { ...state.filters, ...filters },
-    currentPage: 1,
-  })),
-
-  on(NewsActions.setLoadingState, (state, { loading }) => ({
-    ...state,
-    loading,
-  })),
-
-  on(NewsActions.setSelectedFilter, (state, { selectedFilter }) => ({
-    ...state,
-    selectedFilter,
-  })),
 );
 
 export const newsFeature = createFeature({

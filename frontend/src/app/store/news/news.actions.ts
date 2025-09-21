@@ -20,12 +20,5 @@ export const NewsActions = createActionGroup({
 
     // Filters and state management
     applyTimeFilter: props<{ timeFilter: TimeFilter }>(),
-    updateFilters: props<{ filters: MediaNewsFilters }>(),
-    setSelectedFilter: props<{ selectedFilter: TimeFilter }>(),
-    setLoadingState: props<{ loading: boolean }>(),
-
-    // Utility actions
-    clearNews: emptyProps(),
-    refreshNews: emptyProps(),
   },
 });

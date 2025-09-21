@@ -51,8 +51,22 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
     { label: 'Last 6h', value: '6h' },
   ];
 
+  constructor() {
+    effect(() => {
+      const loading = this.loading();
+      const loadingMore = this.loadingMore();
+
+      // Only re-observe when we're not in a loading state
+      if (this.observer && !loading && !loadingMore) {
+        setTimeout(() => {
+          this.observer?.disconnect();
+          this.observeScrollTrigger();
+        }, 100);
+      }
+    });
+  }
+
   ngOnInit(): void {
-    this.store.dispatch(NewsActions.setSelectedFilter({ selectedFilter: 'all' }));
     this.loadInitialNews();
 
     // Only setup infinite scroll in browser environment
@@ -128,21 +142,6 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
       console.warn('scroll-trigger element not found');
       setTimeout(() => this.observeScrollTrigger(), 100);
     }
-  }
-
-  constructor() {
-    effect(() => {
-      const loading = this.loading();
-      const loadingMore = this.loadingMore();
-
-      // Only re-observe when we're not in a loading state
-      if (this.observer && !loading && !loadingMore) {
-        setTimeout(() => {
-          this.observer?.disconnect();
-          this.observeScrollTrigger();
-        }, 100);
-      }
-    });
   }
 
   formatDate(dateString: string): string {

@@ -68,25 +68,4 @@ export class NewsEffects {
       ),
     ),
   );
-
-  refreshNews$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(NewsActions.refreshNews),
-      withLatestFrom(
-        this.store.select(newsFeature.selectFilters),
-        this.store.select(newsFeature.selectSelectedFilter),
-      ),
-      switchMap(([, filters, selectedFilter]) => {
-        return this.mediaNewsService
-          .getMediaNewsWithTimeFilter(selectedFilter, {
-            ...filters,
-            page: 1,
-          })
-          .pipe(
-            map((response) => NewsActions.loadInitialNewsSuccess({ response })),
-            catchError((error) => of(NewsActions.loadInitialNewsFailure({ error }))),
-          );
-      }),
-    ),
-  );
 }
