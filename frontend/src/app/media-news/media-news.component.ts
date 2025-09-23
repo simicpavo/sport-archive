@@ -17,6 +17,8 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { Subscription } from 'rxjs';
 import { MediaNews, TimeFilter } from '../models/media-news.interface';
+import { formatDate } from '../shared/utils/format-date';
+import { formatEngagements } from '../shared/utils/format-engagements';
 import { NewsActions } from '../store/news/news.actions';
 import { newsFeature } from '../store/news/news.store';
 
@@ -43,6 +45,8 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   selectedFilter = this.store.selectSignal(newsFeature.selectSelectedFilter);
   error = this.store.selectSignal(newsFeature.selectError);
   total = this.store.selectSignal(newsFeature.selectTotal);
+  formatDate = formatDate;
+  formatEngagements = formatEngagements;
 
   timeFilters: { label: string; value: TimeFilter }[] = [
     { label: 'All', value: 'all' },
@@ -144,35 +148,7 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
     }
   }
 
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffHours < 1) {
-      return 'Just now';
-    } else if (diffHours < 24) {
-      return `${diffHours}h ago`;
-    } else if (diffDays < 7) {
-      return `${diffDays}d ago`;
-    } else {
-      return date.toLocaleDateString();
-    }
-  }
-
-  formatEngagements(count: number): string {
-    if (count >= 1000000) {
-      return (count / 1000000).toFixed(1) + 'M';
-    } else if (count >= 1000) {
-      return (count / 1000).toFixed(1) + 'K';
-    }
-    return count.toString();
-  }
-
-  onReadMore(event: Event, newsItem: MediaNews): void {
-    event.stopPropagation();
+  onReadMore(newsItem: MediaNews): void {
     if (newsItem.urlPath) {
       window.open(newsItem.urlPath, '_blank');
     }

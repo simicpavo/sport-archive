@@ -19,24 +19,11 @@ export class MediaNewsService {
   getMediaNews(filters: MediaNewsFilters = {}): Observable<PaginatedMediaNews> {
     let params = new HttpParams();
 
-    if (filters.page) {
-      params = params.set('page', filters.page.toString());
-    }
-    if (filters.take) {
-      params = params.set('take', filters.take.toString());
-    }
-    if (filters.startDate) {
-      params = params.set('startDate', filters.startDate);
-    }
-    if (filters.endDate) {
-      params = params.set('endDate', filters.endDate);
-    }
-    if (filters.sortBy) {
-      params = params.set('sortBy', filters.sortBy);
-    }
-    if (filters.sortOrder) {
-      params = params.set('sortOrder', filters.sortOrder);
-    }
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        params = params.set(key, value.toString());
+      }
+    });
 
     return this.http.get<PaginatedMediaNews>(this.baseUrl, { params });
   }
