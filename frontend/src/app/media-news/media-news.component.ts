@@ -81,7 +81,7 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   }
 
   loadInitialNews(): void {
-    this.store.dispatch(NewsActions.loadInitialNews({ filters: { page: 1, take: 10 } }));
+    this.store.dispatch(NewsActions.loadNews({ isLoadMore: false }));
   }
 
   onTimeFilterChange(filter: TimeFilter): void {
@@ -97,7 +97,7 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
 
     if (!this.loading() && !this.loadingMore() && this.hasMore()) {
       this.lastLoadTime = now;
-      this.store.dispatch(NewsActions.loadMoreNews());
+      this.store.dispatch(NewsActions.loadNews({ isLoadMore: true }));
     }
   }
 

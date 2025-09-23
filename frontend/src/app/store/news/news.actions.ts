@@ -1,4 +1,4 @@
-import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { createActionGroup, props } from '@ngrx/store';
 import {
   MediaNewsFilters,
   PaginatedMediaNews,
@@ -8,15 +8,10 @@ import {
 export const NewsActions = createActionGroup({
   source: 'News',
   events: {
-    // Initial news loading
-    loadInitialNews: props<{ filters?: MediaNewsFilters }>(),
-    loadInitialNewsSuccess: props<{ response: PaginatedMediaNews }>(),
-    loadInitialNewsFailure: props<{ error: unknown }>(),
-
-    // Load more news for pagination
-    loadMoreNews: emptyProps(),
-    loadMoreNewsSuccess: props<{ response: PaginatedMediaNews }>(),
-    loadMoreNewsFailure: props<{ error: unknown }>(),
+    // News loading
+    loadNews: props<{ isLoadMore?: boolean; filters?: MediaNewsFilters }>(),
+    loadNewsSuccess: props<{ response: PaginatedMediaNews; isLoadMore?: boolean }>(),
+    loadNewsFailure: props<{ error: unknown }>(),
 
     // Filters and state management
     applyTimeFilter: props<{ timeFilter: TimeFilter }>(),

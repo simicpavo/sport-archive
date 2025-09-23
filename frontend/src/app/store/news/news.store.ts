@@ -37,7 +37,15 @@ export const newsReducer = createReducer(
   initialState,
 
   // Load initial news
-  on(NewsActions.loadInitialNews, (state, { filters }) => {
+  on(NewsActions.loadNews, (state, { isLoadMore = false, filters }) => {
+    if (isLoadMore) {
+      return {
+        ...state,
+        loadingMore: true,
+        error: null,
+      };
+    }
+
     // Create a fresh filter object to avoid carrying over old date filters
     const newFilters = {
       page: 1,
@@ -50,57 +58,33 @@ export const newsReducer = createReducer(
     return {
       ...state,
       loading: true,
+      loadingMore: false,
       error: null,
       filters: newFilters,
       currentPage: 1,
+      news: [], // Clear existing news
+      hasMore: true,
     };
   }),
 
-  on(NewsActions.loadInitialNewsSuccess, (state, { response }) => ({
-    ...state,
-    loading: false,
-    news: response.data,
-    hasMore: response.data.length === (state.filters.take || 10),
-    total: response.meta?.total ?? 0,
-    totalPages: response.meta?.totalPages ?? 0,
-    currentPage: response.meta?.page ?? 1,
-    error: null,
-  })),
-
-  on(NewsActions.loadInitialNewsFailure, (state, { error }) => ({
-    ...state,
-    loading: false,
-    error,
-    news: [],
-    hasMore: false,
-  })),
-
-  on(NewsActions.loadMoreNews, (state) => ({
-    ...state,
-    loadingMore: true,
-    error: null,
-  })),
-
-  on(NewsActions.loadMoreNewsSuccess, (state, { response }) => {
-    // Filter out duplicates by checking existing news IDs
-    const existingIds = new Set(state.news.map((item) => item.id));
-    const newUniqueNews = response.data.filter((item) => !existingIds.has(item.id));
-
+  on(NewsActions.loadNewsSuccess, (state, { response, isLoadMore = false }) => {
+    const newCurrentPage = isLoadMore ? state.currentPage + 1 : (response.meta?.page ?? 1);
     return {
       ...state,
+      loading: false,
       loadingMore: false,
-      news: [...state.news, ...newUniqueNews],
-      hasMore: response.data.length === (state.filters.take || 10) && newUniqueNews.length > 0,
-      total: response.meta?.total ?? state.total,
-      totalPages: response.meta?.totalPages ?? state.totalPages,
-      currentPage: state.currentPage + 1,
-      filters: { ...state.filters, page: state.currentPage + 1 },
+      news: isLoadMore ? [...state.news, ...response.data] : response.data,
+      hasMore: response.data.length === state.filters.take,
+      total: response.meta?.total ?? 0,
+      totalPages: response.meta?.totalPages ?? 0,
+      currentPage: newCurrentPage,
       error: null,
     };
   }),
 
-  on(NewsActions.loadMoreNewsFailure, (state, { error }) => ({
+  on(NewsActions.loadNewsFailure, (state, { error }) => ({
     ...state,
+    loading: false,
     loadingMore: false,
     error,
     hasMore: false,
@@ -110,6 +94,7 @@ export const newsReducer = createReducer(
     ...state,
     selectedFilter: timeFilter,
     loading: true,
+    loadingMore: false,
     currentPage: 1,
     news: [], // Clear existing news when applying filter
     hasMore: true, // Reset hasMore flag
