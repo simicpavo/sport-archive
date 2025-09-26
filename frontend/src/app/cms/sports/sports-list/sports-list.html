@@ -21,14 +21,14 @@
   <!-- Data Table -->
   <div class="card">
     <p-table
-      [value]="sports()"
+      [value]="sportsArray"
       [loading]="isLoading()"
       [paginator]="true"
       [rows]="10"
       [rowsPerPageOptions]="[5, 10, 25, 50]"
       [showCurrentPageReport]="true"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      styleClass="p-datatable-striped"
+      class="p-datatable-striped"
       [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
       [scrollable]="true"
       scrollHeight="60vh"

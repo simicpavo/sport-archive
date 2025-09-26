@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
-import { finalize } from 'rxjs/operators';
+import { SportsActions } from '../../../store/sports/sports.actions';
+import { sportsFeature } from '../../../store/sports/sports.store';
 import { CreateSportDto, FormState, UpdateSportDto } from '../sport.interface';
-import { SportsService } from '../sports.service';
 
 @Component({
   selector: 'app-sports-form',
@@ -25,19 +25,19 @@ import { SportsService } from '../sports.service';
     ToastModule,
     ProgressSpinnerModule,
   ],
-  providers: [MessageService],
+  providers: [],
   templateUrl: './sports-form.html',
 })
 export class SportsFormComponent implements OnInit {
-  private readonly sportsService = inject(SportsService);
+  private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly messageService = inject(MessageService);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly isLoading = signal(false);
+  readonly isLoading = this.store.selectSignal(sportsFeature.selectLoading);
   readonly sportId = signal<string | null>(null);
+  readonly selectedSport = this.store.selectSignal(sportsFeature.selectSelectedSport);
   readonly originalFormValue = signal<FormState>({ name: '' });
   readonly currentFormValue = signal<FormState>({ name: '' });
   readonly isFormValid = signal(false);
@@ -85,32 +85,26 @@ export class SportsFormComponent implements OnInit {
     this.isFormValid.set(this.sportForm.valid);
   }
 
+  constructor() {
+    // Effect to watch selectedSport changes
+    effect(() => {
+      const sport = this.selectedSport();
+      if (sport) {
+        const formValue = { name: sport.name };
+        this.sportForm.patchValue(formValue);
+        this.originalFormValue.set(formValue);
+        this.currentFormValue.set(formValue);
+        this.sportForm.markAsPristine();
+      }
+    });
+  }
+
   private loadSportData() {
     const sportId = this.route.snapshot.paramMap.get('id');
     this.sportId.set(sportId);
 
     if (sportId) {
-      this.isLoading.set(true);
-
-      this.sportsService
-        .getSportById(sportId)
-        .pipe(
-          takeUntilDestroyed(this.destroyRef),
-          finalize(() => this.isLoading.set(false)),
-        )
-        .subscribe({
-          next: (sport) => {
-            const formValue = { name: sport.name };
-            this.sportForm.patchValue(formValue);
-            this.originalFormValue.set(formValue); // Store original value
-            this.currentFormValue.set(formValue); // Set current value
-            this.sportForm.markAsPristine();
-          },
-          error: (error) => {
-            console.error('Error loading sport:', error);
-            this.showErrorMessage('Failed to load sport data');
-          },
-        });
+      this.store.dispatch(SportsActions.loadSports({ id: sportId }));
     }
   }
 
@@ -120,32 +114,17 @@ export class SportsFormComponent implements OnInit {
       return;
     }
 
-    this.isLoading.set(true);
     const formValue = this.sportForm.value as FormState;
 
-    const operation$ = this.isEditMode()
-      ? this.updateSport(formValue)
-      : this.createSport(formValue);
+    if (this.isEditMode()) {
+      const updateData: UpdateSportDto = { name: formValue.name };
+      this.store.dispatch(SportsActions.updateSport({ id: this.sportId()!, sport: updateData }));
+    } else {
+      const createData: CreateSportDto = { name: formValue.name };
+      this.store.dispatch(SportsActions.createSport({ sport: createData }));
+    }
 
-    operation$
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.isLoading.set(false)),
-      )
-      .subscribe({
-        next: () => {
-          const message = this.isEditMode()
-            ? 'Sport updated successfully'
-            : 'Sport created successfully';
-          this.showSuccessMessage(message);
-          this.navigateToSportsList();
-        },
-        error: (error) => {
-          console.error('Error saving sport:', error);
-          const message = this.isEditMode() ? 'Failed to update sport' : 'Failed to create sport';
-          this.showErrorMessage(message);
-        },
-      });
+    this.navigateToSportsList();
   }
 
   onCancel() {
@@ -172,21 +151,6 @@ export class SportsFormComponent implements OnInit {
     return '';
   }
 
-  // Private helper methods
-  private createSport(formValue: FormState) {
-    const createData: CreateSportDto = {
-      name: formValue.name,
-    };
-    return this.sportsService.createSport(createData);
-  }
-
-  private updateSport(formValue: FormState) {
-    const updateData: UpdateSportDto = {
-      name: formValue.name,
-    };
-    return this.sportsService.updateSport(this.sportId()!, updateData);
-  }
-
   private markAllFieldsAsTouched() {
     Object.keys(this.sportForm.controls).forEach((key) => {
       this.sportForm.get(key)?.markAsTouched();
@@ -198,22 +162,6 @@ export class SportsFormComponent implements OnInit {
       name: 'Name',
     };
     return displayNames[fieldName];
-  }
-
-  private showSuccessMessage(detail: string) {
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success',
-      detail,
-    });
-  }
-
-  private showErrorMessage(detail: string) {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail,
-    });
   }
 
   private navigateToSportsList() {

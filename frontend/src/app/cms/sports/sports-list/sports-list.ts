@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { Store } from '@ngrx/store';
+import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
-import { finalize } from 'rxjs/operators';
+import { SportsActions } from '../../../store/sports/sports.actions';
+import { sportsFeature } from '../../../store/sports/sports.store';
 import { Sport } from '../sport.interface';
-import { SportsService } from '../sports.service';
 
 @Component({
   selector: 'app-sports-list',
@@ -25,45 +25,23 @@ import { SportsService } from '../sports.service';
     ToastModule,
     TooltipModule,
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService],
   templateUrl: './sports-list.html',
 })
 export class SportsListComponent implements OnInit {
-  private readonly sportsService = inject(SportsService);
+  private readonly store = inject(Store);
   private readonly router = inject(Router);
   private readonly confirmationService = inject(ConfirmationService);
-  private readonly messageService = inject(MessageService);
-  private readonly destroyRef = inject(DestroyRef);
 
-  readonly sports = signal<Sport[]>([]);
-  readonly isLoading = signal(false);
+  readonly sports = this.store.selectSignal(sportsFeature.selectSports);
+  readonly isLoading = this.store.selectSignal(sportsFeature.selectLoading);
 
-  ngOnInit() {
-    this.loadSports();
+  get sportsArray(): Sport[] {
+    return [...(this.sports() || [])];
   }
 
-  private loadSports() {
-    this.isLoading.set(true);
-
-    this.sportsService
-      .getSports()
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.isLoading.set(false)),
-      )
-      .subscribe({
-        next: (response) => {
-          this.sports.set(response.data);
-        },
-        error: (error) => {
-          console.error('Error loading sports:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to load sports',
-          });
-        },
-      });
+  ngOnInit() {
+    this.store.dispatch(SportsActions.loadSports({}));
   }
 
   onAddSport() {
@@ -81,37 +59,7 @@ export class SportsListComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
-        this.isLoading.set(true);
-
-        this.sportsService
-          .deleteSport(sport.id)
-          .pipe(
-            takeUntilDestroyed(this.destroyRef),
-            finalize(() => this.isLoading.set(false)),
-          )
-          .subscribe({
-            next: () => {
-              // Remove the sport from the current list instead of reloading
-              const updatedSports = this.sports().filter((s: Sport) => s.id !== sport.id);
-              this.sports.set(updatedSports);
-
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: `"${sport.name}" deleted successfully`,
-                life: 3000,
-              });
-            },
-            error: (error) => {
-              console.error('Error deleting sport:', error);
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Failed to delete sport',
-                life: 5000,
-              });
-            },
-          });
+        this.store.dispatch(SportsActions.deleteSport({ id: sport.id }));
       },
     });
   }

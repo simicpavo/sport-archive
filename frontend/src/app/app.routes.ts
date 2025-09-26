@@ -13,7 +13,7 @@ export const routes: Routes = [
   },
   {
     path: 'cms',
-    loadChildren: () => import('./cms/cms-module').then((m) => m.CmsModule),
+    loadChildren: () => import('./cms/cms.routes').then((m) => m.cmsRoutes),
   },
   {
     path: '**',
