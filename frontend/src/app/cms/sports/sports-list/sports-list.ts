@@ -9,9 +9,9 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { Sport } from '../../../shared/interfaces/sport.interface';
 import { SportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
-import { Sport } from '../sport.interface';
 
 @Component({
   selector: 'app-sports-list',

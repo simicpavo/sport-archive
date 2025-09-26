@@ -1,5 +1,5 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { Sport } from '../../cms/sports/sport.interface';
+import { Sport } from '../../shared/interfaces/sport.interface';
 import { SportsActions } from './sports.actions';
 
 export interface SportsState {

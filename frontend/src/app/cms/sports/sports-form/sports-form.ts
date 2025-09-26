@@ -9,9 +9,13 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
+import {
+  CreateSportDto,
+  FormState,
+  UpdateSportDto,
+} from '../../../shared/interfaces/sport.interface';
 import { SportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
-import { CreateSportDto, FormState, UpdateSportDto } from '../sport.interface';
 
 @Component({
   selector: 'app-sports-form',

@@ -4,7 +4,7 @@ import {
   Sport,
   SportsResponse,
   UpdateSportDto,
-} from '../../cms/sports/sport.interface';
+} from '../../shared/interfaces/sport.interface';
 
 export const SportsActions = createActionGroup({
   source: 'Sports',
