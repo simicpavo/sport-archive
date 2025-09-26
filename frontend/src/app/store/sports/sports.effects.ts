@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { SportsService } from '../../cms/sports/sports.service';
+import { SportsService } from '../../services/sports.service';
 import { SportsActions } from './sports.actions';
 
 export const loadSportsEffect = createEffect(

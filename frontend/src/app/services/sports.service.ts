@@ -2,7 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CreateSportDto, Sport, SportsResponse, UpdateSportDto } from './sport.interface';
+import {
+  CreateSportDto,
+  Sport,
+  SportsResponse,
+  UpdateSportDto,
+} from '../shared/interfaces/sport.interface';
 
 @Injectable({
   providedIn: 'root',
