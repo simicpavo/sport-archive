@@ -1,0 +1,67 @@
+<div class="content-types-form p-4 max-w-screen-lg mx-auto">
+  <div class="max-w-md mx-auto">
+    <div class="mb-6 text-center">
+      <h2 class="text-3xl font-bold m-0 text-900">{{ pageTitle() }}</h2>
+      <p class="text-color-secondary mt-2 text-lg">
+        {{
+          isEditMode() ? 'Update content type information' : 'Add a new content type to the system'
+        }}
+      </p>
+    </div>
+
+    @if (isLoading()) {
+      <div class="flex justify-content-center mb-4">
+        <p-progressSpinner
+          strokeWidth="4"
+          [style]="{ width: '50px', height: '50px' }"
+        ></p-progressSpinner>
+      </div>
+    }
+
+    <p-card [class.opacity-50]="isLoading()">
+      <ng-template pTemplate="content">
+        <form [formGroup]="contentTypeForm" (ngSubmit)="onSubmit()">
+          <div class="field mb-4">
+            <label for="name" class="block font-medium mb-2"> Content Type Name * </label>
+            <input
+              id="name"
+              type="text"
+              pInputText
+              formControlName="name"
+              placeholder="Enter content type name (e.g., Article, Video, Podcast)"
+              class="w-full"
+              [class.p-invalid]="isFieldInvalid('name')"
+              autocomplete="off"
+            />
+            @if (getFieldError('name')) {
+              <small class="p-error block mt-1"> {{ getFieldError('name') }} </small>
+            }
+          </div>
+
+          <div class="flex gap-2 justify-content-end pt-4">
+            <p-button
+              type="button"
+              label="Cancel"
+              severity="secondary"
+              [outlined]="true"
+              (onClick)="cancelButton()"
+              [disabled]="isLoading()"
+            >
+            </p-button>
+
+            <p-button
+              type="submit"
+              [label]="submitButtonText()"
+              [loading]="isLoading()"
+              [disabled]="contentTypeForm.invalid || (isEditMode() && isNameUnchanged)"
+              icon="pi pi-check"
+            >
+            </p-button>
+          </div>
+        </form>
+      </ng-template>
+    </p-card>
+  </div>
+</div>
+
+<p-toast></p-toast>
