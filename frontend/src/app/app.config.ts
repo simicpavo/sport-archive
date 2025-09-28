@@ -14,7 +14,7 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import Material from '@primeuix/themes/material';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
-import { NewsEffects } from './store/news/news.effects';
+import { applyTimeFilterEffect, loadNewsEffect } from './store/news/news.effects';
 import { newsReducer } from './store/news/news.store';
 
 export const appConfig: ApplicationConfig = {
@@ -37,7 +37,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideClientHydration(withEventReplay()),
     provideStore({ news: newsReducer }),
-    provideEffects([NewsEffects]),
+    provideEffects({ applyTimeFilterEffect, loadNewsEffect }),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
   ],
 };

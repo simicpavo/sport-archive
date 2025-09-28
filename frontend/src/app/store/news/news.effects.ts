@@ -1,92 +1,65 @@
-import { inject, Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { of } from 'rxjs';
-import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, of, switchMap, withLatestFrom } from 'rxjs';
 import { MediaNewsService } from '../../services/media-news.service';
-import * as NewsActions from './news.actions';
+import { NewsActions } from './news.actions';
 import { newsFeature, NewsState } from './news.store';
 
-@Injectable()
-export class NewsEffects {
-  private actions$ = inject(Actions);
-  private mediaNewsService = inject(MediaNewsService);
-  private store = inject(Store<{ news: NewsState }>);
-
-  loadInitialNews$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(NewsActions.loadInitialNews),
-      withLatestFrom(this.store.select(newsFeature.selectSelectedFilter)),
-      switchMap(([{ filters }, selectedFilter]) => {
-        // Use time filter method to ensure proper sorting is applied
-        return this.mediaNewsService.getMediaNewsWithTimeFilter(selectedFilter, filters).pipe(
-          map((response) => NewsActions.loadInitialNewsSuccess({ response })),
-          catchError((error) => of(NewsActions.loadInitialNewsFailure({ error }))),
-        );
-      }),
-    ),
-  );
-
-  loadMoreNews$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(NewsActions.loadMoreNews),
+export const loadNewsEffect = createEffect(
+  (
+    actions$ = inject(Actions),
+    mediaNewsService = inject(MediaNewsService),
+    store = inject(Store<{ news: NewsState }>),
+  ) => {
+    return actions$.pipe(
+      ofType(NewsActions.loadNews),
       withLatestFrom(
-        this.store.select(newsFeature.selectFilters),
-        this.store.select(newsFeature.selectSelectedFilter),
-        this.store.select(newsFeature.selectCurrentPage),
+        store.select(newsFeature.selectFilters),
+        store.select(newsFeature.selectSelectedFilter),
+        store.select(newsFeature.selectCurrentPage),
       ),
-      switchMap(([, filters, selectedFilter, currentPage]) => {
-        // Use currentPage + 1 directly in the request
-        const nextPageFilters = {
-          ...filters,
-          page: currentPage + 1,
-        };
+      switchMap(
+        ([
+          { isLoadMore = false, filters: actionFilters },
+          storeFilters,
+          selectedFilter,
+          currentPage,
+        ]) => {
+          // Determine which filters to use and page number
+          const filtersToUse = actionFilters || storeFilters;
+          const pageToLoad = isLoadMore ? currentPage + 1 : 1;
 
-        return this.mediaNewsService
-          .getMediaNewsWithTimeFilter(selectedFilter, nextPageFilters)
-          .pipe(
-            map((response) => {
-              return NewsActions.loadMoreNewsSuccess({ response });
-            }),
+          const requestFilters = {
+            ...filtersToUse,
+            page: pageToLoad,
+          };
+
+          return mediaNewsService.getMediaNewsWithTimeFilter(selectedFilter, requestFilters).pipe(
+            map((response) => NewsActions.loadNewsSuccess({ response, isLoadMore })),
             catchError((error) => {
-              console.error('❌ LoadMore Error:', error);
-              return of(NewsActions.loadMoreNewsFailure({ error }));
+              console.error('Load News Error:', error);
+              return of(NewsActions.loadNewsFailure({ error }));
             }),
           );
-      }),
-    ),
-  );
+        },
+      ),
+    );
+  },
+  { functional: true },
+);
 
-  applyTimeFilter$ = createEffect(() =>
-    this.actions$.pipe(
+export const applyTimeFilterEffect = createEffect(
+  (actions$ = inject(Actions), mediaNewsService = inject(MediaNewsService)) => {
+    return actions$.pipe(
       ofType(NewsActions.applyTimeFilter),
       switchMap(({ timeFilter }) =>
-        this.mediaNewsService.getMediaNewsWithTimeFilter(timeFilter, { page: 1, take: 10 }).pipe(
-          map((response) => NewsActions.loadInitialNewsSuccess({ response })),
-          catchError((error) => of(NewsActions.loadInitialNewsFailure({ error }))),
+        mediaNewsService.getMediaNewsWithTimeFilter(timeFilter, { page: 1, take: 10 }).pipe(
+          map((response) => NewsActions.loadNewsSuccess({ response, isLoadMore: false })),
+          catchError((error) => of(NewsActions.loadNewsFailure({ error }))),
         ),
       ),
-    ),
-  );
-
-  refreshNews$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(NewsActions.refreshNews),
-      withLatestFrom(
-        this.store.select(newsFeature.selectFilters),
-        this.store.select(newsFeature.selectSelectedFilter),
-      ),
-      switchMap(([, filters, selectedFilter]) => {
-        return this.mediaNewsService
-          .getMediaNewsWithTimeFilter(selectedFilter, {
-            ...filters,
-            page: 1,
-          })
-          .pipe(
-            map((response) => NewsActions.loadInitialNewsSuccess({ response })),
-            catchError((error) => of(NewsActions.loadInitialNewsFailure({ error }))),
-          );
-      }),
-    ),
-  );
-}
+    );
+  },
+  { functional: true },
+);

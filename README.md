@@ -24,7 +24,7 @@ Automated platform that scrapes Croatian sports portals every 5 minutes, aggrega
 cp .env.example .env.local
 
 # Start services
-docker-compose -f docker-compose.local.yml up -d
+docker-compose -f docker.compose.local.yml up -d
 
 # Setup database
 cd backend
