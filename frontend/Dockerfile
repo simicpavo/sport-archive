@@ -15,7 +15,7 @@ COPY . ./frontend
 WORKDIR /app/frontend
 
 # Build the Angular app
-RUN npm run build
+RUN npm run build --configuration=production
 
 # Stage 2: Run SSR with Node
 FROM node:20-alpine
