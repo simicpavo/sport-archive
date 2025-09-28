@@ -21,7 +21,7 @@ WORKDIR /app/frontend
 RUN sed -i "s|API_URL|${API_URL}|g" src/environments/environment.prod.ts
 
 # Build the Angular app
-RUN npm run build --configuration production
+RUN npm run build --configuration=production
 
 # Stage 2: Run SSR with Node
 FROM node:20-alpine
