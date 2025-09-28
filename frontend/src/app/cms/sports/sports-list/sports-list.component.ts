@@ -26,7 +26,7 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     TooltipModule,
   ],
   providers: [ConfirmationService],
-  templateUrl: './sports-list.html',
+  templateUrl: './sports-list.component.html',
 })
 export class SportsListComponent implements OnInit {
   private readonly store = inject(Store);
@@ -44,15 +44,15 @@ export class SportsListComponent implements OnInit {
     this.store.dispatch(SportsActions.loadSports({}));
   }
 
-  onAddSport() {
+  addSport() {
     this.router.navigate(['/cms/sports/create']);
   }
 
-  onEditSport(sport: Sport) {
+  editSport(sport: Sport) {
     this.router.navigate(['/cms/sports/edit', sport.id]);
   }
 
-  onDeleteSport(sport: Sport) {
+  deleteSport(sport: Sport) {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete "${sport.name}"?`,
       header: 'Delete Confirmation',

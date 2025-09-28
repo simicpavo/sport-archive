@@ -8,7 +8,7 @@
       <p-button
         icon="pi pi-plus"
         label="Add Sport"
-        (click)="onAddSport()"
+        (onClick)="addSport()"
         severity="success"
         [raised]="true"
         size="large"
@@ -57,10 +57,14 @@
             <span class="font-medium">{{ sport.name }}</span>
           </td>
           <td>
-            <span class="text-sm text-color-secondary"> {{ sport.createdAt | date:'short' }} </span>
+            <span class="text-sm text-color-secondary">
+              {{ sport.createdAt | date: 'short' }}
+            </span>
           </td>
           <td>
-            <span class="text-sm text-color-secondary"> {{ sport.updatedAt | date:'short' }} </span>
+            <span class="text-sm text-color-secondary">
+              {{ sport.updatedAt | date: 'short' }}
+            </span>
           </td>
           <td>
             <div class="flex gap-2 align-items-center">
@@ -69,7 +73,7 @@
                 size="small"
                 pTooltip="Edit Sport"
                 tooltipPosition="top"
-                (click)="onEditSport(sport)"
+                (onClick)="editSport(sport)"
                 [rounded]="true"
               >
                 <i class="pi pi-pencil"></i>
@@ -79,7 +83,7 @@
                 size="small"
                 pTooltip="Delete Sport"
                 tooltipPosition="top"
-                (click)="onDeleteSport(sport)"
+                (onClick)="deleteSport(sport)"
                 [rounded]="true"
               >
                 <i class="pi pi-trash"></i>
