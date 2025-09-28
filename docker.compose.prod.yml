@@ -40,7 +40,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - API_URL=${VPS_HOST}:3000
+        - API_URL=${VPS_HOST}
     restart: unless-stopped
     ports:
       - "4000:4000"
