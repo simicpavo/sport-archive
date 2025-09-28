@@ -51,6 +51,7 @@ jobs:
             JWT_SECRET=${{ secrets.JWT_SECRET }}
             LOG_LEVEL=info
             CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
+            VPS_HOST=${{ secrets.VPS_HOST }}
             ENVEOF
             
             # Deploy with Docker Compose
