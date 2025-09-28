@@ -34,25 +34,28 @@ jobs:
             --exclude '.env*' \
             ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/opt/sport-archive/
 
+          # Create .env.prod file
+          cat > .env.prod << 'ENVEOF'
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+          DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}
+          PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}
+          PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}
+          NODE_ENV=production
+          PORT=3000
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          LOG_LEVEL=info
+          CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
+          VPS_HOST=${{ secrets.VPS_HOST }}
+          ENVEOF
+
+          # Copy .env.prod to VPS
+          scp .env.prod ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/opt/sport-archive/
+
           # Deploy application
           ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
             cd /opt/sport-archive
-            
-            # Create .env.prod from secrets
-            cat > .env.prod << 'ENVEOF'
-            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-            DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}
-            PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}
-            PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}
-            NODE_ENV=production
-            PORT=3000
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            LOG_LEVEL=info
-            CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
-            VPS_HOST=${{ secrets.VPS_HOST }}
-            ENVEOF
             
             # Deploy with Docker Compose
             docker-compose -f docker.compose.prod.yml down
@@ -78,4 +81,3 @@ jobs:
           else
             echo "❌ Frontend health check failed"
           fi
-
