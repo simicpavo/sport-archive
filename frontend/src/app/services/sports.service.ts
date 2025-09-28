@@ -13,7 +13,7 @@ import {
   providedIn: 'root',
 })
 export class SportsService {
-  private readonly apiUrl = '/sports';
+  private readonly apiUrl = 'http://localhost:3000/sports';
   private readonly http = inject(HttpClient);
 
   getSports(): Observable<SportsResponse> {
