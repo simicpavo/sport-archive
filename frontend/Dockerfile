@@ -1,6 +1,9 @@
 # Stage 1: Build Angular Universal (SSR)
 FROM node:20-alpine AS build
 
+# Accept build argument for API URL
+ARG API_URL
+
 WORKDIR /app
 
 # Copy root package.json and frontend package.json
@@ -14,8 +17,11 @@ RUN npm install
 COPY . ./frontend
 WORKDIR /app/frontend
 
+# Replace API_URL placeholder with actual value
+RUN sed -i "s|API_URL|${API_URL}|g" src/environments/environment.prod.ts
+
 # Build the Angular app
-RUN npm run build --configuration=production
+RUN npm run build --configuration production
 
 # Stage 2: Run SSR with Node
 FROM node:20-alpine
