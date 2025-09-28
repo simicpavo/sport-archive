@@ -20,6 +20,8 @@ import * as newsEffects from './store/news/news.effects';
 import { newsReducer } from './store/news/news.store';
 import * as sportsEffects from './store/sports/sports.effects';
 import { sportsReducer } from './store/sports/sports.store';
+import * as contentTypesEffects from './store/content-types/content-types.effects';
+import { contentTypesReducer } from './store/content-types/content-types.store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -43,8 +45,9 @@ export const appConfig: ApplicationConfig = {
     provideStore({
       news: newsReducer,
       sports: sportsReducer,
+      contentTypes: contentTypesReducer,
     }),
-    provideEffects(newsEffects, sportsEffects),
+    provideEffects(newsEffects, sportsEffects, contentTypesEffects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     MessageService,
   ],
