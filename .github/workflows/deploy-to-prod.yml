@@ -1,8 +1,8 @@
-name: Deploy to VPS
+name: Deploy to ProductionVPS
 
 on:
   push:
-    branches: [main, feat/27-deploy-to-vps]
+    branches: [main]
 
 jobs:
   deploy:
