@@ -31,11 +31,29 @@
               formControlName="name"
               placeholder="Enter sport name (e.g., Football, Basketball)"
               class="w-full"
-              [class.p-invalid]="isFieldInvalid('name')"
               autocomplete="off"
             />
-            @if (getFieldError('name')) {
-              <small class="p-error block mt-1"> {{ getFieldError('name') }} </small>
+            @if (
+              sportForm.get('name')?.hasError('required') &&
+              sportForm.get('name')?.dirty &&
+              sportForm.get('name')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field is required!
+              </span>
+            }
+            @if (
+              sportForm.get('name')?.hasError('minlength') &&
+              sportForm.get('name')?.dirty &&
+              sportForm.get('name')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                Name must be at least 2 characters long.
+              </span>
             }
           </div>
 
@@ -46,7 +64,7 @@
               label="Cancel"
               severity="secondary"
               [outlined]="true"
-              (onClick)="cancelButton()"
+              (onClick)="navigateToSportsList()"
               [disabled]="isLoading()"
             >
             </p-button>

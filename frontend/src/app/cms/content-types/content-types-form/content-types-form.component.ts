@@ -107,36 +107,13 @@ export class ContentTypesFormComponent implements OnInit {
     this.navigateToContentTypesList();
   }
 
-  cancelButton() {
-    this.navigateToContentTypesList();
-  }
-
-  isFieldInvalid(fieldName: keyof FormState): boolean {
-    const field = this.contentTypeForm.get(fieldName);
-    return !!(field && field.invalid && (field.dirty || field.touched));
-  }
-
-  getFieldError(fieldName: keyof FormState): string {
-    const field = this.contentTypeForm.get(fieldName);
-    if (field?.errors) {
-      if (field.errors['required']) {
-        return `${fieldName} is required`;
-      }
-      if (field.errors['minlength']) {
-        const requiredLength = field.errors['minlength'].requiredLength;
-        return `${fieldName} must be at least ${requiredLength} characters`;
-      }
-    }
-    return '';
-  }
-
   private markAllFieldsAsTouched() {
     Object.keys(this.contentTypeForm.controls).forEach((key) => {
       this.contentTypeForm.get(key)?.markAsTouched();
     });
   }
 
-  private navigateToContentTypesList() {
+  protected navigateToContentTypesList() {
     this.router.navigate(['/cms/content-types']);
   }
 }

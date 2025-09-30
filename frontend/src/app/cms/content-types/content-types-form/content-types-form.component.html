@@ -30,11 +30,29 @@
               formControlName="name"
               placeholder="Enter content type name (e.g., Article, Video, Podcast)"
               class="w-full"
-              [class.p-invalid]="isFieldInvalid('name')"
               autocomplete="off"
             />
-            @if (getFieldError('name')) {
-              <small class="p-error block mt-1"> {{ getFieldError('name') }} </small>
+            @if (
+              contentTypeForm.get('name')?.hasError('required') &&
+              contentTypeForm.get('name')?.dirty &&
+              contentTypeForm.get('name')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field is required!
+              </span>
+            }
+            @if (
+              contentTypeForm.get('name')?.hasError('minlength') &&
+              contentTypeForm.get('name')?.dirty &&
+              contentTypeForm.get('name')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field must be at least 2 characters long!
+              </span>
             }
           </div>
 
@@ -44,7 +62,7 @@
               label="Cancel"
               severity="secondary"
               [outlined]="true"
-              (onClick)="cancelButton()"
+              (onClick)="navigateToContentTypesList()"
               [disabled]="isLoading()"
             >
             </p-button>

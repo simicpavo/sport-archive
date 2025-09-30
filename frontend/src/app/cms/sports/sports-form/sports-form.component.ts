@@ -96,36 +96,13 @@ export class SportsFormComponent implements OnInit {
     this.navigateToSportsList();
   }
 
-  cancelButton() {
-    this.navigateToSportsList();
-  }
-
-  isFieldInvalid(fieldName: keyof FormState): boolean {
-    const field = this.sportForm.get(fieldName);
-    return !!(field && field.invalid && (field.dirty || field.touched));
-  }
-
-  getFieldError(fieldName: keyof FormState): string {
-    const field = this.sportForm.get(fieldName);
-    if (field?.errors) {
-      if (field.errors['required']) {
-        return `${fieldName} is required`;
-      }
-      if (field.errors['minlength']) {
-        const requiredLength = field.errors['minlength'].requiredLength;
-        return `${fieldName} must be at least ${requiredLength} characters`;
-      }
-    }
-    return '';
-  }
-
   private markAllFieldsAsTouched() {
     Object.keys(this.sportForm.controls).forEach((key) => {
       this.sportForm.get(key)?.markAsTouched();
     });
   }
 
-  private navigateToSportsList() {
+  protected navigateToSportsList() {
     this.router.navigate(['/cms/sports']);
   }
 }
