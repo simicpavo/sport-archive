@@ -34,8 +34,8 @@ jobs:
             --exclude '.env*' \
             ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/opt/sport-archive/
 
-          # Create .env.prod file
-          cat > .env.prod << 'ENVEOF'
+          # Create .env file
+          cat > .env << 'ENVEOF'
           POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
@@ -50,8 +50,8 @@ jobs:
           API_URL=http://${{ secrets.VPS_HOST }}:3000
           ENVEOF
 
-          # Copy .env.prod to VPS
-          scp .env.prod ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/opt/sport-archive/
+          # Copy .env to VPS
+          scp .env ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/opt/sport-archive/
 
           # Deploy application
           ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
