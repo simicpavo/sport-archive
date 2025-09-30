@@ -16,12 +16,14 @@ import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 
+import * as contentTypesEffects from './store/content-types/content-types.effects';
+import { contentTypesReducer } from './store/content-types/content-types.store';
+import * as nationalTeamsEffects from './store/national-teams/national-teams.effects';
+import { nationalTeamsReducer } from './store/national-teams/national-teams.store';
 import * as newsEffects from './store/news/news.effects';
 import { newsReducer } from './store/news/news.store';
 import * as sportsEffects from './store/sports/sports.effects';
 import { sportsReducer } from './store/sports/sports.store';
-import * as contentTypesEffects from './store/content-types/content-types.effects';
-import { contentTypesReducer } from './store/content-types/content-types.store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -46,8 +48,9 @@ export const appConfig: ApplicationConfig = {
       news: newsReducer,
       sports: sportsReducer,
       contentTypes: contentTypesReducer,
+      nationalTeams: nationalTeamsReducer,
     }),
-    provideEffects(newsEffects, sportsEffects, contentTypesEffects),
+    provideEffects(newsEffects, sportsEffects, contentTypesEffects, nationalTeamsEffects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     MessageService,
   ],
