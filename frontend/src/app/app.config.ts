@@ -16,6 +16,8 @@ import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 
+import * as clubsEffects from './store/clubs/clubs.effects';
+import { clubsReducer } from './store/clubs/clubs.store';
 import * as contentTypesEffects from './store/content-types/content-types.effects';
 import { contentTypesReducer } from './store/content-types/content-types.store';
 import * as nationalTeamsEffects from './store/national-teams/national-teams.effects';
@@ -49,8 +51,15 @@ export const appConfig: ApplicationConfig = {
       sports: sportsReducer,
       contentTypes: contentTypesReducer,
       nationalTeams: nationalTeamsReducer,
+      clubs: clubsReducer,
     }),
-    provideEffects(newsEffects, sportsEffects, contentTypesEffects, nationalTeamsEffects),
+    provideEffects(
+      newsEffects,
+      sportsEffects,
+      contentTypesEffects,
+      nationalTeamsEffects,
+      clubsEffects,
+    ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     MessageService,
   ],
