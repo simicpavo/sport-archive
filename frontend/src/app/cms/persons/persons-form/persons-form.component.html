@@ -1,0 +1,148 @@
+<div class="persons-form p-4 max-w-screen-lg mx-auto">
+  <div class="max-w-md mx-auto">
+    <!-- Header -->
+    <div class="mb-6 text-center">
+      <h2 class="text-3xl font-bold m-0 text-900">{{ pageTitle() }}</h2>
+      <p class="text-color-secondary mt-2 text-lg">
+        {{ isEditMode() ? 'Update person information' : 'Add a new person to the system' }}
+      </p>
+    </div>
+
+    <!-- Loading Spinner -->
+    @if (isLoading()) {
+      <div class="flex justify-content-center mb-4">
+        <p-progressSpinner
+          strokeWidth="4"
+          [style]="{ width: '50px', height: '50px' }"
+        ></p-progressSpinner>
+      </div>
+    }
+
+    <!-- Form Card -->
+    <p-card [class.opacity-50]="isLoading()">
+      <ng-template pTemplate="content">
+        <form [formGroup]="personForm" (ngSubmit)="onSubmit()">
+          <div class="field mb-4">
+            <label for="firstName" class="block font-medium mb-2"> First Name </label>
+            <input
+              id="firstName"
+              type="text"
+              pInputText
+              formControlName="firstName"
+              placeholder="Enter first name"
+              class="w-full"
+              autocomplete="off"
+            />
+            @if (
+              personForm.get('firstName')?.hasError('required') &&
+              personForm.get('firstName')?.dirty &&
+              personForm.get('firstName')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field is required!
+              </span>
+            }
+            <label for="lastName" class="block font-medium mb-2 mt-2"> Last Name </label>
+            <input
+              id="lastName"
+              type="text"
+              pInputText
+              formControlName="lastName"
+              placeholder="Enter last name"
+              class="w-full"
+              autocomplete="off"
+            />
+            @if (
+              personForm.get('lastName')?.hasError('required') &&
+              personForm.get('lastName')?.dirty &&
+              personForm.get('lastName')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field is required!
+              </span>
+            }
+            <label for="nickname" class="block font-medium mb-2 mt-2"> Nickname </label>
+            <input
+              id="nickname"
+              type="text"
+              pInputText
+              formControlName="nickname"
+              placeholder="Enter nickname"
+              class="w-full"
+              autocomplete="off"
+            />
+            <label for="nationality" class="block font-medium mb-2 mt-2"> Nationality </label>
+            <input
+              id="nationality"
+              type="text"
+              pInputText
+              formControlName="nationality"
+              placeholder="Enter nationality"
+              class="w-full"
+              autocomplete="off"
+            />
+            @if (
+              personForm.get('nationality')?.hasError('required') &&
+              personForm.get('nationality')?.dirty &&
+              personForm.get('nationality')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field is required!
+              </span>
+            }
+            <label for="birthDate" class="block font-medium mb-2 mt-2"> Birth Date </label>
+            <p-datePicker
+              id="birthDate"
+              type="date"
+              formControlName="birthDate"
+              placeholder="Enter birth date"
+              class="w-full"
+              autocomplete="off"
+            />
+            @if (
+              personForm.get('nickname')?.hasError('required') &&
+              personForm.get('nickname')?.dirty &&
+              personForm.get('nickname')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field is required!
+              </span>
+            }
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-2 justify-content-end pt-4">
+            <p-button
+              type="button"
+              label="Cancel"
+              severity="secondary"
+              [outlined]="true"
+              (onClick)="navigateToPersonsList()"
+              [disabled]="isLoading()"
+            >
+            </p-button>
+
+            <p-button
+              type="submit"
+              [label]="submitButtonText()"
+              [loading]="isLoading()"
+              [disabled]="personForm.invalid || (isEditMode() && arePropertiesUnchanged)"
+              icon="pi pi-check"
+            >
+            </p-button>
+          </div>
+        </form>
+      </ng-template>
+    </p-card>
+  </div>
+</div>
+
+<p-toast></p-toast>

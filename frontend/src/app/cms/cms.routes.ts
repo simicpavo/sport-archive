@@ -19,5 +19,9 @@ export const cmsRoutes: Routes = [
     path: 'clubs',
     loadChildren: () => import('./clubs/clubs.routes').then((m) => m.clubsRoutes),
   },
+  {
+    path: 'persons',
+    loadChildren: () => import('./persons/persons.routes').then((m) => m.personsRoutes),
+  },
   { path: '', redirectTo: 'sports', pathMatch: 'full' },
 ];
