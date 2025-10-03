@@ -36,10 +36,6 @@ export class SportsListComponent implements OnInit {
   readonly sports = this.store.selectSignal(sportsFeature.selectSports);
   readonly isLoading = this.store.selectSignal(sportsFeature.selectLoading);
 
-  get sportsArray(): Sport[] {
-    return [...(this.sports() || [])];
-  }
-
   ngOnInit() {
     this.store.dispatch(SportsActions.loadSports({}));
   }

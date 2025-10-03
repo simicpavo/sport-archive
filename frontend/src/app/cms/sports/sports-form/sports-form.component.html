@@ -73,7 +73,9 @@
               type="submit"
               [label]="submitButtonText()"
               [loading]="isLoading()"
-              [disabled]="sportForm.invalid || (isEditMode() && isNameUnchanged)"
+              [disabled]="
+                sportForm.invalid || (isEditMode() && sportForm.controls.name.dirty === false)
+              "
               icon="pi pi-check"
             >
             </p-button>

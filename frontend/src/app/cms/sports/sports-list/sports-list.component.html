@@ -21,7 +21,7 @@
   <!-- Data Table -->
   <div class="card">
     <p-table
-      [value]="sportsArray"
+      [value]="sports() || []"
       [loading]="isLoading()"
       [paginator]="true"
       [rows]="10"

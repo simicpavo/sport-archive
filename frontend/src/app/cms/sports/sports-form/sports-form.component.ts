@@ -49,10 +49,6 @@ export class SportsFormComponent implements OnInit {
   readonly submitButtonText = computed(() => (this.isEditMode() ? 'Update Sport' : 'Create Sport'));
   readonly pageTitle = computed(() => (this.isEditMode() ? 'Edit Sport' : 'Create New Sport'));
 
-  get isNameUnchanged(): boolean {
-    return this.sportForm.get('name')?.value === this.selectedSport()?.name;
-  }
-
   constructor() {
     effect(() => {
       const sport = this.selectedSport();
