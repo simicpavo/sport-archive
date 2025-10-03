@@ -57,16 +57,6 @@ export class PersonsFormComponent implements OnInit {
   );
   readonly pageTitle = computed(() => (this.isEditMode() ? 'Edit Person' : 'Create New Person'));
 
-  get arePropertiesUnchanged(): boolean {
-    return (
-      this.personForm.get('firstName')?.value === this.selectedPerson()?.firstName &&
-      this.personForm.get('lastName')?.value === this.selectedPerson()?.lastName &&
-      this.personForm.get('nickname')?.value === this.selectedPerson()?.nickname &&
-      this.personForm.get('birthDate')?.value === this.selectedPerson()?.birthDate &&
-      this.personForm.get('nationality')?.value === this.selectedPerson()?.nationality
-    );
-  }
-
   constructor() {
     effect(() => {
       const person = this.selectedPerson();

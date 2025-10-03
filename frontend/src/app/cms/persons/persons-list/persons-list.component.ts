@@ -36,10 +36,6 @@ export class PersonsListComponent implements OnInit {
   readonly persons = this.store.selectSignal(personsFeature.selectPersons);
   readonly isLoading = this.store.selectSignal(personsFeature.selectLoading);
 
-  get personsArray(): Person[] {
-    return [...(this.persons() || [])];
-  }
-
   ngOnInit() {
     this.store.dispatch(personsActions.loadPersons({}));
   }

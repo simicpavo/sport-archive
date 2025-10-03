@@ -134,7 +134,15 @@
               type="submit"
               [label]="submitButtonText()"
               [loading]="isLoading()"
-              [disabled]="personForm.invalid || (isEditMode() && arePropertiesUnchanged)"
+              [disabled]="
+                personForm.invalid ||
+                (isEditMode() &&
+                  personForm.controls.firstName.dirty === false &&
+                  personForm.controls.lastName.dirty === false &&
+                  personForm.controls.nickname.dirty === false &&
+                  personForm.controls.birthDate.dirty === false &&
+                  personForm.controls.nationality.dirty === false)
+              "
               icon="pi pi-check"
             >
             </p-button>
