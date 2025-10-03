@@ -71,7 +71,10 @@
               type="submit"
               [label]="submitButtonText()"
               [loading]="isLoading()"
-              [disabled]="contentTypeForm.invalid || (isEditMode() && isNameUnchanged)"
+              [disabled]="
+                contentTypeForm.invalid ||
+                (isEditMode() && contentTypeForm.controls.name.dirty === false)
+              "
               icon="pi pi-check"
             >
             </p-button>

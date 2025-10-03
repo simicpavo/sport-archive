@@ -55,10 +55,6 @@ export class ContentTypesFormComponent implements OnInit {
     this.isEditMode() ? 'Edit Content Type' : 'Create New Content Type',
   );
 
-  get isNameUnchanged(): boolean {
-    return this.contentTypeForm.get('name')?.value === this.selectedContentType()?.name;
-  }
-
   ngOnInit() {
     this.loadContentTypeData();
   }

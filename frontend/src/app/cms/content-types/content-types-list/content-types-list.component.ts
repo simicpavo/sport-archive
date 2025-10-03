@@ -36,10 +36,6 @@ export class ContentTypesListComponent implements OnInit {
   readonly contentTypes = this.store.selectSignal(contentTypesFeature.selectContentTypes);
   readonly isLoading = this.store.selectSignal(contentTypesFeature.selectLoading);
 
-  get contentTypesArray(): ContentType[] {
-    return [...(this.contentTypes() || [])];
-  }
-
   ngOnInit() {
     this.store.dispatch(contentTypesActions.loadContentTypes({}));
   }

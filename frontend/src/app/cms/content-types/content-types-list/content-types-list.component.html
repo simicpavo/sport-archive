@@ -21,7 +21,7 @@
   <!-- Data Table -->
   <div class="card">
     <p-table
-      [value]="contentTypesArray"
+      [value]="contentTypes() || []"
       [loading]="isLoading()"
       [paginator]="true"
       [rows]="10"
@@ -58,12 +58,12 @@
           </td>
           <td>
             <span class="text-sm text-color-secondary">
-              {{ contentType.createdAt | date:'short' }}
+              {{ contentType.createdAt | date: 'short' }}
             </span>
           </td>
           <td>
             <span class="text-sm text-color-secondary">
-              {{ contentType.updatedAt | date:'short' }}
+              {{ contentType.updatedAt | date: 'short' }}
             </span>
           </td>
           <td>
