@@ -10,7 +10,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
 import { CreateClubDto, FormState, UpdateClubDto } from '../../../shared/interfaces/club.interface';
-import { Sport } from '../../../shared/interfaces/sport.interface';
 import { clubsActions } from '../../../store/clubs/clubs.actions';
 import { clubsFeature } from '../../../store/clubs/clubs.store';
 import { SportsActions } from '../../../store/sports/sports.actions';
@@ -40,13 +39,9 @@ export class ClubsFormComponent implements OnInit {
 
   readonly isLoading = this.store.selectSignal(clubsFeature.selectLoading);
   readonly clubId = signal<string | null>(null);
-  readonly selectedClub = computed(() => {
-    const clubs = this.store.selectSignal(clubsFeature.selectClubs)();
-    const id = this.clubId();
-    return id ? clubs?.find((club) => club.id === id) : null;
-  });
   readonly isEditMode = computed(() => this.clubId() !== null);
-  sports = this.store.selectSignal(sportsFeature.selectSports);
+  readonly selectedClub = this.store.selectSignal(clubsFeature.selectSelectedClub);
+  readonly sports = this.store.selectSignal(sportsFeature.selectSports);
 
   readonly clubForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -56,21 +51,6 @@ export class ClubsFormComponent implements OnInit {
   readonly submitButtonText = computed(() => (this.isEditMode() ? 'Update Club' : 'Create Club'));
   readonly pageTitle = computed(() => (this.isEditMode() ? 'Edit Club' : 'Create New Club'));
 
-  get sportsArray(): Sport[] {
-    return [...(this.sports() || [])];
-  }
-
-  get isFormUnchanged(): boolean {
-    const currentValues = this.clubForm.value;
-    const originalClub = this.selectedClub();
-
-    if (!originalClub) return false;
-
-    return (
-      currentValues.name === originalClub.name && currentValues.sportId === originalClub.sportId
-    );
-  }
-
   ngOnInit() {
     this.loadClubData();
   }
@@ -78,10 +58,16 @@ export class ClubsFormComponent implements OnInit {
   constructor() {
     effect(() => {
       const club = this.selectedClub();
-      if (club) {
-        const formValue = { name: club.name, sportId: club.sportId };
-        this.clubForm.patchValue(formValue);
-        this.clubForm.markAsPristine();
+      if (club && this.isEditMode()) {
+        const formValue = {
+          name: club.name,
+          sportId: club.sportId,
+        };
+
+        setTimeout(() => {
+          this.clubForm.patchValue(formValue);
+          this.clubForm.markAsPristine();
+        }, 0);
       }
     });
   }

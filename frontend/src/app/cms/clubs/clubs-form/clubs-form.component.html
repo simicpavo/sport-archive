@@ -53,7 +53,7 @@
               </span>
             }
             <p-select
-              [options]="sportsArray"
+              [options]="sports() || []"
               optionLabel="name"
               optionValue="id"
               placeholder="Select Sport"
@@ -90,7 +90,12 @@
               type="submit"
               [label]="submitButtonText()"
               [loading]="isLoading()"
-              [disabled]="clubForm.invalid || (isEditMode() && isFormUnchanged)"
+              [disabled]="
+                clubForm.invalid ||
+                (isEditMode() &&
+                  clubForm.controls.name.dirty === false &&
+                  clubForm.controls.sportId.dirty === false)
+              "
               icon="pi pi-check"
             >
             </p-button>
