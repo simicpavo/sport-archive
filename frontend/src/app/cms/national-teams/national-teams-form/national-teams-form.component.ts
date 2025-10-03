@@ -14,7 +14,6 @@ import {
   FormState,
   UpdateNationalTeamDto,
 } from '../../../shared/interfaces/national-team.interface';
-import { Sport } from '../../../shared/interfaces/sport.interface';
 import { nationalTeamsActions } from '../../../store/national-teams/national-teams.actions';
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
 import { SportsActions } from '../../../store/sports/sports.actions';
@@ -44,13 +43,11 @@ export class NationalTeamsFormComponent implements OnInit {
 
   readonly isLoading = this.store.selectSignal(nationalTeamsFeature.selectLoading);
   readonly nationalTeamId = signal<string | null>(null);
-  readonly selectedNationalTeam = computed(() => {
-    const teams = this.store.selectSignal(nationalTeamsFeature.selectNationalTeams)();
-    const id = this.nationalTeamId();
-    return id ? teams?.find((team) => team.id === id) : null;
-  });
   readonly isEditMode = computed(() => this.nationalTeamId() !== null);
-  sports = this.store.selectSignal(sportsFeature.selectSports);
+  readonly selectedNationalTeam = this.store.selectSignal(
+    nationalTeamsFeature.selectSelectedNationalTeam,
+  );
+  readonly sports = this.store.selectSignal(sportsFeature.selectSports);
 
   readonly nationalTeamForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -64,21 +61,6 @@ export class NationalTeamsFormComponent implements OnInit {
     this.isEditMode() ? 'Edit National Team' : 'Create New National Team',
   );
 
-  get sportsArray(): Sport[] {
-    return [...(this.sports() || [])];
-  }
-
-  get isFormUnchanged(): boolean {
-    const currentValues = this.nationalTeamForm.value;
-    const originalTeam = this.selectedNationalTeam();
-
-    if (!originalTeam) return false;
-
-    return (
-      currentValues.name === originalTeam.name && currentValues.sportId === originalTeam.sportId
-    );
-  }
-
   ngOnInit() {
     this.loadNationalTeamData();
   }
@@ -86,10 +68,13 @@ export class NationalTeamsFormComponent implements OnInit {
   constructor() {
     effect(() => {
       const nationalTeam = this.selectedNationalTeam();
-      if (nationalTeam) {
+      if (nationalTeam && this.isEditMode()) {
         const formValue = { name: nationalTeam.name, sportId: nationalTeam.sportId };
-        this.nationalTeamForm.patchValue(formValue);
-        this.nationalTeamForm.markAsPristine();
+
+        setTimeout(() => {
+          this.nationalTeamForm.patchValue(formValue);
+          this.nationalTeamForm.markAsPristine();
+        });
       }
     });
   }
