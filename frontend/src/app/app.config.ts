@@ -18,6 +18,8 @@ import { routes } from './app.routes';
 
 import * as clubsEffects from './store/clubs/clubs.effects';
 import { clubsReducer } from './store/clubs/clubs.store';
+import * as competitionsEffects from './store/competitions/competitions.effects';
+import { competitionsReducer } from './store/competitions/competitions.store';
 import * as contentTypesEffects from './store/content-types/content-types.effects';
 import { contentTypesReducer } from './store/content-types/content-types.store';
 import * as nationalTeamsEffects from './store/national-teams/national-teams.effects';
@@ -55,6 +57,7 @@ export const appConfig: ApplicationConfig = {
       nationalTeams: nationalTeamsReducer,
       clubs: clubsReducer,
       persons: personsReducer,
+      competitions: competitionsReducer,
     }),
     provideEffects(
       newsEffects,
@@ -63,6 +66,7 @@ export const appConfig: ApplicationConfig = {
       nationalTeamsEffects,
       clubsEffects,
       personsEffects,
+      competitionsEffects,
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     MessageService,
