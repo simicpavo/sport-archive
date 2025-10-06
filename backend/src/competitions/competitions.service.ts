@@ -3,10 +3,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from 'generated/prisma';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCompetitionDto } from './dto/create-competition.dto';
 import { UpdateCompetitionDto } from './dto/update-competition.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from 'generated/prisma';
 
 @Injectable()
 export class CompetitionsService {
@@ -24,7 +24,13 @@ export class CompetitionsService {
       throw new ConflictException('Competition already exists');
     }
     return this.prisma.competition.create({
-      data: { name, sportId: dto.sportId },
+      data: {
+        name,
+        sportId: dto.sportId,
+        season: dto.season,
+        startDate: dto.startDate,
+        endDate: dto.endDate,
+      },
     });
   }
 
