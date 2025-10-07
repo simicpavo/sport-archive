@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { NationalTeam } from '../shared/interfaces/national-team.interface';
+import { NationalTeam, NationalTeamResponse } from '../shared/interfaces/national-team.interface';
 
 @Injectable({ providedIn: 'root' })
 export class NationalTeamsService {
   private readonly apiUrl = 'http://localhost:3000/national-teams';
   private readonly http = inject(HttpClient);
 
-  getNationalTeams() {
+  getNationalTeams(): Observable<NationalTeamResponse> {
     return this.http.get<NationalTeam[]>(this.apiUrl).pipe(
       map((nationalTeams: NationalTeam[]) => ({
         data: nationalTeams,

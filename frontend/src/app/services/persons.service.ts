@@ -11,7 +11,7 @@ import {
 @Injectable({ providedIn: 'root' })
 export class PersonsService {
   private readonly apiUrl = 'http://localhost:3000/persons';
-  http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
   getPersons(): Observable<PersonResponse> {
     return this.http.get<Person[]>(this.apiUrl).pipe(
