@@ -22,6 +22,8 @@ import * as competitionsEffects from './store/competitions/competitions.effects'
 import { competitionsReducer } from './store/competitions/competitions.store';
 import * as contentTypesEffects from './store/content-types/content-types.effects';
 import { contentTypesReducer } from './store/content-types/content-types.store';
+import * as mediaSourcesEffects from './store/media-sources/media-sources.effects';
+import { mediaSourcesReducer } from './store/media-sources/media-sources.store';
 import * as nationalTeamsEffects from './store/national-teams/national-teams.effects';
 import { nationalTeamsReducer } from './store/national-teams/national-teams.store';
 import * as newsEffects from './store/news/news.effects';
@@ -61,6 +63,7 @@ export const appConfig: ApplicationConfig = {
       persons: personsReducer,
       competitions: competitionsReducer,
       records: recordsReducer,
+      mediaSources: mediaSourcesReducer,
     }),
     provideEffects(
       newsEffects,
@@ -71,6 +74,7 @@ export const appConfig: ApplicationConfig = {
       personsEffects,
       competitionsEffects,
       recordsEffects,
+      mediaSourcesEffects,
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     MessageService,
