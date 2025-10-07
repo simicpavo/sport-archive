@@ -6,7 +6,7 @@ import {
   UpdateSportDto,
 } from '../../shared/interfaces/sport.interface';
 
-export const SportsActions = createActionGroup({
+export const sportsActions = createActionGroup({
   source: 'Sports',
   events: {
     loadSports: props<{ id?: string }>(),

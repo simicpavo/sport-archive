@@ -30,7 +30,6 @@ import { personsFeature } from '../../../store/persons/persons.store';
     ProgressSpinnerModule,
     DatePickerModule,
   ],
-  providers: [],
   templateUrl: './persons-form.component.html',
 })
 export class PersonsFormComponent implements OnInit {

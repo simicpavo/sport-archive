@@ -10,7 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { Sport } from '../../../shared/interfaces/sport.interface';
-import { SportsActions } from '../../../store/sports/sports.actions';
+import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
@@ -37,7 +37,7 @@ export class SportsListComponent implements OnInit {
   readonly isLoading = this.store.selectSignal(sportsFeature.selectLoading);
 
   ngOnInit() {
-    this.store.dispatch(SportsActions.loadSports({}));
+    this.store.dispatch(sportsActions.loadSports({}));
   }
 
   addSport() {
@@ -55,7 +55,7 @@ export class SportsListComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
-        this.store.dispatch(SportsActions.deleteSport({ id: sport.id }));
+        this.store.dispatch(sportsActions.deleteSport({ id: sport.id }));
       },
     });
   }

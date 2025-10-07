@@ -13,7 +13,7 @@ import {
   FormState,
   UpdateSportDto,
 } from '../../../shared/interfaces/sport.interface';
-import { SportsActions } from '../../../store/sports/sports.actions';
+import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
@@ -28,7 +28,6 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     ToastModule,
     ProgressSpinnerModule,
   ],
-  providers: [],
   templateUrl: './sports-form.component.html',
 })
 export class SportsFormComponent implements OnInit {
@@ -69,7 +68,7 @@ export class SportsFormComponent implements OnInit {
     this.sportId.set(sportId);
 
     if (sportId) {
-      this.store.dispatch(SportsActions.loadSports({ id: sportId }));
+      this.store.dispatch(sportsActions.loadSports({ id: sportId }));
     }
   }
 
@@ -83,10 +82,10 @@ export class SportsFormComponent implements OnInit {
 
     if (this.isEditMode()) {
       const updateData: UpdateSportDto = { name: formValue.name };
-      this.store.dispatch(SportsActions.updateSport({ id: this.sportId()!, sport: updateData }));
+      this.store.dispatch(sportsActions.updateSport({ id: this.sportId()!, sport: updateData }));
     } else {
       const createData: CreateSportDto = { name: formValue.name };
-      this.store.dispatch(SportsActions.createSport({ sport: createData }));
+      this.store.dispatch(sportsActions.createSport({ sport: createData }));
     }
 
     this.navigateToSportsList();

@@ -1,6 +1,6 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 import { Sport } from '../../shared/interfaces/sport.interface';
-import { SportsActions } from './sports.actions';
+import { sportsActions } from './sports.actions';
 
 export interface SportsState {
   sports: Sport[];
@@ -21,13 +21,13 @@ export const initialState: SportsState = {
 export const sportsReducer = createReducer(
   initialState,
 
-  on(SportsActions.loadSports, (state) => ({
+  on(sportsActions.loadSports, (state) => ({
     ...state,
     loading: true,
     error: null,
   })),
 
-  on(SportsActions.loadSportsSuccess, (state, { response, sport }) => ({
+  on(sportsActions.loadSportsSuccess, (state, { response, sport }) => ({
     ...state,
     loading: false,
     // If response exists, update sports list
@@ -42,19 +42,19 @@ export const sportsReducer = createReducer(
     error: null,
   })),
 
-  on(SportsActions.loadSportsFailure, (state, { error }) => ({
+  on(sportsActions.loadSportsFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
   })),
 
-  on(SportsActions.createSport, (state) => ({
+  on(sportsActions.createSport, (state) => ({
     ...state,
     loading: true,
     error: null,
   })),
 
-  on(SportsActions.createSportSuccess, (state, { sport }) => ({
+  on(sportsActions.createSportSuccess, (state, { sport }) => ({
     ...state,
     loading: false,
     sports: [...state.sports, sport],
@@ -62,19 +62,19 @@ export const sportsReducer = createReducer(
     error: null,
   })),
 
-  on(SportsActions.createSportFailure, (state, { error }) => ({
+  on(sportsActions.createSportFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
   })),
 
-  on(SportsActions.updateSport, (state) => ({
+  on(sportsActions.updateSport, (state) => ({
     ...state,
     loading: true,
     error: null,
   })),
 
-  on(SportsActions.updateSportSuccess, (state, { sport }) => ({
+  on(sportsActions.updateSportSuccess, (state, { sport }) => ({
     ...state,
     loading: false,
     sports: state.sports.map((s) => (s.id === sport.id ? sport : s)),
@@ -82,19 +82,19 @@ export const sportsReducer = createReducer(
     error: null,
   })),
 
-  on(SportsActions.updateSportFailure, (state, { error }) => ({
+  on(sportsActions.updateSportFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
   })),
 
-  on(SportsActions.deleteSport, (state) => ({
+  on(sportsActions.deleteSport, (state) => ({
     ...state,
     loading: true,
     error: null,
   })),
 
-  on(SportsActions.deleteSportSuccess, (state, { id }) => ({
+  on(sportsActions.deleteSportSuccess, (state, { id }) => ({
     ...state,
     loading: false,
     sports: state.sports.filter((sport) => sport.id !== id),
@@ -103,7 +103,7 @@ export const sportsReducer = createReducer(
     error: null,
   })),
 
-  on(SportsActions.deleteSportFailure, (state, { error }) => ({
+  on(sportsActions.deleteSportFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,

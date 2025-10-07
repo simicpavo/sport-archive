@@ -12,7 +12,7 @@ import { ToastModule } from 'primeng/toast';
 import { CreateClubDto, FormState, UpdateClubDto } from '../../../shared/interfaces/club.interface';
 import { clubsActions } from '../../../store/clubs/clubs.actions';
 import { clubsFeature } from '../../../store/clubs/clubs.store';
-import { SportsActions } from '../../../store/sports/sports.actions';
+import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
@@ -28,7 +28,6 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     ProgressSpinnerModule,
     SelectModule,
   ],
-  providers: [],
   templateUrl: './clubs-form.component.html',
 })
 export class ClubsFormComponent implements OnInit {
@@ -76,7 +75,7 @@ export class ClubsFormComponent implements OnInit {
     const clubId = this.route.snapshot.paramMap.get('id');
     this.clubId.set(clubId);
 
-    this.store.dispatch(SportsActions.loadSports({}));
+    this.store.dispatch(sportsActions.loadSports({}));
 
     if (clubId) {
       this.store.dispatch(clubsActions.loadClubs({ id: clubId }));

@@ -28,7 +28,6 @@ import { contentTypesFeature } from '../../../store/content-types/content-types.
     ToastModule,
     ProgressSpinnerModule,
   ],
-  providers: [],
   templateUrl: './content-types-form.component.html',
 })
 export class ContentTypesFormComponent implements OnInit {

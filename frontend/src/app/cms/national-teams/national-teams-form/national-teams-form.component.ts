@@ -16,7 +16,7 @@ import {
 } from '../../../shared/interfaces/national-team.interface';
 import { nationalTeamsActions } from '../../../store/national-teams/national-teams.actions';
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
-import { SportsActions } from '../../../store/sports/sports.actions';
+import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
@@ -32,7 +32,6 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     ProgressSpinnerModule,
     SelectModule,
   ],
-  providers: [],
   templateUrl: './national-teams-form.component.html',
 })
 export class NationalTeamsFormComponent implements OnInit {
@@ -83,7 +82,7 @@ export class NationalTeamsFormComponent implements OnInit {
     const nationalTeamId = this.route.snapshot.paramMap.get('id');
     this.nationalTeamId.set(nationalTeamId);
 
-    this.store.dispatch(SportsActions.loadSports({}));
+    this.store.dispatch(sportsActions.loadSports({}));
 
     if (nationalTeamId) {
       this.store.dispatch(nationalTeamsActions.loadNationalTeams({ id: nationalTeamId }));

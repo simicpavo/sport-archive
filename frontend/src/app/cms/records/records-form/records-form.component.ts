@@ -23,7 +23,7 @@ import { nationalTeamsActions } from '../../../store/national-teams/national-tea
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
 import { recordsActions } from '../../../store/records/records.actions';
 import { recordsFeature } from '../../../store/records/records.store';
-import { SportsActions } from '../../../store/sports/sports.actions';
+import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
@@ -102,7 +102,7 @@ export class RecordsFormComponent implements OnInit {
     const recordId = this.route.snapshot.paramMap.get('id');
     this.recordId.set(recordId);
 
-    this.store.dispatch(SportsActions.loadSports({}));
+    this.store.dispatch(sportsActions.loadSports({}));
     this.store.dispatch(competitionsActions.loadCompetitions({}));
     this.store.dispatch(nationalTeamsActions.loadNationalTeams({}));
     this.store.dispatch(contentTypesActions.loadContentTypes({}));

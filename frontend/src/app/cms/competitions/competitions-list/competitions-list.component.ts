@@ -12,7 +12,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Competition } from '../../../shared/interfaces/competition.interface';
 import { competitionsActions } from '../../../store/competitions/competitions.actions';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
-import { SportsActions } from '../../../store/sports/sports.actions';
+import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
@@ -51,7 +51,7 @@ export class CompetitionsListComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(competitionsActions.loadCompetitions({}));
-    this.store.dispatch(SportsActions.loadSports({}));
+    this.store.dispatch(sportsActions.loadSports({}));
   }
 
   addCompetition() {

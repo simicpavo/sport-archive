@@ -17,7 +17,7 @@ import {
 } from '../../../shared/interfaces/competition.interface';
 import { competitionsActions } from '../../../store/competitions/competitions.actions';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
-import { SportsActions } from '../../../store/sports/sports.actions';
+import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
@@ -92,7 +92,7 @@ export class CompetitionsFormComponent implements OnInit {
     const competitionId = this.route.snapshot.paramMap.get('id');
     this.competitionId.set(competitionId);
 
-    this.store.dispatch(SportsActions.loadSports({}));
+    this.store.dispatch(sportsActions.loadSports({}));
 
     if (competitionId) {
       this.store.dispatch(competitionsActions.loadCompetitions({ id: competitionId }));

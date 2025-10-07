@@ -18,7 +18,7 @@ import { nationalTeamsActions } from '../../../store/national-teams/national-tea
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
 import { recordsActions } from '../../../store/records/records.actions';
 import { recordsFeature } from '../../../store/records/records.store';
-import { SportsActions } from '../../../store/sports/sports.actions';
+import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
@@ -70,7 +70,7 @@ export class RecordsListComponent implements OnInit {
 
   private loadData() {
     this.store.dispatch(recordsActions.loadRecords({}));
-    this.store.dispatch(SportsActions.loadSports({}));
+    this.store.dispatch(sportsActions.loadSports({}));
     this.store.dispatch(contentTypesActions.loadContentTypes({}));
     this.store.dispatch(nationalTeamsActions.loadNationalTeams({}));
     this.store.dispatch(competitionsActions.loadCompetitions({}));

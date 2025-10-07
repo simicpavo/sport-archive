@@ -4,24 +4,24 @@ import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { SportsService } from '../../services/sports.service';
-import { SportsActions } from './sports.actions';
+import { sportsActions } from './sports.actions';
 
 export const loadSportsEffect = createEffect(
   (actions$ = inject(Actions), sportsService = inject(SportsService)) => {
     return actions$.pipe(
-      ofType(SportsActions.loadSports),
+      ofType(sportsActions.loadSports),
       switchMap(({ id }) => {
         // If id is provided, load single sport
         if (id) {
           return sportsService.getSportById(id).pipe(
-            map((sport) => SportsActions.loadSportsSuccess({ sport })),
-            catchError((error) => of(SportsActions.loadSportsFailure({ error }))),
+            map((sport) => sportsActions.loadSportsSuccess({ sport })),
+            catchError((error) => of(sportsActions.loadSportsFailure({ error }))),
           );
         }
         // Otherwise load all sports
         return sportsService.getSports().pipe(
-          map((response) => SportsActions.loadSportsSuccess({ response })),
-          catchError((error) => of(SportsActions.loadSportsFailure({ error }))),
+          map((response) => sportsActions.loadSportsSuccess({ response })),
+          catchError((error) => of(sportsActions.loadSportsFailure({ error }))),
         );
       }),
     );
@@ -32,11 +32,11 @@ export const loadSportsEffect = createEffect(
 export const createSportEffect = createEffect(
   (actions$ = inject(Actions), sportsService = inject(SportsService)) => {
     return actions$.pipe(
-      ofType(SportsActions.createSport),
+      ofType(sportsActions.createSport),
       switchMap(({ sport }) =>
         sportsService.createSport(sport).pipe(
-          map((createdSport) => SportsActions.createSportSuccess({ sport: createdSport })),
-          catchError((error) => of(SportsActions.createSportFailure({ error }))),
+          map((createdSport) => sportsActions.createSportSuccess({ sport: createdSport })),
+          catchError((error) => of(sportsActions.createSportFailure({ error }))),
         ),
       ),
     );
@@ -47,11 +47,11 @@ export const createSportEffect = createEffect(
 export const updateSportEffect = createEffect(
   (actions$ = inject(Actions), sportsService = inject(SportsService)) => {
     return actions$.pipe(
-      ofType(SportsActions.updateSport),
+      ofType(sportsActions.updateSport),
       switchMap(({ id, sport }) =>
         sportsService.updateSport(id, sport).pipe(
-          map((updatedSport) => SportsActions.updateSportSuccess({ sport: updatedSport })),
-          catchError((error) => of(SportsActions.updateSportFailure({ error }))),
+          map((updatedSport) => sportsActions.updateSportSuccess({ sport: updatedSport })),
+          catchError((error) => of(sportsActions.updateSportFailure({ error }))),
         ),
       ),
     );
@@ -62,11 +62,11 @@ export const updateSportEffect = createEffect(
 export const deleteSportEffect = createEffect(
   (actions$ = inject(Actions), sportsService = inject(SportsService)) => {
     return actions$.pipe(
-      ofType(SportsActions.deleteSport),
+      ofType(sportsActions.deleteSport),
       switchMap(({ id }) =>
         sportsService.deleteSport(id).pipe(
-          map(() => SportsActions.deleteSportSuccess({ id })),
-          catchError((error) => of(SportsActions.deleteSportFailure({ error }))),
+          map(() => sportsActions.deleteSportSuccess({ id })),
+          catchError((error) => of(sportsActions.deleteSportFailure({ error }))),
         ),
       ),
     );
@@ -78,9 +78,9 @@ export const showSuccessMessageEffect = createEffect(
   (actions$ = inject(Actions), messageService = inject(MessageService)) => {
     return actions$.pipe(
       ofType(
-        SportsActions.createSportSuccess,
-        SportsActions.updateSportSuccess,
-        SportsActions.deleteSportSuccess,
+        sportsActions.createSportSuccess,
+        sportsActions.updateSportSuccess,
+        sportsActions.deleteSportSuccess,
       ),
       tap((action) => {
         let message = '';
@@ -112,10 +112,10 @@ export const showErrorMessageEffect = createEffect(
   (actions$ = inject(Actions), messageService = inject(MessageService)) => {
     return actions$.pipe(
       ofType(
-        SportsActions.loadSportsFailure,
-        SportsActions.createSportFailure,
-        SportsActions.updateSportFailure,
-        SportsActions.deleteSportFailure,
+        sportsActions.loadSportsFailure,
+        sportsActions.createSportFailure,
+        sportsActions.updateSportFailure,
+        sportsActions.deleteSportFailure,
       ),
       tap((action) => {
         let message = '';
