@@ -32,5 +32,10 @@ export const cmsRoutes: Routes = [
     path: 'records',
     loadChildren: () => import('./records/records.routes').then((m) => m.recordsRoutes),
   },
+  {
+    path: 'media-sources',
+    loadChildren: () =>
+      import('./media-sources/media-sources.routes').then((m) => m.mediaSourcesRoutes),
+  },
   { path: '', redirectTo: 'sports', pathMatch: 'full' },
 ];
