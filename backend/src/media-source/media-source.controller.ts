@@ -19,7 +19,7 @@ import { UpdateMediaSourceDto } from './dto/update-media-source.dto';
 import { MediaSourceService } from './media-source.service';
 
 @ApiTags('Media Sources')
-@Controller('media-source')
+@Controller('media-sources')
 export class MediaSourceController {
   constructor(private readonly mediaSourceService: MediaSourceService) {}
 
