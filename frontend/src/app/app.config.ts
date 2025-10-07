@@ -28,6 +28,8 @@ import * as newsEffects from './store/news/news.effects';
 import { newsReducer } from './store/news/news.store';
 import * as personsEffects from './store/persons/persons.effects';
 import { personsReducer } from './store/persons/persons.store';
+import * as recordsEffects from './store/records/records.effects';
+import { recordsReducer } from './store/records/records.store';
 import * as sportsEffects from './store/sports/sports.effects';
 import { sportsReducer } from './store/sports/sports.store';
 
@@ -58,6 +60,7 @@ export const appConfig: ApplicationConfig = {
       clubs: clubsReducer,
       persons: personsReducer,
       competitions: competitionsReducer,
+      records: recordsReducer,
     }),
     provideEffects(
       newsEffects,
@@ -67,6 +70,7 @@ export const appConfig: ApplicationConfig = {
       clubsEffects,
       personsEffects,
       competitionsEffects,
+      recordsEffects,
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     MessageService,

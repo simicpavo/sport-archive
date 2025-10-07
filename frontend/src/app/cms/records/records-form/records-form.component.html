@@ -1,0 +1,206 @@
+<div class="records-form p-4 max-w-screen-lg mx-auto">
+  <div class="max-w-md mx-auto">
+    <div class="mb-6 text-center">
+      <h2 class="text-3xl font-bold m-0 text-900">{{ pageTitle() }}</h2>
+      <p class="text-color-secondary mt-2 text-lg">
+        {{ isEditMode() ? 'Update record information' : 'Add a new record to the system' }}
+      </p>
+    </div>
+
+    @if (isLoading()) {
+      <div class="flex justify-content-center mb-4">
+        <p-progressSpinner
+          strokeWidth="4"
+          [style]="{ width: '50px', height: '50px' }"
+        ></p-progressSpinner>
+      </div>
+    }
+
+    <p-card [class.opacity-50]="isLoading()">
+      <ng-template pTemplate="content">
+        <form [formGroup]="recordsForm" (ngSubmit)="onSubmit()">
+          <div class="field mb-4">
+            <label for="title" class="block font-medium mb-2"> Record Title </label>
+            <input
+              id="title"
+              type="text"
+              pInputText
+              formControlName="title"
+              placeholder="Enter record title (e.g., Match 1, Match 2)"
+              class="w-full"
+              autocomplete="off"
+            />
+            @if (
+              recordsForm.get('title')?.hasError('required') &&
+              recordsForm.get('title')?.dirty &&
+              recordsForm.get('title')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field is required!
+              </span>
+            }
+            @if (
+              recordsForm.get('title')?.hasError('minlength') &&
+              recordsForm.get('title')?.dirty &&
+              recordsForm.get('title')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field must be at least 2 characters long!
+              </span>
+            }
+
+            <label for="description" class="block font-medium mb-2 mt-2">
+              Record Description
+            </label>
+            <input
+              id="description"
+              type="text"
+              pInputText
+              formControlName="description"
+              placeholder="Enter record description"
+              class="w-full"
+              autocomplete="off"
+            />
+            @if (
+              recordsForm.get('description')?.hasError('required') &&
+              recordsForm.get('description')?.dirty &&
+              recordsForm.get('description')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field is required!
+              </span>
+            }
+            @if (
+              recordsForm.get('description')?.hasError('minlength') &&
+              recordsForm.get('description')?.dirty &&
+              recordsForm.get('description')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field must be at least 2 characters long!
+              </span>
+            }
+
+            <label for="sportId" class="block font-medium mb-2 mt-2"> Sport </label>
+            <p-select
+              [options]="sports() || []"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Select Sport"
+              formControlName="sportId"
+              class="w-full"
+              [showClear]="true"
+              [loading]="isLoading()"
+            />
+            @if (
+              recordsForm.get('sportId')?.hasError('required') &&
+              recordsForm.get('sportId')?.dirty &&
+              recordsForm.get('sportId')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field is required!
+              </span>
+            }
+
+            <label for="contentTypeId" class="block font-medium mb-2 mt-2"> Content Type </label>
+            <p-select
+              [options]="contentTypes() || []"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Select Content Type"
+              formControlName="contentTypeId"
+              class="w-full"
+              [showClear]="true"
+              [loading]="isLoading()"
+            />
+            @if (
+              recordsForm.get('sportId')?.hasError('required') &&
+              recordsForm.get('sportId')?.dirty &&
+              recordsForm.get('sportId')?.invalid
+            ) {
+              <span
+                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+              >
+                This field is required!
+              </span>
+            }
+
+            <label for="competitionId" class="block font-medium mb-2 mt-2"> Competition </label>
+            <p-select
+              [options]="competitions() || []"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Select Competition"
+              formControlName="competitionId"
+              class="w-full"
+              [showClear]="true"
+              [loading]="isLoading()"
+            />
+
+            <label for="nationalTeamId" class="block font-medium mb-2 mt-2"> National Team </label>
+            <p-select
+              [options]="nationalTeams() || []"
+              optionLabel="name"
+              optionValue="id"
+              placeholder="Select National Team"
+              formControlName="nationalTeamId"
+              class="w-full"
+              [showClear]="true"
+              [loading]="isLoading()"
+            />
+
+            <label for="date" class="block font-medium mb-2 mt-2"> Date </label>
+            <p-datePicker
+              id="date"
+              formControlName="date"
+              placeholder="Enter date"
+              class="w-full"
+              [showIcon]="true"
+            />
+          </div>
+
+          <div class="flex gap-2 justify-content-end pt-4">
+            <p-button
+              type="button"
+              label="Cancel"
+              severity="secondary"
+              [outlined]="true"
+              (onClick)="navigateToRecordsList()"
+              [disabled]="isLoading()"
+            >
+            </p-button>
+
+            <p-button
+              type="submit"
+              [label]="submitButtonText()"
+              [loading]="isLoading()"
+              [disabled]="
+                recordsForm.invalid ||
+                (isEditMode() &&
+                  recordsForm.controls.title.dirty === false &&
+                  recordsForm.controls.description.dirty === false &&
+                  recordsForm.controls.sportId.dirty === false &&
+                  recordsForm.controls.contentTypeId.dirty === false &&
+                  recordsForm.controls.nationalTeamId.dirty === false &&
+                  recordsForm.controls.competitionId.dirty === false)
+              "
+              icon="pi pi-check"
+            >
+            </p-button>
+          </div>
+        </form>
+      </ng-template>
+    </p-card>
+  </div>
+</div>
+
+<p-toast></p-toast>

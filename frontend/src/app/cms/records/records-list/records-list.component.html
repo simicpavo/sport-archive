@@ -1,0 +1,165 @@
+<div class="records-management p-4 max-w-screen-xl mx-auto">
+  <!-- Header Section -->
+  <div class="flex justify-content-between align-items-start mb-5">
+    <div class="flex-grow-1">
+      <h2 class="text-3xl font-bold m-0 text-900">Records Management</h2>
+    </div>
+    <div class="flex-shrink-0 ml-4">
+      <p-button
+        icon="pi pi-plus"
+        label="Add Record"
+        (onClick)="addRecord()"
+        severity="success"
+        [raised]="true"
+        size="large"
+        styleClass="px-4 py-2"
+      >
+      </p-button>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="card">
+    <p-table
+      [value]="recordsWithNames()"
+      [loading]="isLoading()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      class="p-datatable-striped"
+      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+      [scrollable]="true"
+      scrollHeight="60vh"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="title" style="width: 10%">
+            Title
+            <p-sortIcon field="title"></p-sortIcon>
+          </th>
+          <th pSortableColumn="description" style="width: 10%">
+            Description
+            <p-sortIcon field="description"></p-sortIcon>
+          </th>
+          <th pSortableColumn="sportId" style="width: 9%">
+            Sport
+            <p-sortIcon field="sportId"></p-sortIcon>
+          </th>
+          <th pSortableColumn="contentTypeId" style="width: 9%">
+            Content Type
+            <p-sortIcon field="contentTypeId"></p-sortIcon>
+          </th>
+          <th pSortableColumn="nationalTeamId" style="width: 9%">
+            National Team
+            <p-sortIcon field="nationalTeamId"></p-sortIcon>
+          </th>
+          <th pSortableColumn="competitionId" style="width: 9%">
+            Competition
+            <p-sortIcon field="competitionId"></p-sortIcon>
+          </th>
+          <th pSortableColumn="date" style="width: 9%">
+            Date
+            <p-sortIcon field="date"></p-sortIcon>
+          </th>
+          <th pSortableColumn="createdAt" style="width: 9.5%">
+            Created At
+            <p-sortIcon field="createdAt"></p-sortIcon>
+          </th>
+          <th pSortableColumn="updatedAt" style="width: 9.5%">
+            Updated At
+            <p-sortIcon field="updatedAt"></p-sortIcon>
+          </th>
+          <th pSortableColumn="popularityScore" style="width: 8%">
+            Popularity Score
+            <p-sortIcon field="popularityScore"></p-sortIcon>
+          </th>
+          <th style="width: 8.5%; min-width: 120px">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-record>
+        <tr>
+          <td>
+            <span class="font-medium">{{ record.title }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ record.description }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ record.sportName }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ record.contentTypeName }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ record.nationalTeamName }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ record.competitionName }}</span>
+          </td>
+          <td>
+            <span class="text-sm text-color-secondary">
+              {{ record.date | date: 'mediumDate' }}
+            </span>
+          </td>
+          <td>
+            <span class="text-sm text-color-secondary">
+              {{ record.createdAt | date: 'short' }}
+            </span>
+          </td>
+          <td>
+            <span class="text-sm text-color-secondary">
+              {{ record.updatedAt | date: 'short' }}
+            </span>
+          </td>
+          <td>
+            <span class="text-sm text-color-secondary">
+              {{ record.popularityScore }}
+            </span>
+          </td>
+
+          <td>
+            <div class="flex gap-2 align-items-center">
+              <p-button
+                severity="success"
+                size="small"
+                pTooltip="Edit National Team"
+                tooltipPosition="top"
+                (onClick)="editRecord(record)"
+                [rounded]="true"
+              >
+                <i class="pi pi-pencil"></i>
+              </p-button>
+              <p-button
+                severity="danger"
+                size="small"
+                pTooltip="Delete National Team"
+                tooltipPosition="top"
+                (onClick)="deleteRecord(record)"
+                [rounded]="true"
+              >
+                <i class="pi pi-trash"></i>
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="11" class="text-center py-8">
+            <div class="text-color-secondary">
+              <i class="pi pi-info-circle text-4xl mb-3 block"></i>
+              <p class="text-lg mb-2">No records found</p>
+              <p class="text-sm">Click "Add Record" to create your first record</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>
