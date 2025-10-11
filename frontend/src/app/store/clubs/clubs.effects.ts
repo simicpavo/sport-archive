@@ -1,4 +1,5 @@
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
@@ -27,12 +28,15 @@ export const loadClubsEffect = createEffect(
 );
 
 export const createClubEffect = createEffect(
-  (actions$ = inject(Actions), clubsService = inject(ClubsService)) => {
+  (actions$ = inject(Actions), router = inject(Router), clubsService = inject(ClubsService)) => {
     return actions$.pipe(
       ofType(clubsActions.createClub),
       switchMap(({ club }) =>
         clubsService.createClub(club).pipe(
-          map((createdClub) => clubsActions.createClubSuccess({ club: createdClub })),
+          map(() => {
+            router.navigate(['/cms/clubs']);
+            return clubsActions.createClubSuccess();
+          }),
           catchError((error) => of(clubsActions.createClubFailure({ error }))),
         ),
       ),
@@ -42,12 +46,15 @@ export const createClubEffect = createEffect(
 );
 
 export const updateClubEffect = createEffect(
-  (actions$ = inject(Actions), clubsService = inject(ClubsService)) => {
+  (actions$ = inject(Actions), router = inject(Router), clubsService = inject(ClubsService)) => {
     return actions$.pipe(
       ofType(clubsActions.updateClub),
       switchMap(({ id, club }) =>
         clubsService.updateClub(id, club).pipe(
-          map((updatedClub) => clubsActions.updateClubSuccess({ club: updatedClub })),
+          map(() => {
+            router.navigate(['/cms/clubs']);
+            return clubsActions.updateClubSuccess();
+          }),
           catchError((error) => of(clubsActions.updateClubFailure({ error }))),
         ),
       ),

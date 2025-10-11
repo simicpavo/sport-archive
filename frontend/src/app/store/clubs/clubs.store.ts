@@ -52,10 +52,9 @@ export const clubsReducer = createReducer(
     error: null,
   })),
 
-  on(clubsActions.createClubSuccess, (state, { club }) => ({
+  on(clubsActions.createClubSuccess, (state) => ({
     ...state,
     loading: false,
-    clubs: [...state.clubs, club],
     total: state.total + 1,
     error: null,
   })),
@@ -72,11 +71,10 @@ export const clubsReducer = createReducer(
     error: null,
   })),
 
-  on(clubsActions.updateClubSuccess, (state, { club }) => ({
+  on(clubsActions.updateClubSuccess, (state) => ({
     ...state,
     loading: false,
-    clubs: state.clubs.map((c) => (c.id === club.id ? club : c)),
-    selectedClub: state.selectedClub?.id === club.id ? club : state.selectedClub,
+    error: null,
   })),
 
   on(clubsActions.updateClubFailure, (state, { error }) => ({

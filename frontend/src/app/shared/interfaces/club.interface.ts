@@ -15,11 +15,6 @@ export interface UpdateClubDto {
   sportId?: string;
 }
 
-export interface FormState {
-  name: string;
-  sportId: string;
-}
-
 export interface ClubResponse {
   data: Club[];
   meta: {

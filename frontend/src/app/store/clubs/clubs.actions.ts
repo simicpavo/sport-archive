@@ -1,4 +1,4 @@
-import { createActionGroup, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import {
   Club,
   ClubResponse,
@@ -14,11 +14,11 @@ export const clubsActions = createActionGroup({
     loadClubsFailure: props<{ error: unknown }>(),
 
     createClub: props<{ club: CreateClubDto }>(),
-    createClubSuccess: props<{ club: Club }>(),
+    createClubSuccess: emptyProps(),
     createClubFailure: props<{ error: unknown }>(),
 
     updateClub: props<{ id: string; club: UpdateClubDto }>(),
-    updateClubSuccess: props<{ club: Club }>(),
+    updateClubSuccess: emptyProps(),
     updateClubFailure: props<{ error: unknown }>(),
 
     deleteClub: props<{ id: string }>(),

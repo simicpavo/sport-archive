@@ -9,7 +9,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
-import { CreateClubDto, FormState, UpdateClubDto } from '../../../shared/interfaces/club.interface';
 import { clubsActions } from '../../../store/clubs/clubs.actions';
 import { clubsFeature } from '../../../store/clubs/clubs.store';
 import { sportsActions } from '../../../store/sports/sports.actions';
@@ -42,13 +41,10 @@ export class ClubsFormComponent implements OnInit {
   readonly selectedClub = this.store.selectSignal(clubsFeature.selectSelectedClub);
   readonly sports = this.store.selectSignal(sportsFeature.selectSports);
 
-  readonly clubForm = this.fb.group({
+  readonly clubForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     sportId: ['', [Validators.required]],
   });
-
-  readonly submitButtonText = computed(() => (this.isEditMode() ? 'Update Club' : 'Create Club'));
-  readonly pageTitle = computed(() => (this.isEditMode() ? 'Edit Club' : 'Create New Club'));
 
   ngOnInit() {
     this.loadClubData();
@@ -56,17 +52,14 @@ export class ClubsFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const club = this.selectedClub();
-      if (club && this.isEditMode()) {
-        const formValue = {
-          name: club.name,
-          sportId: club.sportId,
-        };
-
+      if (this.isEditMode() && this.selectedClub()) {
         setTimeout(() => {
-          this.clubForm.patchValue(formValue);
+          this.clubForm.patchValue({
+            name: this.selectedClub()?.name,
+            sportId: this.selectedClub()?.sportId,
+          });
           this.clubForm.markAsPristine();
-        }, 0);
+        });
       }
     });
   }
@@ -88,30 +81,20 @@ export class ClubsFormComponent implements OnInit {
       return;
     }
 
-    const formValue = this.clubForm.value as FormState;
+    const formValue = this.clubForm.getRawValue();
 
     if (this.isEditMode()) {
-      const updateData: UpdateClubDto = {
-        name: formValue.name,
-        sportId: formValue.sportId,
-      };
       this.store.dispatch(
         clubsActions.updateClub({
           id: this.clubId()!,
-          club: updateData,
+          club: { name: formValue.name, sportId: formValue.sportId },
         }),
       );
     } else {
-      const createData: CreateClubDto = {
-        name: formValue.name,
-        sportId: formValue.sportId,
-      };
-      this.store.dispatch(clubsActions.createClub({ club: createData }));
+      this.store.dispatch(
+        clubsActions.createClub({ club: { name: formValue.name, sportId: formValue.sportId } }),
+      );
     }
-
-    setTimeout(() => {
-      this.navigateToClubsList();
-    }, 100);
   }
 
   private markAllFieldsAsTouched() {
