@@ -21,7 +21,7 @@
   <!-- Data Table -->
   <div class="card">
     <p-table
-      [value]="clubsWithSportNames()"
+      [value]="clubs()"
       [loading]="isLoading()"
       [paginator]="true"
       [rows]="10"
@@ -61,7 +61,7 @@
             <span class="font-medium">{{ club.name }}</span>
           </td>
           <td>
-            <span class="font-medium">{{ club.sportName }}</span>
+            <span class="font-medium">{{ club.sport.name }}</span>
           </td>
           <td>
             <span class="text-sm text-color-secondary"> {{ club.createdAt | date: 'short' }} </span>

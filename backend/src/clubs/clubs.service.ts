@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateClubDto } from './dto/create-club.dto';
-import { UpdateClubDto } from './dto/update-club.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import type { Prisma } from '../../generated/prisma/client';
+import { CreateClubDto } from './dto/create-club.dto';
+import { UpdateClubDto } from './dto/update-club.dto';
 
 @Injectable()
 export class ClubsService {
@@ -17,7 +17,15 @@ export class ClubsService {
   }
 
   async findAll() {
-    return this.prisma.club.findMany();
+    return this.prisma.club.findMany({
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+        sport: { select: { name: true } },
+      },
+    });
   }
 
   async findOne(id: string) {

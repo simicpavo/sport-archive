@@ -121,8 +121,6 @@ export class ClubsFormComponent implements OnInit {
   }
 
   protected navigateToClubsList() {
-    this.router.navigate(['/cms/clubs']).then(() => {
-      this.store.dispatch(clubsActions.loadClubs({}));
-    });
+    this.router.navigate(['/cms/clubs']);
   }
 }

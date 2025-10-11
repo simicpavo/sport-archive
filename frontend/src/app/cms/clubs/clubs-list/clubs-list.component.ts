@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ConfirmationService } from 'primeng/api';
@@ -12,8 +12,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Club } from '../../../shared/interfaces/club.interface';
 import { clubsActions } from '../../../store/clubs/clubs.actions';
 import { clubsFeature } from '../../../store/clubs/clubs.store';
-import { sportsActions } from '../../../store/sports/sports.actions';
-import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
   selector: 'app-content-types-list',
@@ -36,22 +34,10 @@ export class ClubsListComponent implements OnInit {
   private readonly confirmationService = inject(ConfirmationService);
 
   readonly clubs = this.store.selectSignal(clubsFeature.selectClubs);
-  readonly sports = this.store.selectSignal(sportsFeature.selectSports);
   readonly isLoading = this.store.selectSignal(clubsFeature.selectLoading);
-
-  readonly clubsWithSportNames = computed(() => {
-    const clubs = this.clubs() || [];
-    const sports = this.sports() || [];
-
-    return clubs.map((club) => ({
-      ...club,
-      sportName: sports.find((s) => s.id === club.sportId)?.name || 'Unknown club',
-    }));
-  });
 
   ngOnInit() {
     this.store.dispatch(clubsActions.loadClubs({}));
-    this.store.dispatch(sportsActions.loadSports({}));
   }
 
   addClub() {
