@@ -52,10 +52,9 @@ export const personsReducer = createReducer(
     error: null,
   })),
 
-  on(personsActions.createPersonSuccess, (state, { person }) => ({
+  on(personsActions.createPersonSuccess, (state) => ({
     ...state,
     loading: false,
-    persons: [...state.persons, person],
     total: state.total + 1,
     error: null,
   })),
@@ -72,11 +71,9 @@ export const personsReducer = createReducer(
     error: null,
   })),
 
-  on(personsActions.updatePersonSuccess, (state, { person }) => ({
+  on(personsActions.updatePersonSuccess, (state) => ({
     ...state,
     loading: false,
-    persons: state.persons.map((p) => (p.id === person.id ? person : p)),
-    selectedPerson: state.selectedPerson?.id === person.id ? person : state.selectedPerson,
     error: null,
   })),
 

@@ -1,4 +1,4 @@
-import { createActionGroup, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import {
   CreatePersonDto,
   Person,
@@ -14,11 +14,11 @@ export const personsActions = createActionGroup({
     loadPersonsFailure: props<{ error: unknown }>(),
 
     createPerson: props<{ person: CreatePersonDto }>(),
-    createPersonSuccess: props<{ person: Person }>(),
+    createPersonSuccess: emptyProps(),
     createPersonFailure: props<{ error: unknown }>(),
 
     updatePerson: props<{ id: string; person: UpdatePersonDto }>(),
-    updatePersonSuccess: props<{ person: Person }>(),
+    updatePersonSuccess: emptyProps(),
     updatePersonFailure: props<{ error: unknown }>(),
 
     deletePerson: props<{ id: string }>(),

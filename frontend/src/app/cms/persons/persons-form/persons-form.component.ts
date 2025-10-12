@@ -9,11 +9,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
-import {
-  CreatePersonDto,
-  FormState,
-  UpdatePersonDto,
-} from '../../../shared/interfaces/person.interface';
+import { FormState } from '../../../shared/interfaces/person.interface';
 import { personsActions } from '../../../store/persons/persons.actions';
 import { personsFeature } from '../../../store/persons/persons.store';
 
@@ -43,7 +39,7 @@ export class PersonsFormComponent implements OnInit {
   readonly selectedPerson = this.store.selectSignal(personsFeature.selectSelectedPerson);
   readonly isEditMode = computed(() => this.personId() !== null);
 
-  readonly personForm = this.fb.group({
+  readonly personForm = this.fb.nonNullable.group({
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
     nickname: [''],
@@ -51,23 +47,18 @@ export class PersonsFormComponent implements OnInit {
     nationality: ['', [Validators.required]],
   });
 
-  readonly submitButtonText = computed(() =>
-    this.isEditMode() ? 'Update Person' : 'Create Person',
-  );
-  readonly pageTitle = computed(() => (this.isEditMode() ? 'Edit Person' : 'Create New Person'));
-
   constructor() {
     effect(() => {
-      const person = this.selectedPerson();
-      if (person) {
-        const formValue = {
-          firstName: person.firstName,
-          lastName: person.lastName,
-          nickname: person.nickname,
-          birthDate: person.birthDate,
-          nationality: person.nationality,
-        };
-        this.personForm.patchValue(formValue);
+      if (this.selectedPerson() && this.isEditMode()) {
+        setTimeout(() => {
+          this.personForm.patchValue({
+            firstName: this.selectedPerson()?.firstName,
+            lastName: this.selectedPerson()?.lastName,
+            nickname: this.selectedPerson()?.nickname,
+            birthDate: this.selectedPerson()?.birthDate,
+            nationality: this.selectedPerson()?.nationality,
+          });
+        });
         this.personForm.markAsPristine();
       }
     });
@@ -95,28 +86,31 @@ export class PersonsFormComponent implements OnInit {
     const formValue = this.personForm.value as FormState;
 
     if (this.isEditMode()) {
-      const updateData: UpdatePersonDto = {
-        firstName: formValue.firstName,
-        lastName: formValue.lastName,
-        nickname: formValue.nickname,
-        birthDate: formValue.birthDate,
-        nationality: formValue.nationality,
-      };
       this.store.dispatch(
-        personsActions.updatePerson({ id: this.personId()!, person: updateData }),
+        personsActions.updatePerson({
+          id: this.personId()!,
+          person: {
+            firstName: formValue.firstName,
+            lastName: formValue.lastName,
+            nickname: formValue.nickname,
+            birthDate: formValue.birthDate,
+            nationality: formValue.nationality,
+          },
+        }),
       );
     } else {
-      const createData: CreatePersonDto = {
-        firstName: formValue.firstName,
-        lastName: formValue.lastName,
-        nickname: formValue.nickname,
-        birthDate: formValue.birthDate,
-        nationality: formValue.nationality,
-      };
-      this.store.dispatch(personsActions.createPerson({ person: createData }));
+      this.store.dispatch(
+        personsActions.createPerson({
+          person: {
+            firstName: formValue.firstName,
+            lastName: formValue.lastName,
+            nickname: formValue.nickname,
+            birthDate: formValue.birthDate,
+            nationality: formValue.nationality,
+          },
+        }),
+      );
     }
-
-    this.navigateToPersonsList();
   }
 
   private markAllFieldsAsTouched() {

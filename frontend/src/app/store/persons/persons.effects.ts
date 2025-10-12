@@ -1,4 +1,5 @@
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
@@ -27,12 +28,19 @@ export const loadPersonsEffect = createEffect(
 );
 
 export const createPersonEffect = createEffect(
-  (actions$ = inject(Actions), personsService = inject(PersonsService)) => {
+  (
+    actions$ = inject(Actions),
+    router = inject(Router),
+    personsService = inject(PersonsService),
+  ) => {
     return actions$.pipe(
       ofType(personsActions.createPerson),
       switchMap(({ person }) =>
         personsService.createPerson(person).pipe(
-          map((createdPerson) => personsActions.createPersonSuccess({ person: createdPerson })),
+          map(() => {
+            router.navigate(['/cms/persons']);
+            return personsActions.createPersonSuccess();
+          }),
           catchError((error) => of(personsActions.createPersonFailure({ error }))),
         ),
       ),
@@ -42,12 +50,19 @@ export const createPersonEffect = createEffect(
 );
 
 export const updatePersonEffect = createEffect(
-  (actions$ = inject(Actions), personsService = inject(PersonsService)) => {
+  (
+    actions$ = inject(Actions),
+    router = inject(Router),
+    personsService = inject(PersonsService),
+  ) => {
     return actions$.pipe(
       ofType(personsActions.updatePerson),
       switchMap(({ id, person }) =>
         personsService.updatePerson(id, person).pipe(
-          map((updatedPerson) => personsActions.updatePersonSuccess({ person: updatedPerson })),
+          map(() => {
+            router.navigate(['/cms/persons']);
+            return personsActions.updatePersonSuccess();
+          }),
           catchError((error) => of(personsActions.updatePersonFailure({ error }))),
         ),
       ),
