@@ -54,10 +54,9 @@ export const contentTypesReducer = createReducer(
     error: null,
   })),
 
-  on(contentTypesActions.createContentTypeSuccess, (state, { contentType }) => ({
+  on(contentTypesActions.createContentTypeSuccess, (state) => ({
     ...state,
     loading: false,
-    contentTypes: [...state.contentTypes, contentType],
     total: state.total + 1,
     error: null,
   })),
@@ -74,12 +73,9 @@ export const contentTypesReducer = createReducer(
     error: null,
   })),
 
-  on(contentTypesActions.updateContentTypeSuccess, (state, { contentType }) => ({
+  on(contentTypesActions.updateContentTypeSuccess, (state) => ({
     ...state,
     loading: false,
-    contentTypes: state.contentTypes.map((s) => (s.id === contentType.id ? contentType : s)),
-    selectedContentType:
-      state.selectedContentType?.id === contentType.id ? contentType : state.selectedContentType,
     error: null,
   })),
 

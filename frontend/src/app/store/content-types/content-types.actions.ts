@@ -1,4 +1,4 @@
-import { createActionGroup, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import {
   ContentType,
   ContentTypeResponse,
@@ -14,11 +14,11 @@ export const contentTypesActions = createActionGroup({
     loadContentTypesFailure: props<{ error: unknown }>(),
 
     createContentType: props<{ contentType: CreateContentTypeDto }>(),
-    createContentTypeSuccess: props<{ contentType: ContentType }>(),
+    createContentTypeSuccess: emptyProps(),
     createContentTypeFailure: props<{ error: unknown }>(),
 
     updateContentType: props<{ id: string; contentType: UpdateContentTypeDto }>(),
-    updateContentTypeSuccess: props<{ contentType: ContentType }>(),
+    updateContentTypeSuccess: emptyProps(),
     updateContentTypeFailure: props<{ error: unknown }>(),
 
     deleteContentType: props<{ id: string }>(),

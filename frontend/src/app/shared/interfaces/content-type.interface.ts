@@ -13,10 +13,6 @@ export interface UpdateContentTypeDto {
   name?: string;
 }
 
-export interface FormState {
-  name: string;
-}
-
 export interface ContentTypeResponse {
   data: ContentType[];
   meta: {

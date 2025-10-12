@@ -8,11 +8,6 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
-import {
-  CreateContentTypeDto,
-  FormState,
-  UpdateContentTypeDto,
-} from '../../../shared/interfaces/content-type.interface';
 import { contentTypesActions } from '../../../store/content-types/content-types.actions';
 import { contentTypesFeature } from '../../../store/content-types/content-types.store';
 
@@ -43,16 +38,9 @@ export class ContentTypesFormComponent implements OnInit {
   );
   readonly isEditMode = computed(() => this.contentTypeId() !== null);
 
-  readonly contentTypeForm = this.fb.group({
+  readonly contentTypeForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
   });
-
-  readonly submitButtonText = computed(() =>
-    this.isEditMode() ? 'Update Content Type' : 'Create Content Type',
-  );
-  readonly pageTitle = computed(() =>
-    this.isEditMode() ? 'Edit Content Type' : 'Create New Content Type',
-  );
 
   ngOnInit() {
     this.loadContentTypeData();
@@ -60,10 +48,12 @@ export class ContentTypesFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const contentType = this.selectedContentType();
-      if (contentType) {
-        const formValue = { name: contentType.name };
-        this.contentTypeForm.patchValue(formValue);
+      if (this.selectedContentType() && this.isEditMode()) {
+        setTimeout(() => {
+          this.contentTypeForm.patchValue({
+            name: this.selectedContentType()!.name,
+          });
+        });
         this.contentTypeForm.markAsPristine();
       }
     });
@@ -84,22 +74,20 @@ export class ContentTypesFormComponent implements OnInit {
       return;
     }
 
-    const formValue = this.contentTypeForm.value as FormState;
+    const formValue = this.contentTypeForm.getRawValue();
 
     if (this.isEditMode()) {
-      const updateData: UpdateContentTypeDto = { name: formValue.name };
       this.store.dispatch(
         contentTypesActions.updateContentType({
           id: this.contentTypeId()!,
-          contentType: updateData,
+          contentType: { name: formValue.name },
         }),
       );
     } else {
-      const createData: CreateContentTypeDto = { name: formValue.name };
-      this.store.dispatch(contentTypesActions.createContentType({ contentType: createData }));
+      this.store.dispatch(
+        contentTypesActions.createContentType({ contentType: { name: formValue.name } }),
+      );
     }
-
-    this.navigateToContentTypesList();
   }
 
   private markAllFieldsAsTouched() {

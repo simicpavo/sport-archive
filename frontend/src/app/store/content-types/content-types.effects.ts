@@ -1,4 +1,5 @@
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
@@ -30,14 +31,19 @@ export const loadContentTypesEffect = createEffect(
 );
 
 export const createContentTypeEffect = createEffect(
-  (actions$ = inject(Actions), contentTypesService = inject(ContentTypesService)) => {
+  (
+    actions$ = inject(Actions),
+    router = inject(Router),
+    contentTypesService = inject(ContentTypesService),
+  ) => {
     return actions$.pipe(
       ofType(contentTypesActions.createContentType),
       switchMap(({ contentType }) =>
         contentTypesService.createContentType(contentType).pipe(
-          map((createdContentType) =>
-            contentTypesActions.createContentTypeSuccess({ contentType: createdContentType }),
-          ),
+          map(() => {
+            router.navigate(['/cms/content-types']);
+            return contentTypesActions.createContentTypeSuccess();
+          }),
           catchError((error) => of(contentTypesActions.createContentTypeFailure({ error }))),
         ),
       ),
@@ -47,14 +53,19 @@ export const createContentTypeEffect = createEffect(
 );
 
 export const updateContentTypeEffect = createEffect(
-  (actions$ = inject(Actions), contentTypesService = inject(ContentTypesService)) => {
+  (
+    actions$ = inject(Actions),
+    router = inject(Router),
+    contentTypesService = inject(ContentTypesService),
+  ) => {
     return actions$.pipe(
       ofType(contentTypesActions.updateContentType),
       switchMap(({ id, contentType }) =>
         contentTypesService.updateContentType(id, contentType).pipe(
-          map((updatedContentType) =>
-            contentTypesActions.updateContentTypeSuccess({ contentType: updatedContentType }),
-          ),
+          map(() => {
+            router.navigate(['/cms/content-types']);
+            return contentTypesActions.updateContentTypeSuccess();
+          }),
           catchError((error) => of(contentTypesActions.updateContentTypeFailure({ error }))),
         ),
       ),
