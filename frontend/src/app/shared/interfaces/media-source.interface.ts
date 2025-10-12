@@ -19,12 +19,6 @@ export interface UpdateMediaSourceDto {
   name?: string;
 }
 
-export interface FormState {
-  baseUrl: string;
-  urlPath: string;
-  name: string;
-}
-
 export interface MediaSourceResponse {
   data: MediaSource[];
   meta: {

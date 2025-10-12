@@ -52,10 +52,9 @@ export const mediaSourcesReducer = createReducer(
     error: null,
   })),
 
-  on(mediaSourcesActions.createMediaSourceSuccess, (state, { mediaSource }) => ({
+  on(mediaSourcesActions.createMediaSourceSuccess, (state) => ({
     ...state,
     loading: false,
-    mediaSources: [...state.mediaSources, mediaSource],
     total: state.total + 1,
     error: null,
   })),
@@ -72,12 +71,9 @@ export const mediaSourcesReducer = createReducer(
     error: null,
   })),
 
-  on(mediaSourcesActions.updateMediaSourceSuccess, (state, { mediaSource }) => ({
+  on(mediaSourcesActions.updateMediaSourceSuccess, (state) => ({
     ...state,
     loading: false,
-    mediaSources: state.mediaSources.map((s) => (s.id === mediaSource.id ? mediaSource : s)),
-    selectedMediaSource:
-      state.selectedMediaSource?.id === mediaSource.id ? mediaSource : state.selectedMediaSource,
     error: null,
   })),
 

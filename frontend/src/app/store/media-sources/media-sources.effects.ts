@@ -1,4 +1,5 @@
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
@@ -28,14 +29,19 @@ export const loadMediaSourcesEffect = createEffect(
 );
 
 export const createMediaSourceEffect = createEffect(
-  (actions$ = inject(Actions), mediaSourcesService = inject(MediaSourcesService)) => {
+  (
+    actions$ = inject(Actions),
+    router = inject(Router),
+    mediaSourcesService = inject(MediaSourcesService),
+  ) => {
     return actions$.pipe(
       ofType(mediaSourcesActions.createMediaSource),
       switchMap(({ mediaSource }) =>
         mediaSourcesService.createMediaSource(mediaSource).pipe(
-          map((createdMediaSource) =>
-            mediaSourcesActions.createMediaSourceSuccess({ mediaSource: createdMediaSource }),
-          ),
+          map(() => {
+            router.navigate(['/cms/media-sources']);
+            return mediaSourcesActions.createMediaSourceSuccess();
+          }),
           catchError((error) => of(mediaSourcesActions.createMediaSourceFailure({ error }))),
         ),
       ),
@@ -45,14 +51,19 @@ export const createMediaSourceEffect = createEffect(
 );
 
 export const updateMediaSourceEffect = createEffect(
-  (actions$ = inject(Actions), mediaSourcesService = inject(MediaSourcesService)) => {
+  (
+    actions$ = inject(Actions),
+    router = inject(Router),
+    mediaSourcesService = inject(MediaSourcesService),
+  ) => {
     return actions$.pipe(
       ofType(mediaSourcesActions.updateMediaSource),
       switchMap(({ id, mediaSource }) =>
         mediaSourcesService.updateMediaSource(id, mediaSource).pipe(
-          map((updatedMediaSource) =>
-            mediaSourcesActions.updateMediaSourceSuccess({ mediaSource: updatedMediaSource }),
-          ),
+          map(() => {
+            router.navigate(['/cms/media-sources']);
+            return mediaSourcesActions.updateMediaSourceSuccess();
+          }),
           catchError((error) => of(mediaSourcesActions.updateMediaSourceFailure({ error }))),
         ),
       ),

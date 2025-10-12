@@ -8,11 +8,6 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
-import {
-  CreateMediaSourceDto,
-  FormState,
-  UpdateMediaSourceDto,
-} from '../../../shared/interfaces/media-source.interface';
 import { mediaSourcesActions } from '../../../store/media-sources/media-sources.actions';
 import { mediaSourcesFeature } from '../../../store/media-sources/media-sources.store';
 
@@ -43,18 +38,11 @@ export class MediaSourcesFormComponent implements OnInit {
   );
   readonly isEditMode = computed(() => this.mediaSourceId() !== null);
 
-  readonly mediaSourceForm = this.fb.group({
+  readonly mediaSourceForm = this.fb.nonNullable.group({
     baseUrl: ['', [Validators.required, Validators.minLength(2)]],
     urlPath: [''],
     name: ['', [Validators.required, Validators.minLength(2)]],
   });
-
-  readonly submitButtonText = computed(() =>
-    this.isEditMode() ? 'Update Media Source' : 'Create Media Source',
-  );
-  readonly pageTitle = computed(() =>
-    this.isEditMode() ? 'Edit Media Source' : 'Create New Media Source',
-  );
 
   ngOnInit() {
     this.loadMediaSourceData();
@@ -62,14 +50,14 @@ export class MediaSourcesFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const mediaSource = this.selectedMediaSource();
-      if (mediaSource) {
-        const formValue = {
-          baseUrl: mediaSource.baseUrl,
-          urlPath: mediaSource.urlPath,
-          name: mediaSource.name,
-        };
-        this.mediaSourceForm.patchValue(formValue);
+      if (this.selectedMediaSource() && this.isEditMode()) {
+        setTimeout(() => {
+          this.mediaSourceForm.patchValue({
+            baseUrl: this.selectedMediaSource()?.baseUrl,
+            urlPath: this.selectedMediaSource()?.urlPath,
+            name: this.selectedMediaSource()?.name,
+          });
+        });
         this.mediaSourceForm.markAsPristine();
       }
     });
@@ -90,30 +78,30 @@ export class MediaSourcesFormComponent implements OnInit {
       return;
     }
 
-    const formValue = this.mediaSourceForm.value as FormState;
+    const formValue = this.mediaSourceForm.getRawValue();
 
     if (this.isEditMode()) {
-      const updateData: UpdateMediaSourceDto = {
-        baseUrl: formValue.baseUrl,
-        urlPath: formValue.urlPath,
-        name: formValue.name,
-      };
       this.store.dispatch(
         mediaSourcesActions.updateMediaSource({
           id: this.mediaSourceId()!,
-          mediaSource: updateData,
+          mediaSource: {
+            baseUrl: formValue.baseUrl,
+            urlPath: formValue.urlPath,
+            name: formValue.name,
+          },
         }),
       );
     } else {
-      const createData: CreateMediaSourceDto = {
-        baseUrl: formValue.baseUrl,
-        urlPath: formValue.urlPath,
-        name: formValue.name,
-      };
-      this.store.dispatch(mediaSourcesActions.createMediaSource({ mediaSource: createData }));
+      this.store.dispatch(
+        mediaSourcesActions.createMediaSource({
+          mediaSource: {
+            baseUrl: formValue.baseUrl,
+            urlPath: formValue.urlPath,
+            name: formValue.name,
+          },
+        }),
+      );
     }
-
-    this.navigateToMediaSourcesList();
   }
 
   private markAllFieldsAsTouched() {

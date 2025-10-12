@@ -1,4 +1,4 @@
-import { createActionGroup, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import {
   CreateMediaSourceDto,
   MediaSource,
@@ -14,11 +14,11 @@ export const mediaSourcesActions = createActionGroup({
     loadMediaSourcesFailure: props<{ error: unknown }>(),
 
     createMediaSource: props<{ mediaSource: CreateMediaSourceDto }>(),
-    createMediaSourceSuccess: props<{ mediaSource: MediaSource }>(),
+    createMediaSourceSuccess: emptyProps(),
     createMediaSourceFailure: props<{ error: unknown }>(),
 
     updateMediaSource: props<{ id: string; mediaSource: UpdateMediaSourceDto }>(),
-    updateMediaSourceSuccess: props<{ mediaSource: MediaSource }>(),
+    updateMediaSourceSuccess: emptyProps(),
     updateMediaSourceFailure: props<{ error: unknown }>(),
 
     deleteMediaSource: props<{ id: string }>(),
