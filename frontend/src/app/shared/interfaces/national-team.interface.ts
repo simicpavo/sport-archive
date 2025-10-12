@@ -16,11 +16,6 @@ export interface UpdateNationalTeamDto {
   sportId?: string;
 }
 
-export interface FormState {
-  name: string;
-  sportId: string;
-}
-
 export interface NationalTeamResponse {
   data: NationalTeam[];
   meta: {

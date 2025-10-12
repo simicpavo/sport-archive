@@ -21,7 +21,7 @@
   <!-- Data Table -->
   <div class="card">
     <p-table
-      [value]="nationalTeamsWithSportNames()"
+      [value]="nationalTeams()"
       [loading]="isLoading()"
       [paginator]="true"
       [rows]="10"
@@ -61,7 +61,7 @@
             <span class="font-medium">{{ nationalTeam.name }}</span>
           </td>
           <td>
-            <span class="font-medium">{{ nationalTeam.sportName }}</span>
+            <span class="font-medium">{{ nationalTeam.sport.name }}</span>
           </td>
           <td>
             <span class="text-sm text-color-secondary">

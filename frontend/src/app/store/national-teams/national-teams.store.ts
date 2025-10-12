@@ -52,10 +52,9 @@ export const nationalTeamsReducer = createReducer(
     error: null,
   })),
 
-  on(nationalTeamsActions.createNationalTeamSuccess, (state, { nationalTeam }) => ({
+  on(nationalTeamsActions.createNationalTeamSuccess, (state) => ({
     ...state,
     loading: false,
-    nationalTeams: [...state.nationalTeams, nationalTeam],
     total: state.total + 1,
     error: null,
   })),
@@ -72,14 +71,10 @@ export const nationalTeamsReducer = createReducer(
     error: null,
   })),
 
-  on(nationalTeamsActions.updateNationalTeamSuccess, (state, { nationalTeam }) => ({
+  on(nationalTeamsActions.updateNationalTeamSuccess, (state) => ({
     ...state,
     loading: false,
-    nationalTeams: state.nationalTeams.map((nt) => (nt.id === nationalTeam.id ? nationalTeam : nt)),
-    selectedNationalTeams:
-      state.selectedNationalTeam?.id === nationalTeam.id
-        ? nationalTeam
-        : state.selectedNationalTeam,
+    error: null,
   })),
 
   on(nationalTeamsActions.updateNationalTeamFailure, (state, { error }) => ({

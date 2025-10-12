@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ConfirmationService } from 'primeng/api';
@@ -12,8 +12,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { NationalTeam } from '../../../shared/interfaces/national-team.interface';
 import { nationalTeamsActions } from '../../../store/national-teams/national-teams.actions';
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
-import { sportsActions } from '../../../store/sports/sports.actions';
-import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
   selector: 'app-content-types-list',
@@ -36,22 +34,10 @@ export class NationalTeamsListComponent implements OnInit {
   private readonly confirmationService = inject(ConfirmationService);
 
   readonly nationalTeams = this.store.selectSignal(nationalTeamsFeature.selectNationalTeams);
-  readonly sports = this.store.selectSignal(sportsFeature.selectSports);
   readonly isLoading = this.store.selectSignal(nationalTeamsFeature.selectLoading);
-
-  readonly nationalTeamsWithSportNames = computed(() => {
-    const teams = this.nationalTeams() || [];
-    const sports = this.sports() || [];
-
-    return teams.map((team) => ({
-      ...team,
-      sportName: sports.find((s) => s.id === team.sportId)?.name || 'Unknown Sport',
-    }));
-  });
 
   ngOnInit() {
     this.store.dispatch(nationalTeamsActions.loadNationalTeams({}));
-    this.store.dispatch(sportsActions.loadSports({}));
   }
 
   addNationalTeam() {

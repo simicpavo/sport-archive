@@ -9,11 +9,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
-import {
-  CreateNationalTeamDto,
-  FormState,
-  UpdateNationalTeamDto,
-} from '../../../shared/interfaces/national-team.interface';
 import { nationalTeamsActions } from '../../../store/national-teams/national-teams.actions';
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
 import { sportsActions } from '../../../store/sports/sports.actions';
@@ -48,17 +43,10 @@ export class NationalTeamsFormComponent implements OnInit {
   );
   readonly sports = this.store.selectSignal(sportsFeature.selectSports);
 
-  readonly nationalTeamForm = this.fb.group({
+  readonly nationalTeamForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     sportId: ['', [Validators.required]],
   });
-
-  readonly submitButtonText = computed(() =>
-    this.isEditMode() ? 'Update National Team' : 'Create National Team',
-  );
-  readonly pageTitle = computed(() =>
-    this.isEditMode() ? 'Edit National Team' : 'Create New National Team',
-  );
 
   ngOnInit() {
     this.loadNationalTeamData();
@@ -66,14 +54,14 @@ export class NationalTeamsFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const nationalTeam = this.selectedNationalTeam();
-      if (nationalTeam && this.isEditMode()) {
-        const formValue = { name: nationalTeam.name, sportId: nationalTeam.sportId };
-
+      if (this.selectedNationalTeam() && this.isEditMode()) {
         setTimeout(() => {
-          this.nationalTeamForm.patchValue(formValue);
-          this.nationalTeamForm.markAsPristine();
+          this.nationalTeamForm.patchValue({
+            name: this.selectedNationalTeam()?.name,
+            sportId: this.selectedNationalTeam()?.sportId,
+          });
         });
+        this.nationalTeamForm.markAsPristine();
       }
     });
   }
@@ -95,30 +83,22 @@ export class NationalTeamsFormComponent implements OnInit {
       return;
     }
 
-    const formValue = this.nationalTeamForm.value as FormState;
+    const formValue = this.nationalTeamForm.getRawValue();
 
     if (this.isEditMode()) {
-      const updateData: UpdateNationalTeamDto = {
-        name: formValue.name,
-        sportId: formValue.sportId,
-      };
       this.store.dispatch(
         nationalTeamsActions.updateNationalTeam({
           id: this.nationalTeamId()!,
-          nationalTeam: updateData,
+          nationalTeam: { name: formValue.name, sportId: formValue.sportId },
         }),
       );
     } else {
-      const createData: CreateNationalTeamDto = {
-        name: formValue.name,
-        sportId: formValue.sportId,
-      };
-      this.store.dispatch(nationalTeamsActions.createNationalTeam({ nationalTeam: createData }));
+      this.store.dispatch(
+        nationalTeamsActions.createNationalTeam({
+          nationalTeam: { name: formValue.name, sportId: formValue.sportId },
+        }),
+      );
     }
-
-    setTimeout(() => {
-      this.navigateToNationalTeamsList();
-    }, 100);
   }
 
   private markAllFieldsAsTouched() {
@@ -128,8 +108,6 @@ export class NationalTeamsFormComponent implements OnInit {
   }
 
   protected navigateToNationalTeamsList() {
-    this.router.navigate(['/cms/national-teams']).then(() => {
-      this.store.dispatch(nationalTeamsActions.loadNationalTeams({}));
-    });
+    this.router.navigate(['/cms/national-teams']);
   }
 }

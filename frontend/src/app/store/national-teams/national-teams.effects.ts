@@ -1,4 +1,5 @@
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
@@ -6,14 +7,19 @@ import { NationalTeamsService } from '../../services/national-teams.service';
 import { nationalTeamsActions } from './national-teams.actions';
 
 export const createNationalTeamsEffects = createEffect(
-  (actions$ = inject(Actions), nationalTeamsService = inject(NationalTeamsService)) => {
+  (
+    actions$ = inject(Actions),
+    router = inject(Router),
+    nationalTeamsService = inject(NationalTeamsService),
+  ) => {
     return actions$.pipe(
       ofType(nationalTeamsActions.createNationalTeam),
       switchMap(({ nationalTeam }) =>
         nationalTeamsService.createNationalTeam(nationalTeam).pipe(
-          map((createdNationalTeam) =>
-            nationalTeamsActions.createNationalTeamSuccess({ nationalTeam: createdNationalTeam }),
-          ),
+          map(() => {
+            router.navigate(['/cms/national-teams']);
+            return nationalTeamsActions.createNationalTeamSuccess();
+          }),
           catchError((error) => of(nationalTeamsActions.createNationalTeamFailure({ error }))),
         ),
       ),
@@ -44,14 +50,19 @@ export const loadNationalTeamsEffect = createEffect(
 );
 
 export const updateNationalTeamEffect = createEffect(
-  (action$ = inject(Actions), nationalTeamsService = inject(NationalTeamsService)) => {
+  (
+    action$ = inject(Actions),
+    router = inject(Router),
+    nationalTeamsService = inject(NationalTeamsService),
+  ) => {
     return action$.pipe(
       ofType(nationalTeamsActions.updateNationalTeam),
       switchMap(({ id, nationalTeam }) =>
         nationalTeamsService.updateNationalTeam(id, nationalTeam).pipe(
-          map((updatedNationalTeam) =>
-            nationalTeamsActions.updateNationalTeamSuccess({ nationalTeam: updatedNationalTeam }),
-          ),
+          map(() => {
+            router.navigate(['/cms/national-teams']);
+            return nationalTeamsActions.updateNationalTeamSuccess();
+          }),
           catchError((error) => of(nationalTeamsActions.updateNationalTeamFailure({ error }))),
         ),
       ),
