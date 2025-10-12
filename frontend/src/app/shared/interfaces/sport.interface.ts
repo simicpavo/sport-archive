@@ -13,10 +13,6 @@ export interface UpdateSportDto {
   name?: string;
 }
 
-export interface FormState {
-  name: string;
-}
-
 export interface SportsResponse {
   data: Sport[];
   meta: {

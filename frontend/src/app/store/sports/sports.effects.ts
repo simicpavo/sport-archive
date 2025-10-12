@@ -1,4 +1,5 @@
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
@@ -30,12 +31,15 @@ export const loadSportsEffect = createEffect(
 );
 
 export const createSportEffect = createEffect(
-  (actions$ = inject(Actions), sportsService = inject(SportsService)) => {
+  (actions$ = inject(Actions), router = inject(Router), sportsService = inject(SportsService)) => {
     return actions$.pipe(
       ofType(sportsActions.createSport),
       switchMap(({ sport }) =>
         sportsService.createSport(sport).pipe(
-          map((createdSport) => sportsActions.createSportSuccess({ sport: createdSport })),
+          map(() => {
+            router.navigate(['/cms/sports']);
+            return sportsActions.createSportSuccess();
+          }),
           catchError((error) => of(sportsActions.createSportFailure({ error }))),
         ),
       ),
@@ -45,12 +49,15 @@ export const createSportEffect = createEffect(
 );
 
 export const updateSportEffect = createEffect(
-  (actions$ = inject(Actions), sportsService = inject(SportsService)) => {
+  (actions$ = inject(Actions), router = inject(Router), sportsService = inject(SportsService)) => {
     return actions$.pipe(
       ofType(sportsActions.updateSport),
       switchMap(({ id, sport }) =>
         sportsService.updateSport(id, sport).pipe(
-          map((updatedSport) => sportsActions.updateSportSuccess({ sport: updatedSport })),
+          map(() => {
+            router.navigate(['/cms/sports']);
+            return sportsActions.updateSportSuccess();
+          }),
           catchError((error) => of(sportsActions.updateSportFailure({ error }))),
         ),
       ),

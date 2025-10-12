@@ -54,10 +54,9 @@ export const sportsReducer = createReducer(
     error: null,
   })),
 
-  on(sportsActions.createSportSuccess, (state, { sport }) => ({
+  on(sportsActions.createSportSuccess, (state) => ({
     ...state,
     loading: false,
-    sports: [...state.sports, sport],
     total: state.total + 1,
     error: null,
   })),
@@ -74,11 +73,9 @@ export const sportsReducer = createReducer(
     error: null,
   })),
 
-  on(sportsActions.updateSportSuccess, (state, { sport }) => ({
+  on(sportsActions.updateSportSuccess, (state) => ({
     ...state,
     loading: false,
-    sports: state.sports.map((s) => (s.id === sport.id ? sport : s)),
-    selectedSport: state.selectedSport?.id === sport.id ? sport : state.selectedSport,
     error: null,
   })),
 

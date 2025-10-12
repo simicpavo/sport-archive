@@ -8,11 +8,6 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
-import {
-  CreateSportDto,
-  FormState,
-  UpdateSportDto,
-} from '../../../shared/interfaces/sport.interface';
 import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
 
@@ -41,19 +36,16 @@ export class SportsFormComponent implements OnInit {
   readonly selectedSport = this.store.selectSignal(sportsFeature.selectSelectedSport);
   readonly isEditMode = computed(() => this.sportId() !== null);
 
-  readonly sportForm = this.fb.group({
+  readonly sportForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
   });
 
-  readonly submitButtonText = computed(() => (this.isEditMode() ? 'Update Sport' : 'Create Sport'));
-  readonly pageTitle = computed(() => (this.isEditMode() ? 'Edit Sport' : 'Create New Sport'));
-
   constructor() {
     effect(() => {
-      const sport = this.selectedSport();
-      if (sport) {
-        const formValue = { name: sport.name };
-        this.sportForm.patchValue(formValue);
+      if (this.isEditMode() && this.selectedSport()) {
+        this.sportForm.patchValue({
+          name: this.selectedSport()?.name,
+        });
         this.sportForm.markAsPristine();
       }
     });
@@ -78,17 +70,15 @@ export class SportsFormComponent implements OnInit {
       return;
     }
 
-    const formValue = this.sportForm.value as FormState;
+    const formValue = this.sportForm.getRawValue();
 
     if (this.isEditMode()) {
-      const updateData: UpdateSportDto = { name: formValue.name };
-      this.store.dispatch(sportsActions.updateSport({ id: this.sportId()!, sport: updateData }));
+      this.store.dispatch(
+        sportsActions.updateSport({ id: this.sportId()!, sport: { name: formValue.name } }),
+      );
     } else {
-      const createData: CreateSportDto = { name: formValue.name };
-      this.store.dispatch(sportsActions.createSport({ sport: createData }));
+      this.store.dispatch(sportsActions.createSport({ sport: { name: formValue.name } }));
     }
-
-    this.navigateToSportsList();
   }
 
   private markAllFieldsAsTouched() {
