@@ -23,19 +23,31 @@ export class CompetitionsService {
     if (existing) {
       throw new ConflictException('Competition already exists');
     }
-    return this.prisma.competition.create({
-      data: {
-        name,
-        sportId: dto.sportId,
-        season: dto.season,
-        startDate: dto.startDate,
-        endDate: dto.endDate,
-      },
-    });
+
+    const data: Prisma.CompetitionCreateInput = {
+      name: dto.name,
+      season: dto.season,
+      startDate: dto.startDate,
+      endDate: dto.endDate,
+      sport: { connect: { id: dto.sportId } },
+    };
+
+    return this.prisma.competition.create({ data });
   }
 
   async findAll() {
-    return this.prisma.competition.findMany();
+    return this.prisma.competition.findMany({
+      select: {
+        id: true,
+        name: true,
+        season: true,
+        startDate: true,
+        endDate: true,
+        createdAt: true,
+        updatedAt: true,
+        sport: { select: { name: true } },
+      },
+    });
   }
 
   async findOne(id: string) {
@@ -59,7 +71,19 @@ export class CompetitionsService {
       throw new NotFoundException(`Competition with ID ${id} not found`);
     }
 
-    const data: Prisma.CompetitionUpdateInput = {};
+    const data: Prisma.CompetitionUpdateInput = {
+      ...(dto.name !== undefined && { name: dto.name.trim() }),
+      ...(dto.season !== undefined && { season: dto.season }),
+      ...(dto.sportId !== undefined && {
+        sport: { connect: { id: dto.sportId } },
+      }),
+      ...(dto.startDate !== undefined && {
+        startDate: dto.startDate,
+      }),
+      ...(dto.endDate !== undefined && {
+        endDate: dto.endDate,
+      }),
+    };
 
     if (dto.name !== undefined) {
       const trimmed = dto.name.trim();

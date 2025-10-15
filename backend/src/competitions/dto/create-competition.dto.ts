@@ -17,12 +17,12 @@ export class CreateCompetitionDto {
   @IsOptional()
   season?: string;
 
-  @ApiPropertyOptional({ type: String, format: 'date', example: '1981-08-28' })
+  @ApiPropertyOptional({ example: '1981-08-28' })
   @IsDateString()
   @IsOptional()
   startDate?: string;
 
-  @ApiPropertyOptional({ type: String, format: 'date', example: '1981-08-28' })
+  @ApiPropertyOptional({ example: '1981-08-28' })
   @IsDateString()
   @IsOptional()
   endDate?: string;
