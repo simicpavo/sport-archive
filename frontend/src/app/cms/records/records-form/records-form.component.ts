@@ -10,11 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
-import {
-  CreateRecordDto,
-  FormState,
-  UpdateRecordDto,
-} from '../../../shared/interfaces/record.interface';
+import { FormState } from '../../../shared/interfaces/record.interface';
 import { competitionsActions } from '../../../store/competitions/competitions.actions';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
 import { contentTypesActions } from '../../../store/content-types/content-types.actions';
@@ -58,19 +54,14 @@ export class RecordsFormComponent implements OnInit {
   readonly nationalTeams = this.store.selectSignal(nationalTeamsFeature.selectNationalTeams);
 
   readonly recordsForm = this.fb.group({
-    title: ['', [Validators.required, Validators.minLength(2)]],
-    description: ['', [Validators.required, Validators.minLength(2)]],
+    title: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
+    description: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
     date: [null as Date | null],
-    sportId: ['', [Validators.required]],
+    sportId: this.fb.nonNullable.control('', [Validators.required]),
     competitionId: [''],
     nationalTeamId: [''],
-    contentTypeId: ['', [Validators.required]],
+    contentTypeId: this.fb.nonNullable.control('', [Validators.required]),
   });
-
-  readonly submitButtonText = computed(() =>
-    this.isEditMode() ? 'Update Record' : 'Create Record',
-  );
-  readonly pageTitle = computed(() => (this.isEditMode() ? 'Edit Record' : 'Create New Record'));
 
   ngOnInit() {
     this.loadRecordData();
@@ -78,22 +69,19 @@ export class RecordsFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const record = this.selectedRecord();
-      if (record && this.isEditMode()) {
-        const formValue = {
-          title: record.title,
-          description: record.description,
-          sportId: record.sportId,
-          competitionId: record.competitionId,
-          nationalTeamId: record.nationalTeamId,
-          contentTypeId: record.contentTypeId,
-          date: record.date,
-        };
-
+      if (this.selectedRecord() && this.isEditMode()) {
         setTimeout(() => {
-          this.recordsForm.patchValue(formValue);
-          this.recordsForm.markAsPristine();
+          this.recordsForm.patchValue({
+            title: this.selectedRecord()?.title,
+            description: this.selectedRecord()?.description,
+            date: this.selectedRecord()?.date,
+            sportId: this.selectedRecord()?.sportId,
+            competitionId: this.selectedRecord()?.competitionId,
+            nationalTeamId: this.selectedRecord()?.nationalTeamId,
+            contentTypeId: this.selectedRecord()?.contentTypeId,
+          });
         });
+        this.recordsForm.markAsPristine();
       }
     });
   }
@@ -121,37 +109,35 @@ export class RecordsFormComponent implements OnInit {
     const formValue = this.recordsForm.value as FormState;
 
     if (this.isEditMode()) {
-      const updateData: UpdateRecordDto = {
-        title: formValue.title,
-        description: formValue.description,
-        sportId: formValue.sportId,
-        competitionId: formValue.competitionId,
-        nationalTeamId: formValue.nationalTeamId,
-        contentTypeId: formValue.contentTypeId,
-        date: formValue.date,
-      };
       this.store.dispatch(
         recordsActions.updateRecord({
           id: this.recordId()!,
-          record: updateData,
+          record: {
+            title: formValue.title,
+            description: formValue.description,
+            sportId: formValue.sportId,
+            competitionId: formValue.competitionId,
+            nationalTeamId: formValue.nationalTeamId,
+            contentTypeId: formValue.contentTypeId,
+            date: formValue.date,
+          },
         }),
       );
     } else {
-      const createData: CreateRecordDto = {
-        title: formValue.title,
-        description: formValue.description,
-        sportId: formValue.sportId,
-        competitionId: formValue.competitionId,
-        nationalTeamId: formValue.nationalTeamId,
-        contentTypeId: formValue.contentTypeId,
-        date: formValue.date,
-      };
-      this.store.dispatch(recordsActions.createRecord({ record: createData }));
+      this.store.dispatch(
+        recordsActions.createRecord({
+          record: {
+            title: formValue.title,
+            description: formValue.description,
+            sportId: formValue.sportId,
+            competitionId: formValue.competitionId,
+            nationalTeamId: formValue.nationalTeamId,
+            contentTypeId: formValue.contentTypeId,
+            date: formValue.date,
+          },
+        }),
+      );
     }
-
-    setTimeout(() => {
-      this.navigateToRecordsList();
-    }, 100);
   }
 
   private markAllFieldsAsTouched() {
@@ -161,8 +147,6 @@ export class RecordsFormComponent implements OnInit {
   }
 
   protected navigateToRecordsList() {
-    this.router.navigate(['/cms/records']).then(() => {
-      this.store.dispatch(recordsActions.loadRecords({}));
-    });
+    this.router.navigate(['/cms/records']);
   }
 }

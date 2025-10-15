@@ -21,7 +21,7 @@
   <!-- Data Table -->
   <div class="card">
     <p-table
-      [value]="recordsWithNames()"
+      [value]="mutableRecords()"
       [loading]="isLoading()"
       [paginator]="true"
       [rows]="10"
@@ -35,47 +35,23 @@
     >
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="title" style="width: 10%">
+          <th pSortableColumn="title" style="width: 25%">
             Title
             <p-sortIcon field="title"></p-sortIcon>
           </th>
-          <th pSortableColumn="description" style="width: 10%">
+          <th pSortableColumn="description" style="width: 35%">
             Description
             <p-sortIcon field="description"></p-sortIcon>
           </th>
-          <th pSortableColumn="sportId" style="width: 9%">
-            Sport
-            <p-sortIcon field="sportId"></p-sortIcon>
-          </th>
-          <th pSortableColumn="contentTypeId" style="width: 9%">
+          <th pSortableColumn="contentTypeId" style="width: 15%">
             Content Type
             <p-sortIcon field="contentTypeId"></p-sortIcon>
           </th>
-          <th pSortableColumn="nationalTeamId" style="width: 9%">
-            National Team
-            <p-sortIcon field="nationalTeamId"></p-sortIcon>
-          </th>
-          <th pSortableColumn="competitionId" style="width: 9%">
-            Competition
-            <p-sortIcon field="competitionId"></p-sortIcon>
-          </th>
-          <th pSortableColumn="date" style="width: 9%">
-            Date
-            <p-sortIcon field="date"></p-sortIcon>
-          </th>
-          <th pSortableColumn="createdAt" style="width: 9.5%">
-            Created At
-            <p-sortIcon field="createdAt"></p-sortIcon>
-          </th>
-          <th pSortableColumn="updatedAt" style="width: 9.5%">
+          <th pSortableColumn="updatedAt" style="width: 15%">
             Updated At
             <p-sortIcon field="updatedAt"></p-sortIcon>
           </th>
-          <th pSortableColumn="popularityScore" style="width: 8%">
-            Popularity Score
-            <p-sortIcon field="popularityScore"></p-sortIcon>
-          </th>
-          <th style="width: 8.5%; min-width: 120px">Actions</th>
+          <th style="width: 10%; min-width: 120px">Actions</th>
         </tr>
       </ng-template>
 
@@ -88,35 +64,11 @@
             <span class="font-medium">{{ record.description }}</span>
           </td>
           <td>
-            <span class="font-medium">{{ record.sportName }}</span>
-          </td>
-          <td>
-            <span class="font-medium">{{ record.contentTypeName }}</span>
-          </td>
-          <td>
-            <span class="font-medium">{{ record.nationalTeamName }}</span>
-          </td>
-          <td>
-            <span class="font-medium">{{ record.competitionName }}</span>
-          </td>
-          <td>
-            <span class="text-sm text-color-secondary">
-              {{ record.date | date: 'mediumDate' }}
-            </span>
-          </td>
-          <td>
-            <span class="text-sm text-color-secondary">
-              {{ record.createdAt | date: 'short' }}
-            </span>
+            <span class="font-medium">{{ record.contentType.name }}</span>
           </td>
           <td>
             <span class="text-sm text-color-secondary">
               {{ record.updatedAt | date: 'short' }}
-            </span>
-          </td>
-          <td>
-            <span class="text-sm text-color-secondary">
-              {{ record.popularityScore }}
             </span>
           </td>
 
@@ -149,7 +101,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="11" class="text-center py-8">
+          <td colspan="6" class="text-center py-8">
             <div class="text-color-secondary">
               <i class="pi pi-info-circle text-4xl mb-3 block"></i>
               <p class="text-lg mb-2">No records found</p>
