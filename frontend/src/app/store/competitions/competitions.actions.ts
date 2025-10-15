@@ -1,4 +1,4 @@
-import { createActionGroup, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import {
   Competition,
   CompetitionResponse,
@@ -17,11 +17,11 @@ export const competitionsActions = createActionGroup({
     loadCompetitionsFailure: props<{ error: unknown }>(),
 
     createCompetition: props<{ competition: CreateCompetitionDto }>(),
-    createCompetitionSuccess: props<{ competition: Competition }>(),
+    createCompetitionSuccess: emptyProps(),
     createCompetitionFailure: props<{ error: unknown }>(),
 
     updateCompetition: props<{ id: string; competition: UpdateCompetitionDto }>(),
-    updateCompetitionSuccess: props<{ competition: Competition }>(),
+    updateCompetitionSuccess: emptyProps(),
     updateCompetitionFailure: props<{ error: unknown }>(),
 
     deleteCompetition: props<{ id: string }>(),

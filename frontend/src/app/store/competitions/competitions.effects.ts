@@ -1,4 +1,5 @@
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
@@ -27,14 +28,19 @@ export const loadCompetitionsEffect = createEffect(
 );
 
 export const createCompetitionEffect = createEffect(
-  (actions$ = inject(Actions), competitionsService = inject(CompetitionsService)) => {
+  (
+    actions$ = inject(Actions),
+    router = inject(Router),
+    competitionsService = inject(CompetitionsService),
+  ) => {
     return actions$.pipe(
       ofType(competitionsActions.createCompetition),
       switchMap(({ competition }) =>
         competitionsService.createCompetition(competition).pipe(
-          map((createdCompetition) =>
-            competitionsActions.createCompetitionSuccess({ competition: createdCompetition }),
-          ),
+          map(() => {
+            router.navigate(['/cms/competitions']);
+            return competitionsActions.createCompetitionSuccess();
+          }),
           catchError((error) => of(competitionsActions.createCompetitionFailure({ error }))),
         ),
       ),
@@ -44,12 +50,19 @@ export const createCompetitionEffect = createEffect(
 );
 
 export const updateCompetitionEffect = createEffect(
-  (actions$ = inject(Actions), competitionsService = inject(CompetitionsService)) => {
+  (
+    actions$ = inject(Actions),
+    router = inject(Router),
+    competitionsService = inject(CompetitionsService),
+  ) => {
     return actions$.pipe(
       ofType(competitionsActions.updateCompetition),
       switchMap(({ id, competition }) =>
         competitionsService.updateCompetition(id, competition).pipe(
-          map((competition) => competitionsActions.updateCompetitionSuccess({ competition })),
+          map(() => {
+            router.navigate(['/cms/competitions']);
+            return competitionsActions.updateCompetitionSuccess();
+          }),
           catchError((error) => of(competitionsActions.updateCompetitionFailure({ error }))),
         ),
       ),

@@ -52,10 +52,9 @@ export const competitionsReducer = createReducer(
     error: null,
   })),
 
-  on(competitionsActions.createCompetitionSuccess, (state, { competition }) => ({
+  on(competitionsActions.createCompetitionSuccess, (state) => ({
     ...state,
     loading: false,
-    competitions: [...state.competitions, competition],
     total: state.total + 1,
     error: null,
   })),
@@ -72,12 +71,10 @@ export const competitionsReducer = createReducer(
     error: null,
   })),
 
-  on(competitionsActions.updateCompetitionSuccess, (state, { competition }) => ({
+  on(competitionsActions.updateCompetitionSuccess, (state) => ({
     ...state,
     loading: false,
-    competitions: state.competitions.map((c) => (c.id === competition.id ? competition : c)),
-    selectedCompetition:
-      state.selectedCompetition?.id === competition.id ? competition : state.selectedCompetition,
+    error: null,
   })),
 
   on(competitionsActions.updateCompetitionFailure, (state, { error }) => ({
