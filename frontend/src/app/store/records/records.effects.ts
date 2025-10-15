@@ -1,4 +1,5 @@
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
@@ -27,12 +28,19 @@ export const loadRecordsEffect = createEffect(
 );
 
 export const createRecordEffect = createEffect(
-  (actions$ = inject(Actions), recordsService = inject(RecordsService)) => {
+  (
+    actions$ = inject(Actions),
+    router = inject(Router),
+    recordsService = inject(RecordsService),
+  ) => {
     return actions$.pipe(
       ofType(recordsActions.createRecord),
       switchMap(({ record }) =>
         recordsService.createRecord(record).pipe(
-          map((createdRecord) => recordsActions.createRecordSuccess({ record: createdRecord })),
+          map(() => {
+            router.navigate(['/cms/records']);
+            return recordsActions.createRecordSuccess();
+          }),
           catchError((error) => of(recordsActions.createRecordFailure({ error }))),
         ),
       ),
@@ -42,12 +50,19 @@ export const createRecordEffect = createEffect(
 );
 
 export const updateRecordEffect = createEffect(
-  (actions$ = inject(Actions), recordsService = inject(RecordsService)) => {
+  (
+    actions$ = inject(Actions),
+    router = inject(Router),
+    recordsService = inject(RecordsService),
+  ) => {
     return actions$.pipe(
       ofType(recordsActions.updateRecord),
       switchMap(({ id, record }) =>
         recordsService.updateRecord(id, record).pipe(
-          map((updatedRecord) => recordsActions.updateRecordSuccess({ record: updatedRecord })),
+          map(() => {
+            router.navigate(['/cms/records']);
+            return recordsActions.updateRecordSuccess();
+          }),
           catchError((error) => of(recordsActions.updateRecordFailure({ error }))),
         ),
       ),

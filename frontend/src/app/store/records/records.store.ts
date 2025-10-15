@@ -77,10 +77,9 @@ export const recordsReducer = createReducer(
     error: null,
   })),
 
-  on(recordsActions.createRecordSuccess, (state, { record }) => ({
+  on(recordsActions.createRecordSuccess, (state) => ({
     ...state,
     loading: false,
-    records: [...state.records, record],
     total: state.total + 1,
     error: null,
   })),
@@ -97,11 +96,9 @@ export const recordsReducer = createReducer(
     error: null,
   })),
 
-  on(recordsActions.updateRecordSuccess, (state, { record }) => ({
+  on(recordsActions.updateRecordSuccess, (state) => ({
     ...state,
     loading: false,
-    records: state.records.map((r) => (r.id === record.id ? record : r)),
-    selectedRecord: state.selectedRecord?.id === record.id ? record : state.selectedRecord,
     error: null,
   })),
 
