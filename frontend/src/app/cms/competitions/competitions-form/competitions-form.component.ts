@@ -10,11 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
-import {
-  CreateCompetitionDto,
-  FormState,
-  UpdateCompetitionDto,
-} from '../../../shared/interfaces/competition.interface';
+import { FormState } from '../../../shared/interfaces/competition.interface';
 import { competitionsActions } from '../../../store/competitions/competitions.actions';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
 import { sportsActions } from '../../../store/sports/sports.actions';
@@ -51,33 +47,24 @@ export class CompetitionsFormComponent implements OnInit {
   readonly sports = this.store.selectSignal(sportsFeature.selectSports);
 
   readonly competitionForm = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    season: [''],
-    startDate: [null as Date | null],
-    endDate: [null as Date | null],
-    sportId: ['', [Validators.required]],
+    name: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
+    season: this.fb.nonNullable.control(''),
+    startDate: this.fb.control<Date | null>(null),
+    endDate: this.fb.control<Date | null>(null),
+    sportId: this.fb.nonNullable.control('', [Validators.required]),
   });
-
-  readonly submitButtonText = computed(() =>
-    this.isEditMode() ? 'Update Competition' : 'Create Competition',
-  );
-  readonly pageTitle = computed(() =>
-    this.isEditMode() ? 'Edit Competition' : 'Create New Competition',
-  );
 
   constructor() {
     effect(() => {
-      const competition = this.selectedCompetition();
-      if (competition && this.isEditMode()) {
-        const formValue = {
-          name: competition.name,
-          season: competition.season,
-          startDate: competition.startDate,
-          endDate: competition.endDate,
-          sportId: competition.sportId,
-        };
+      if (this.selectedCompetition() && this.isEditMode()) {
         setTimeout(() => {
-          this.competitionForm.patchValue(formValue);
+          this.competitionForm.patchValue({
+            name: this.selectedCompetition()?.name,
+            season: this.selectedCompetition()?.season,
+            startDate: this.selectedCompetition()?.startDate,
+            endDate: this.selectedCompetition()?.endDate,
+            sportId: this.selectedCompetition()?.sportId,
+          });
           this.competitionForm.markAsPristine();
         });
       }
@@ -108,31 +95,31 @@ export class CompetitionsFormComponent implements OnInit {
     const formValue = this.competitionForm.value as FormState;
 
     if (this.isEditMode()) {
-      const updateData: UpdateCompetitionDto = {
-        name: formValue.name,
-        season: formValue.season,
-        startDate: formValue.startDate,
-        endDate: formValue.endDate,
-        sportId: formValue.sportId,
-      };
       this.store.dispatch(
         competitionsActions.updateCompetition({
           id: this.competitionId()!,
-          competition: updateData,
+          competition: {
+            name: formValue.name,
+            season: formValue.season,
+            startDate: formValue.startDate,
+            endDate: formValue.endDate,
+            sportId: formValue.sportId,
+          },
         }),
       );
     } else {
-      const createData: CreateCompetitionDto = {
-        name: formValue.name,
-        season: formValue.season,
-        startDate: formValue.startDate,
-        endDate: formValue.endDate,
-        sportId: formValue.sportId,
-      };
-      this.store.dispatch(competitionsActions.createCompetition({ competition: createData }));
+      this.store.dispatch(
+        competitionsActions.createCompetition({
+          competition: {
+            name: formValue.name,
+            season: formValue.season,
+            startDate: formValue.startDate,
+            endDate: formValue.endDate,
+            sportId: formValue.sportId,
+          },
+        }),
+      );
     }
-
-    this.navigateToCompetitionsList();
   }
 
   private markAllFieldsAsTouched() {

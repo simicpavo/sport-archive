@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ConfirmationService } from 'primeng/api';
@@ -12,8 +12,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Competition } from '../../../shared/interfaces/competition.interface';
 import { competitionsActions } from '../../../store/competitions/competitions.actions';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
-import { sportsActions } from '../../../store/sports/sports.actions';
-import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
   selector: 'app-competitions-list',
@@ -36,22 +34,10 @@ export class CompetitionsListComponent implements OnInit {
   private readonly confirmationService = inject(ConfirmationService);
 
   readonly competitions = this.store.selectSignal(competitionsFeature.selectCompetitions);
-  readonly sports = this.store.selectSignal(sportsFeature.selectSports);
   readonly isLoading = this.store.selectSignal(competitionsFeature.selectLoading);
-
-  readonly competitionsWithSportNames = computed(() => {
-    const competitions = this.competitions() || [];
-    const sports = this.sports() || [];
-
-    return competitions.map((competition) => ({
-      ...competition,
-      sportName: sports.find((s) => s.id === competition.sportId)?.name || 'Unknown Sport',
-    }));
-  });
 
   ngOnInit() {
     this.store.dispatch(competitionsActions.loadCompetitions({}));
-    this.store.dispatch(sportsActions.loadSports({}));
   }
 
   addCompetition() {

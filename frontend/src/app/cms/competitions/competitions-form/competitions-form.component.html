@@ -2,7 +2,9 @@
   <div class="max-w-md mx-auto">
     <!-- Header -->
     <div class="mb-6 text-center">
-      <h2 class="text-3xl font-bold m-0 text-900">{{ pageTitle() }}</h2>
+      <h2 class="text-3xl font-bold m-0 text-900">
+        {{ this.isEditMode() ? 'Edit Competition' : 'Create New Competition' }}
+      </h2>
       <p class="text-color-secondary mt-2 text-lg">
         {{
           isEditMode() ? 'Update competition information' : 'Add a new competition to the system'
@@ -33,7 +35,6 @@
               formControlName="name"
               placeholder="Enter competition name (e.g., Premier League)"
               class="w-full"
-              autocomplete="off"
             />
 
             @if (
@@ -68,7 +69,6 @@
               formControlName="season"
               placeholder="Enter competition season (e.g., 2023/2024)"
               class="w-full"
-              autocomplete="off"
             />
             <label for="sportId" class="block font-medium mb-2 mt-2"> Sport </label>
             <p-select
@@ -97,6 +97,8 @@
             <label for="startDate" class="block font-medium mb-2 mt-2"> Start Date </label>
             <p-datePicker
               id="startDate"
+              dateFormat="yy.mm.dd"
+              hourFormat="24"
               formControlName="startDate"
               placeholder="Enter start date"
               class="w-full"
@@ -106,6 +108,8 @@
             <label for="endDate" class="block font-medium mb-2 mt-2"> End Date </label>
             <p-datePicker
               id="endDate"
+              dateFormat="yy.mm.dd"
+              hourFormat="24"
               formControlName="endDate"
               placeholder="Enter end date"
               class="w-full"
@@ -127,7 +131,7 @@
 
             <p-button
               type="submit"
-              [label]="submitButtonText()"
+              [label]="this.isEditMode() ? 'Update Competition' : 'Create Competition'"
               [loading]="isLoading()"
               [disabled]="
                 competitionForm.invalid ||
