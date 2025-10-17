@@ -1,0 +1,139 @@
+<div class="cms-dashboard">
+  <p-drawer
+    [(visible)]="sidebarVisible"
+    position="left"
+    [modal]="true"
+    [style]="{ width: '300px' }"
+  >
+    <ng-template pTemplate="header">
+      <span class="font-semibold text-xl">Manage</span>
+    </ng-template>
+    <ng-template pTemplate="content">
+      <ul class="list-none p-0 m-0">
+        <li class="mb-3">
+          <a
+            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors"
+          >
+            <i class="pi pi-book mr-2"></i>
+            <button
+              class="hover:underline cursor-pointer"
+              (click)="this.router.navigate(['/cms/records'])"
+            >
+              Records
+            </button>
+          </a>
+        </li>
+        <li class="mb-3">
+          <a
+            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors"
+          >
+            <i class="pi pi-crown mr-2"></i>
+            <button
+              class="hover:underline cursor-pointer"
+              (click)="this.router.navigate(['/cms/clubs'])"
+            >
+              Clubs
+            </button>
+          </a>
+        </li>
+        <li class="mb-3">
+          <a
+            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors"
+          >
+            <i class="pi pi-trophy mr-2"></i>
+            <button
+              class="hover:underline cursor-pointer"
+              (click)="this.router.navigate(['/cms/sports'])"
+            >
+              Sports
+            </button>
+          </a>
+        </li>
+        <li class="mb-3">
+          <a
+            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors"
+          >
+            <i class="pi pi-globe mr-2"></i>
+            <button
+              class="hover:underline cursor-pointer"
+              (click)="this.router.navigate(['/cms/national-teams'])"
+            >
+              National Teams
+            </button>
+          </a>
+        </li>
+        <li class="mb-3">
+          <a
+            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors"
+          >
+            <i class="pi pi-stopwatch mr-2"></i>
+            <button
+              class="hover:underline cursor-pointer"
+              (click)="this.router.navigate(['cms/competitions'])"
+            >
+              Competitions
+            </button>
+          </a>
+        </li>
+        <li class="mb-3">
+          <a
+            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors"
+          >
+            <i class="pi pi-pen-to-square mr-2"></i>
+            <button
+              class="hover:underline cursor-pointer"
+              (click)="this.router.navigate(['cms/content-types'])"
+            >
+              Content Types
+            </button>
+          </a>
+        </li>
+        <li class="mb-3">
+          <a
+            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors"
+          >
+            <i class="pi pi-link mr-2"></i>
+            <button
+              class="hover:underline cursor-pointer"
+              (click)="this.router.navigate(['cms/media-sources'])"
+            >
+              Media Sources
+            </button>
+          </a>
+        </li>
+        <li class="mb-3">
+          <a
+            class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors"
+          >
+            <i class="pi pi-user mr-2"></i>
+            <button
+              class="hover:underline cursor-pointer"
+              (click)="this.router.navigate(['cms/persons'])"
+            >
+              Persons
+            </button>
+          </a>
+        </li>
+      </ul>
+    </ng-template>
+  </p-drawer>
+
+  <div class="w-screen-xl mx-auto">
+    <div
+      class="flex align-items-center gap-3 p-4 surface-0 border-bottom-1 surface-border sticky top-0 z-1"
+    >
+      <p-button
+        icon="pi pi-bars"
+        (click)="sidebarVisible.set(true)"
+        [rounded]="true"
+        [text]="true"
+        severity="secondary"
+      />
+      <div class="flex align-items-center gap-3">
+        <h1 class="text-4xl font-bold m-0 text-900">Dashboard</h1>
+      </div>
+    </div>
+
+    <div class="p-4"><!-- content here --></div>
+  </div>
+</div>
