@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, computed, effect, inject, OnInit, signal, untracked } from '@angular/core';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { FormState } from '../../../shared/interfaces/person.interface';
 import { personsActions } from '../../../store/persons/persons.actions';
 import { personsFeature } from '../../../store/persons/persons.store';
@@ -23,7 +23,7 @@ import { personsFeature } from '../../../store/persons/persons.store';
     InputTextModule,
     ButtonModule,
     ToastModule,
-    ProgressSpinnerModule,
+    LoadingSpinnerComponent,
     DatePickerModule,
   ],
   templateUrl: './persons-form.component.html',
@@ -43,19 +43,21 @@ export class PersonsFormComponent implements OnInit {
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
     nickname: [''],
-    birthDate: [null as Date | null, [Validators.required]],
+    birthDate: [new FormControl<Date | null>(null), [Validators.required]],
     nationality: ['', [Validators.required]],
   });
 
   constructor() {
     effect(() => {
       if (this.selectedPerson() && this.isEditMode()) {
-        setTimeout(() => {
+        untracked(() => {
           this.personForm.patchValue({
             firstName: this.selectedPerson()?.firstName,
             lastName: this.selectedPerson()?.lastName,
             nickname: this.selectedPerson()?.nickname,
-            birthDate: this.selectedPerson()?.birthDate,
+            birthDate: this.selectedPerson()?.birthDate
+              ? new Date(this.selectedPerson()!.birthDate)
+              : null,
             nationality: this.selectedPerson()?.nationality,
           });
         });

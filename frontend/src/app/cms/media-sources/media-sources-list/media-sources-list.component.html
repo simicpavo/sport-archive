@@ -109,12 +109,11 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="6" class="text-center py-8">
-            <div class="text-color-secondary">
-              <i class="pi pi-info-circle text-4xl mb-3 block"></i>
-              <p class="text-lg mb-2">No media sources found</p>
-              <p class="text-sm">Click "Add Media Source" to create your first media source</p>
-            </div>
+          <td colspan="6">
+            <app-table-empty-message
+              title="No Media Sources Found"
+              message="Click the 'Add Media Source' button to create one."
+            ></app-table-empty-message>
           </td>
         </tr>
       </ng-template>

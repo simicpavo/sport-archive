@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { nationalTeamsActions } from '../../../store/national-teams/national-teams.actions';
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
 import { sportsActions } from '../../../store/sports/sports.actions';
@@ -24,7 +24,7 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     InputTextModule,
     ButtonModule,
     ToastModule,
-    ProgressSpinnerModule,
+    LoadingSpinnerComponent,
     SelectModule,
   ],
   templateUrl: './national-teams-form.component.html',
@@ -55,7 +55,7 @@ export class NationalTeamsFormComponent implements OnInit {
   constructor() {
     effect(() => {
       if (this.selectedNationalTeam() && this.isEditMode()) {
-        setTimeout(() => {
+        untracked(() => {
           this.nationalTeamForm.patchValue({
             name: this.selectedNationalTeam()?.name,
             sportId: this.selectedNationalTeam()?.sportId,

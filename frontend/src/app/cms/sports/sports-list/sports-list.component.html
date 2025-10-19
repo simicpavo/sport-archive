@@ -95,12 +95,11 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="4" class="text-center py-8">
-            <div class="text-color-secondary">
-              <i class="pi pi-info-circle text-4xl mb-3 block"></i>
-              <p class="text-lg mb-2">No sports found</p>
-              <p class="text-sm">Click "Add Sport" to create your first sport</p>
-            </div>
+          <td colspan="4">
+            <app-table-empty-message
+              title="No Sports Found"
+              message="Click the 'Add Sport' button to create one."
+            ></app-table-empty-message>
           </td>
         </tr>
       </ng-template>

@@ -127,12 +127,11 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="8" class="text-center py-8">
-            <div class="text-color-secondary">
-              <i class="pi pi-info-circle text-4xl mb-3 block"></i>
-              <p class="text-lg mb-2">No competitions found</p>
-              <p class="text-sm">Click "Add Competition" to create your first competition</p>
-            </div>
+          <td colspan="8">
+            <app-table-empty-message
+              title="No Competitions Found"
+              message="Click the 'Add Competition' button to create one."
+            ></app-table-empty-message>
           </td>
         </tr>
       </ng-template>

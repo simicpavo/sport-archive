@@ -9,6 +9,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { Competition } from '../../../shared/interfaces/competition.interface';
 import { competitionsActions } from '../../../store/competitions/competitions.actions';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
@@ -24,6 +25,7 @@ import { competitionsFeature } from '../../../store/competitions/competitions.st
     ConfirmDialogModule,
     ToastModule,
     TooltipModule,
+    TableEmptyMessageComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './competitions-list.component.html',

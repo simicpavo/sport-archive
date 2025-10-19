@@ -9,6 +9,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { NationalTeam } from '../../../shared/interfaces/national-team.interface';
 import { nationalTeamsActions } from '../../../store/national-teams/national-teams.actions';
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
@@ -24,6 +25,7 @@ import { nationalTeamsFeature } from '../../../store/national-teams/national-tea
     ConfirmDialogModule,
     ToastModule,
     TooltipModule,
+    TableEmptyMessageComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './national-teams-list.component.html',

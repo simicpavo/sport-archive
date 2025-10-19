@@ -9,6 +9,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { ContentType } from '../../../shared/interfaces/content-type.interface';
 import { contentTypesActions } from '../../../store/content-types/content-types.actions';
 import { contentTypesFeature } from '../../../store/content-types/content-types.store';
@@ -24,6 +25,7 @@ import { contentTypesFeature } from '../../../store/content-types/content-types.
     ConfirmDialogModule,
     ToastModule,
     TooltipModule,
+    TableEmptyMessageComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './content-types-list.component.html',

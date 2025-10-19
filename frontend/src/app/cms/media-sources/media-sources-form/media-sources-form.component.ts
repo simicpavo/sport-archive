@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { mediaSourcesActions } from '../../../store/media-sources/media-sources.actions';
 import { mediaSourcesFeature } from '../../../store/media-sources/media-sources.store';
 
@@ -21,7 +21,7 @@ import { mediaSourcesFeature } from '../../../store/media-sources/media-sources.
     InputTextModule,
     ButtonModule,
     ToastModule,
-    ProgressSpinnerModule,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './media-sources-form.component.html',
 })
@@ -51,7 +51,7 @@ export class MediaSourcesFormComponent implements OnInit {
   constructor() {
     effect(() => {
       if (this.selectedMediaSource() && this.isEditMode()) {
-        setTimeout(() => {
+        untracked(() => {
           this.mediaSourceForm.patchValue({
             baseUrl: this.selectedMediaSource()?.baseUrl,
             urlPath: this.selectedMediaSource()?.urlPath,

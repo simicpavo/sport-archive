@@ -98,12 +98,11 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5" class="text-center py-8">
-            <div class="text-color-secondary">
-              <i class="pi pi-info-circle text-4xl mb-3 block"></i>
-              <p class="text-lg mb-2">No clubs found</p>
-              <p class="text-sm">Click "Add Club" to create your first club</p>
-            </div>
+          <td colspan="5">
+            <app-table-empty-message
+              title="No clubs found."
+              message="Click 'Add Club' to create your first club."
+            ></app-table-empty-message>
           </td>
         </tr>
       </ng-template>
