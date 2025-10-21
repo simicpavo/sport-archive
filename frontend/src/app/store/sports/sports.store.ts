@@ -91,12 +91,9 @@ export const sportsReducer = createReducer(
     error: null,
   })),
 
-  on(sportsActions.deleteSportSuccess, (state, { id }) => ({
+  on(sportsActions.deleteSportSuccess, (state) => ({
     ...state,
     loading: false,
-    sports: state.sports.filter((sport) => sport.id !== id),
-    total: state.total - 1,
-    selectedSport: state.selectedSport?.id === id ? null : state.selectedSport,
     error: null,
   })),
 

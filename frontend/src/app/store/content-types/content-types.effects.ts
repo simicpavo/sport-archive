@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { ContentTypesService } from '../../services/content-types.service';
 import { contentTypesActions } from './content-types.actions';
 
@@ -80,7 +80,10 @@ export const deleteContentTypeEffect = createEffect(
       ofType(contentTypesActions.deleteContentType),
       switchMap(({ id }) =>
         contentTypesService.deleteContentType(id).pipe(
-          map(() => contentTypesActions.deleteContentTypeSuccess({ id })),
+          mergeMap(() => [
+            contentTypesActions.deleteContentTypeSuccess({ id }),
+            contentTypesActions.loadContentTypes({}),
+          ]),
           catchError((error) => of(contentTypesActions.deleteContentTypeFailure({ error }))),
         ),
       ),

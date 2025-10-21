@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { CompetitionsService } from '../../services/competitions.service';
 import { competitionsActions } from './competitions.actions';
 
@@ -77,7 +77,10 @@ export const deleteCompetitionEffect = createEffect(
       ofType(competitionsActions.deleteCompetition),
       switchMap(({ id }) =>
         competitionsService.deleteCompetition(id).pipe(
-          map(() => competitionsActions.deleteCompetitionSuccess({ id })),
+          mergeMap(() => [
+            competitionsActions.deleteCompetitionSuccess({ id }),
+            competitionsActions.loadCompetitions({}),
+          ]),
           catchError((error) => of(competitionsActions.deleteCompetitionFailure({ error }))),
         ),
       ),

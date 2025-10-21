@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { NationalTeamsService } from '../../services/national-teams.service';
 import { nationalTeamsActions } from './national-teams.actions';
 
@@ -77,7 +77,10 @@ export const deleteNationalTeamEffect = createEffect(
       ofType(nationalTeamsActions.deleteNationalTeam),
       switchMap(({ id }) =>
         nationalTeamsService.deleteNationalTeam(id).pipe(
-          map(() => nationalTeamsActions.deleteNationalTeamSuccess({ id })),
+          mergeMap(() => [
+            nationalTeamsActions.deleteNationalTeamSuccess({ id }),
+            nationalTeamsActions.loadNationalTeams({}),
+          ]),
           catchError((error) => of(nationalTeamsActions.deleteNationalTeamFailure({ error }))),
         ),
       ),

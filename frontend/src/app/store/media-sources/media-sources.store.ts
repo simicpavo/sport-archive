@@ -89,12 +89,9 @@ export const mediaSourcesReducer = createReducer(
     error: null,
   })),
 
-  on(mediaSourcesActions.deleteMediaSourceSuccess, (state, { id }) => ({
+  on(mediaSourcesActions.deleteMediaSourceSuccess, (state) => ({
     ...state,
     loading: false,
-    mediaSources: state.mediaSources.filter((mediaSource) => mediaSource.id !== id),
-    total: state.total - 1,
-    selectedMediaSource: state.selectedMediaSource?.id === id ? null : state.selectedMediaSource,
     error: null,
   })),
 

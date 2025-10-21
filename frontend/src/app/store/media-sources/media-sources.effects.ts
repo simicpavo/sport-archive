@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { MediaSourcesService } from '../../services/media-sources.service';
 import { mediaSourcesActions } from './media-sources.actions';
 
@@ -78,7 +78,10 @@ export const deleteMediaSourceEffect = createEffect(
       ofType(mediaSourcesActions.deleteMediaSource),
       switchMap(({ id }) =>
         mediaSourcesService.deleteMediaSource(id).pipe(
-          map(() => mediaSourcesActions.deleteMediaSourceSuccess({ id })),
+          mergeMap(() => [
+            mediaSourcesActions.deleteMediaSourceSuccess({ id }),
+            mediaSourcesActions.loadMediaSources({}),
+          ]),
           catchError((error) => of(mediaSourcesActions.deleteMediaSourceFailure({ error }))),
         ),
       ),

@@ -89,12 +89,9 @@ export const competitionsReducer = createReducer(
     error: null,
   })),
 
-  on(competitionsActions.deleteCompetitionSuccess, (state, { id }) => ({
+  on(competitionsActions.deleteCompetitionSuccess, (state) => ({
     ...state,
     loading: false,
-    competitions: state.competitions.filter((c) => c.id !== id),
-    total: state.total - 1,
-    selectedCompetition: state.selectedCompetition?.id === id ? null : state.selectedCompetition,
     error: null,
   })),
 

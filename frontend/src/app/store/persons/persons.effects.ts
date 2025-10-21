@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { PersonsService } from '../../services/persons.service';
 import { personsActions } from './persons.actions';
 
@@ -77,7 +77,10 @@ export const deletePersonEffect = createEffect(
       ofType(personsActions.deletePerson),
       switchMap(({ id }) =>
         personsService.deletePerson(id).pipe(
-          map(() => personsActions.deletePersonSuccess({ id })),
+          mergeMap(() => [
+            personsActions.deletePersonSuccess({ id }),
+            personsActions.loadPersons({}),
+          ]),
           catchError((error) => of(personsActions.deletePersonFailure({ error }))),
         ),
       ),

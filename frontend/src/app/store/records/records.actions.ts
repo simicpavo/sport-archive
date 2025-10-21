@@ -9,6 +9,8 @@ import {
 export const recordsActions = createActionGroup({
   source: 'Records',
   events: {
+    initializeRecordForm: props<{ recordId?: string }>(),
+
     loadRecords: props<{ id?: string }>(),
     loadRecordsSuccess: props<{ response?: RecordResponse; record?: Record }>(),
     loadRecordsFailure: props<{ error: unknown }>(),

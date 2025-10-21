@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { SportsService } from '../../services/sports.service';
 import { sportsActions } from './sports.actions';
 
@@ -72,7 +72,7 @@ export const deleteSportEffect = createEffect(
       ofType(sportsActions.deleteSport),
       switchMap(({ id }) =>
         sportsService.deleteSport(id).pipe(
-          map(() => sportsActions.deleteSportSuccess({ id })),
+          mergeMap(() => [sportsActions.deleteSportSuccess({ id }), sportsActions.loadSports({})]),
           catchError((error) => of(sportsActions.deleteSportFailure({ error }))),
         ),
       ),

@@ -52,31 +52,6 @@ export const recordsReducer = createReducer(
     error: null,
   })),
 
-  on(recordsActions.loadRecordsSuccess, (state, { response, record }) => ({
-    ...state,
-    loading: false,
-    ...(response && {
-      records: response.data,
-      total: response.meta.total,
-    }),
-    ...(record && {
-      selectedRecord: record,
-    }),
-    error: null,
-  })),
-
-  on(recordsActions.loadRecordsFailure, (state, { error }) => ({
-    ...state,
-    loading: false,
-    error,
-  })),
-
-  on(recordsActions.createRecord, (state) => ({
-    ...state,
-    loading: true,
-    error: null,
-  })),
-
   on(recordsActions.createRecordSuccess, (state) => ({
     ...state,
     loading: false,
@@ -114,12 +89,9 @@ export const recordsReducer = createReducer(
     error: null,
   })),
 
-  on(recordsActions.deleteRecordSuccess, (state, { id }) => ({
+  on(recordsActions.deleteRecordSuccess, (state) => ({
     ...state,
     loading: false,
-    records: state.records.filter((r) => r.id !== id),
-    total: state.total - 1,
-    selectedRecord: state.selectedRecord?.id === id ? null : state.selectedRecord,
     error: null,
   })),
 

@@ -89,12 +89,9 @@ export const clubsReducer = createReducer(
     error: null,
   })),
 
-  on(clubsActions.deleteClubSuccess, (state, { id }) => ({
+  on(clubsActions.deleteClubSuccess, (state) => ({
     ...state,
     loading: false,
-    clubs: state.clubs.filter((c) => c.id !== id),
-    total: state.total - 1,
-    selectedClub: state.selectedClub?.id === id ? null : state.selectedClub,
     error: null,
   })),
 

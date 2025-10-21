@@ -91,12 +91,9 @@ export const contentTypesReducer = createReducer(
     error: null,
   })),
 
-  on(contentTypesActions.deleteContentTypeSuccess, (state, { id }) => ({
+  on(contentTypesActions.deleteContentTypeSuccess, (state) => ({
     ...state,
     loading: false,
-    contentTypes: state.contentTypes.filter((contentType) => contentType.id !== id),
-    total: state.total - 1,
-    selectedContentType: state.selectedContentType?.id === id ? null : state.selectedContentType,
     error: null,
   })),
 
