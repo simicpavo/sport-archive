@@ -25,14 +25,6 @@ export interface UpdatePersonDto {
   nationality?: string;
 }
 
-export interface FormState {
-  firstName: string;
-  lastName: string;
-  nickname: string;
-  birthDate: Date;
-  nationality: string;
-}
-
 export interface PersonResponse {
   data: Person[];
   meta: {
