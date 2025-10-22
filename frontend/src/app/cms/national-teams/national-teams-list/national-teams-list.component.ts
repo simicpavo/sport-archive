@@ -10,6 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
+import { PageHeaderComponent } from '../../../shared/components/header.component';
 import { NationalTeam } from '../../../shared/interfaces/national-team.interface';
 import { nationalTeamsActions } from '../../../store/national-teams/national-teams.actions';
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
@@ -26,6 +27,7 @@ import { nationalTeamsFeature } from '../../../store/national-teams/national-tea
     ToastModule,
     TooltipModule,
     TableEmptyMessageComponent,
+    PageHeaderComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './national-teams-list.component.html',

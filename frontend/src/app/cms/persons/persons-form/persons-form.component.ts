@@ -9,7 +9,6 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
-import { FormState } from '../../../shared/interfaces/person.interface';
 import { personsActions } from '../../../store/persons/persons.actions';
 import { personsFeature } from '../../../store/persons/persons.store';
 
@@ -43,7 +42,7 @@ export class PersonsFormComponent implements OnInit {
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
     nickname: [''],
-    birthDate: [new FormControl<Date | null>(null), [Validators.required]],
+    birthDate: new FormControl<Date | null>(null, [Validators.required]),
     nationality: ['', [Validators.required]],
   });
 
@@ -85,31 +84,27 @@ export class PersonsFormComponent implements OnInit {
       return;
     }
 
-    const formValue = this.personForm.value as FormState;
+    const formValue = this.personForm.getRawValue();
+
+    const personData = {
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      nickname: formValue.nickname,
+      birthDate: formValue.birthDate!,
+      nationality: formValue.nationality,
+    };
 
     if (this.isEditMode()) {
       this.store.dispatch(
         personsActions.updatePerson({
           id: this.personId()!,
-          person: {
-            firstName: formValue.firstName,
-            lastName: formValue.lastName,
-            nickname: formValue.nickname,
-            birthDate: formValue.birthDate,
-            nationality: formValue.nationality,
-          },
+          person: personData,
         }),
       );
     } else {
       this.store.dispatch(
         personsActions.createPerson({
-          person: {
-            firstName: formValue.firstName,
-            lastName: formValue.lastName,
-            nickname: formValue.nickname,
-            birthDate: formValue.birthDate,
-            nationality: formValue.nationality,
-          },
+          person: personData,
         }),
       );
     }

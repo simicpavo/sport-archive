@@ -10,7 +10,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
-import { FormState } from '../../../shared/interfaces/competition.interface';
 import { competitionsActions } from '../../../store/competitions/competitions.actions';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
 import { sportsActions } from '../../../store/sports/sports.actions';
@@ -96,31 +95,27 @@ export class CompetitionsFormComponent implements OnInit {
       return;
     }
 
-    const formValue = this.competitionForm.value as FormState;
+    const formValue = this.competitionForm.getRawValue();
+
+    const competitionData = {
+      name: formValue.name,
+      season: formValue.season,
+      startDate: formValue.startDate || undefined,
+      endDate: formValue.endDate || undefined,
+      sportId: formValue.sportId,
+    };
 
     if (this.isEditMode()) {
       this.store.dispatch(
         competitionsActions.updateCompetition({
           id: this.competitionId()!,
-          competition: {
-            name: formValue.name,
-            season: formValue.season,
-            startDate: formValue.startDate,
-            endDate: formValue.endDate,
-            sportId: formValue.sportId,
-          },
+          competition: competitionData,
         }),
       );
     } else {
       this.store.dispatch(
         competitionsActions.createCompetition({
-          competition: {
-            name: formValue.name,
-            season: formValue.season,
-            startDate: formValue.startDate,
-            endDate: formValue.endDate,
-            sportId: formValue.sportId,
-          },
+          competition: competitionData,
         }),
       );
     }

@@ -10,6 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
+import { PageHeaderComponent } from '../../../shared/components/header.component';
 import { Sport } from '../../../shared/interfaces/sport.interface';
 import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
@@ -26,6 +27,7 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     ToastModule,
     TooltipModule,
     TableEmptyMessageComponent,
+    PageHeaderComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './sports-list.component.html',

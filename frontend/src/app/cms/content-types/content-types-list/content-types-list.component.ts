@@ -10,6 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
+import { PageHeaderComponent } from '../../../shared/components/header.component';
 import { ContentType } from '../../../shared/interfaces/content-type.interface';
 import { contentTypesActions } from '../../../store/content-types/content-types.actions';
 import { contentTypesFeature } from '../../../store/content-types/content-types.store';
@@ -26,6 +27,7 @@ import { contentTypesFeature } from '../../../store/content-types/content-types.
     ToastModule,
     TooltipModule,
     TableEmptyMessageComponent,
+    PageHeaderComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './content-types-list.component.html',

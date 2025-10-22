@@ -10,6 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
+import { PageHeaderComponent } from '../../../shared/components/header.component';
 import { Club } from '../../../shared/interfaces/club.interface';
 import { clubsActions } from '../../../store/clubs/clubs.actions';
 import { clubsFeature } from '../../../store/clubs/clubs.store';
@@ -26,6 +27,7 @@ import { clubsFeature } from '../../../store/clubs/clubs.store';
     ToastModule,
     TooltipModule,
     TableEmptyMessageComponent,
+    PageHeaderComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './clubs-list.component.html',
