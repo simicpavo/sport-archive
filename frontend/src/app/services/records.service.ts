@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import {
   CreateRecordDto,
   Record,
@@ -12,7 +13,7 @@ import {
   providedIn: 'root',
 })
 export class RecordsService {
-  private readonly apiUrl = 'http://localhost:3000/records';
+  private readonly apiUrl = `${environment?.apiUrl}/records`;
   private readonly http = inject(HttpClient);
 
   getRecords(): Observable<RecordResponse> {

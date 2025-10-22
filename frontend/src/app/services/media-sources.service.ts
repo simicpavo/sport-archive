@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import {
   CreateMediaSourceDto,
   MediaSource,
@@ -10,7 +11,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class MediaSourcesService {
-  private readonly apiUrl = 'http://localhost:3000/media-sources';
+  private readonly apiUrl = `${environment?.apiUrl}/media-sources`;
   private readonly http = inject(HttpClient);
 
   getMediaSources(): Observable<MediaSourceResponse> {

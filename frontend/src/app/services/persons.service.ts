@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import {
   CreatePersonDto,
   Person,
@@ -10,7 +11,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class PersonsService {
-  private readonly apiUrl = 'http://localhost:3000/persons';
+  private readonly apiUrl = `${environment?.apiUrl}/persons`;
   private readonly http = inject(HttpClient);
 
   getPersons(): Observable<PersonResponse> {

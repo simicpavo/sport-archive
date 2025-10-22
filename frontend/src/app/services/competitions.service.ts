@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import {
   Competition,
   CompetitionResponse,
@@ -10,10 +11,11 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class CompetitionsService {
-  private readonly apiUrl = 'http://localhost:3000/competitions';
+  private readonly apiUrl = `${environment?.apiUrl}/competitions`;
   private readonly http = inject(HttpClient);
 
   getCompetitions(): Observable<CompetitionResponse> {
+    console.log(environment.apiUrl);
     return this.http.get<Competition[]>(this.apiUrl).pipe(
       map((competitions: Competition[]) => ({
         data: competitions,

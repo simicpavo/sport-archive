@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { Club, ClubResponse } from '../shared/interfaces/club.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ClubsService {
-  private readonly apiUrl = 'http://localhost:3000/clubs';
+  private readonly apiUrl = `${environment?.apiUrl}/clubs`;
   private readonly http = inject(HttpClient);
 
   getClubs(): Observable<ClubResponse> {
