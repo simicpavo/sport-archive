@@ -20,15 +20,15 @@
       <ng-template pTemplate="content">
         <form [formGroup]="personForm" (ngSubmit)="onSubmit()">
           <div class="field mb-4">
-            <label for="firstName" class="block font-medium mb-2"> First Name </label>
+            <label class="block font-medium mb-2" for="firstName"> First Name </label>
             <input
-              id="firstName"
-              type="text"
-              pInputText
-              formControlName="firstName"
-              placeholder="Enter first name"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="firstName"
+              id="firstName"
+              pInputText
+              placeholder="Enter first name"
+              type="text"
             />
             @if (
               personForm.get('firstName')?.hasError('required') &&
@@ -41,15 +41,15 @@
                 This field is required!
               </span>
             }
-            <label for="lastName" class="block font-medium mb-2 mt-2"> Last Name </label>
+            <label class="block font-medium mb-2 mt-2" for="lastName"> Last Name </label>
             <input
-              id="lastName"
-              type="text"
-              pInputText
-              formControlName="lastName"
-              placeholder="Enter last name"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="lastName"
+              id="lastName"
+              pInputText
+              placeholder="Enter last name"
+              type="text"
             />
             @if (
               personForm.get('lastName')?.hasError('required') &&
@@ -62,25 +62,25 @@
                 This field is required!
               </span>
             }
-            <label for="nickname" class="block font-medium mb-2 mt-2"> Nickname </label>
+            <label class="block font-medium mb-2 mt-2" for="nickname"> Nickname </label>
             <input
-              id="nickname"
-              type="text"
-              pInputText
+              autocomplete="off"
+              class="w-full"
               formControlName="nickname"
-              placeholder="Enter nickname"
-              class="w-full"
-              autocomplete="off"
-            />
-            <label for="nationality" class="block font-medium mb-2 mt-2"> Nationality </label>
-            <input
-              id="nationality"
-              type="text"
+              id="nickname"
               pInputText
-              formControlName="nationality"
-              placeholder="Enter nationality"
-              class="w-full"
+              placeholder="Enter nickname"
+              type="text"
+            />
+            <label class="block font-medium mb-2 mt-2" for="nationality"> Nationality </label>
+            <input
               autocomplete="off"
+              class="w-full"
+              formControlName="nationality"
+              id="nationality"
+              pInputText
+              placeholder="Enter nationality"
+              type="text"
             />
             @if (
               personForm.get('nationality')?.hasError('required') &&
@@ -93,14 +93,14 @@
                 This field is required!
               </span>
             }
-            <label for="birthDate" class="block font-medium mb-2 mt-2"> Birth Date </label>
+            <label class="block font-medium mb-2 mt-2" for="birthDate"> Birth Date </label>
             <p-datePicker
-              id="birthDate"
-              type="date"
-              formControlName="birthDate"
-              placeholder="Enter birth date"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="birthDate"
+              id="birthDate"
+              placeholder="Enter birth date"
+              type="date"
             />
             @if (
               personForm.get('nickname')?.hasError('required') &&
@@ -118,19 +118,17 @@
           <!-- Action Buttons -->
           <div class="flex gap-2 justify-content-end pt-4">
             <p-button
-              type="button"
               label="Cancel"
               severity="secondary"
+              type="button"
+              [disabled]="isLoading()"
               [outlined]="true"
               (onClick)="navigateToPersonsList()"
-              [disabled]="isLoading()"
-            >
-            </p-button>
+            />
 
             <p-button
+              icon="pi pi-check"
               type="submit"
-              [label]="this.isEditMode() ? 'Update Person' : 'Create Person'"
-              [loading]="isLoading()"
               [disabled]="
                 personForm.invalid ||
                 (isEditMode() &&
@@ -140,9 +138,9 @@
                   personForm.controls.birthDate.dirty === false &&
                   personForm.controls.nationality.dirty === false)
               "
-              icon="pi pi-check"
-            >
-            </p-button>
+              [label]="this.isEditMode() ? 'Update Person' : 'Create Person'"
+              [loading]="isLoading()"
+            />
           </div>
         </form>
       </ng-template>

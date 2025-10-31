@@ -1,62 +1,62 @@
 <div class="persons-management p-4 max-w-screen-xl mx-auto">
   <!-- Header Section -->
   <app-page-header
-    title="Persons Management"
     buttonLabel="Add Person"
     buttonSeverity="success"
+    title="Persons Management"
     (buttonClick)="addPerson()"
   />
 
   <!-- Data Table -->
   <div class="card">
     <p-table
-      [value]="persons() || []"
+      class="p-datatable-striped"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      scrollHeight="60vh"
       [loading]="isLoading()"
       [paginator]="true"
       [rows]="10"
       [rowsPerPageOptions]="[5, 10, 25, 50]"
-      [showCurrentPageReport]="true"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      class="p-datatable-striped"
-      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
       [scrollable]="true"
-      scrollHeight="60vh"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+      [value]="persons() || []"
     >
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="firstName" style="width: 12.5%">
             First Name
-            <p-sortIcon field="firstName"></p-sortIcon>
+            <p-sortIcon field="firstName" />
           </th>
           <th pSortableColumn="lastName" style="width: 12.5%">
             Last Name
-            <p-sortIcon field="lastName"></p-sortIcon>
+            <p-sortIcon field="lastName" />
           </th>
           <th pSortableColumn="nickname" style="width: 10%">
             Nickname
-            <p-sortIcon field="nickname"></p-sortIcon>
+            <p-sortIcon field="nickname" />
           </th>
           <th pSortableColumn="nationality" style="width: 12.5%">
             Nationality
-            <p-sortIcon field="nationality"></p-sortIcon>
+            <p-sortIcon field="nationality" />
           </th>
           <th pSortableColumn="birthDate" style="width: 15%">
             Birth Date
-            <p-sortIcon field="birthDate"></p-sortIcon>
+            <p-sortIcon field="birthDate" />
           </th>
           <th pSortableColumn="createdAt" style="width: 13.75%">
             Created At
-            <p-sortIcon field="createdAt"></p-sortIcon>
+            <p-sortIcon field="createdAt" />
           </th>
           <th pSortableColumn="updatedAt" style="width: 13.75%">
             Updated At
-            <p-sortIcon field="updatedAt"></p-sortIcon>
+            <p-sortIcon field="updatedAt" />
           </th>
           <th style="width: 10%; min-width: 120px">Actions</th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-person>
+      <ng-template let-person pTemplate="body">
         <tr>
           <td>
             <span class="font-medium">{{ person.firstName }}</span>
@@ -88,22 +88,22 @@
           <td>
             <div class="flex gap-2 align-items-center">
               <p-button
+                pTooltip="Edit Person"
                 severity="success"
                 size="small"
-                pTooltip="Edit Person"
                 tooltipPosition="top"
-                (onClick)="editPerson(person)"
                 [rounded]="true"
+                (onClick)="editPerson(person)"
               >
                 <i class="pi pi-pencil"></i>
               </p-button>
               <p-button
+                pTooltip="Delete Person"
                 severity="danger"
                 size="small"
-                pTooltip="Delete Person"
                 tooltipPosition="top"
-                (onClick)="deletePerson(person)"
                 [rounded]="true"
+                (onClick)="deletePerson(person)"
               >
                 <i class="pi pi-trash"></i>
               </p-button>
@@ -117,8 +117,8 @@
           <td colspan="8">
             <app-table-empty-message
               icon="pi pi-info-circle"
-              title="No Persons Found"
               message="Click the 'Add Person' button to create one."
+              title="No Persons Found"
             />
           </td>
         </tr>

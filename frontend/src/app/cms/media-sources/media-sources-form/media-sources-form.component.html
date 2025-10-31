@@ -19,15 +19,15 @@
       <ng-template pTemplate="content">
         <form [formGroup]="mediaSourceForm" (ngSubmit)="onSubmit()">
           <div class="field mb-4">
-            <label for="baseUrl" class="block font-medium mb-2"> Media Source Base URL </label>
+            <label class="block font-medium mb-2" for="baseUrl"> Media Source Base URL </label>
             <input
-              id="baseUrl"
-              type="text"
-              pInputText
-              formControlName="baseUrl"
-              placeholder="Enter media source base URL"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="baseUrl"
+              id="baseUrl"
+              pInputText
+              placeholder="Enter media source base URL"
+              type="text"
             />
             @if (
               mediaSourceForm.get('baseUrl')?.hasError('required') &&
@@ -52,26 +52,26 @@
               </span>
             }
 
-            <label for="urlPath" class="block font-medium mb-2 mt-2"> Media Source URL Path </label>
+            <label class="block font-medium mb-2 mt-2" for="urlPath"> Media Source URL Path </label>
             <input
-              id="urlPath"
-              type="text"
-              pInputText
-              formControlName="urlPath"
-              placeholder="Enter media source URL path"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="urlPath"
+              id="urlPath"
+              pInputText
+              placeholder="Enter media source URL path"
+              type="text"
             />
 
-            <label for="name" class="block font-medium mb-2 mt-2"> Media Source Name </label>
+            <label class="block font-medium mb-2 mt-2" for="name"> Media Source Name </label>
             <input
-              id="name"
-              type="text"
-              pInputText
-              formControlName="name"
-              placeholder="Enter content type name (e.g., Article, Video, Podcast)"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="name"
+              id="name"
+              pInputText
+              placeholder="Enter content type name (e.g., Article, Video, Podcast)"
+              type="text"
             />
             @if (
               mediaSourceForm.get('name')?.hasError('required') &&
@@ -99,19 +99,17 @@
 
           <div class="flex gap-2 justify-content-end pt-4">
             <p-button
-              type="button"
               label="Cancel"
               severity="secondary"
+              type="button"
+              [disabled]="isLoading()"
               [outlined]="true"
               (onClick)="navigateToMediaSourcesList()"
-              [disabled]="isLoading()"
-            >
-            </p-button>
+            />
 
             <p-button
+              icon="pi pi-check"
               type="submit"
-              [label]="this.isEditMode() ? 'Update Media Source' : 'Create Media Source'"
-              [loading]="isLoading()"
               [disabled]="
                 mediaSourceForm.invalid ||
                 (isEditMode() &&
@@ -119,9 +117,9 @@
                   mediaSourceForm.controls.baseUrl.dirty === false &&
                   mediaSourceForm.controls.urlPath.dirty === false)
               "
-              icon="pi pi-check"
-            >
-            </p-button>
+              [label]="this.isEditMode() ? 'Update Media Source' : 'Create Media Source'"
+              [loading]="isLoading()"
+            />
           </div>
         </form>
       </ng-template>

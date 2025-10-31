@@ -1,46 +1,46 @@
 <div class="sports-management p-4 max-w-screen-xl mx-auto">
   <!-- Header Section -->
   <app-page-header
-    title="Sports Management"
     buttonLabel="Add Sport"
     buttonSeverity="success"
+    title="Sports Management"
     (buttonClick)="addSport()"
   />
 
   <!-- Data Table -->
   <div class="card">
     <p-table
-      [value]="sports() || []"
+      class="p-datatable-striped"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      scrollHeight="60vh"
       [loading]="isLoading()"
       [paginator]="true"
       [rows]="10"
       [rowsPerPageOptions]="[5, 10, 25, 50]"
-      [showCurrentPageReport]="true"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      class="p-datatable-striped"
-      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
       [scrollable]="true"
-      scrollHeight="60vh"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+      [value]="sports() || []"
     >
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="name" style="width: 35%">
             Name
-            <p-sortIcon field="name"></p-sortIcon>
+            <p-sortIcon field="name" />
           </th>
           <th pSortableColumn="createdAt" style="width: 27.5%">
             Created At
-            <p-sortIcon field="createdAt"></p-sortIcon>
+            <p-sortIcon field="createdAt" />
           </th>
           <th pSortableColumn="updatedAt" style="width: 27.5%">
             Updated At
-            <p-sortIcon field="updatedAt"></p-sortIcon>
+            <p-sortIcon field="updatedAt" />
           </th>
           <th style="width: 10%; min-width: 120px">Actions</th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-sport>
+      <ng-template let-sport pTemplate="body">
         <tr>
           <td>
             <span class="font-medium">{{ sport.name }}</span>
@@ -58,22 +58,22 @@
           <td>
             <div class="flex gap-2 align-items-center">
               <p-button
+                pTooltip="Edit Sport"
                 severity="success"
                 size="small"
-                pTooltip="Edit Sport"
                 tooltipPosition="top"
-                (onClick)="editSport(sport)"
                 [rounded]="true"
+                (onClick)="editSport(sport)"
               >
                 <i class="pi pi-pencil"></i>
               </p-button>
               <p-button
+                pTooltip="Delete Sport"
                 severity="danger"
                 size="small"
-                pTooltip="Delete Sport"
                 tooltipPosition="top"
-                (onClick)="deleteSport(sport)"
                 [rounded]="true"
+                (onClick)="deleteSport(sport)"
               >
                 <i class="pi pi-trash"></i>
               </p-button>
@@ -87,8 +87,8 @@
           <td colspan="4">
             <app-table-empty-message
               icon="pi pi-info-circle"
-              title="No Sports Found"
               message="Click the 'Add Sport' button to create one."
+              title="No Sports Found"
             />
           </td>
         </tr>

@@ -19,15 +19,15 @@
       <ng-template pTemplate="content">
         <form [formGroup]="contentTypeForm" (ngSubmit)="onSubmit()">
           <div class="field mb-4">
-            <label for="name" class="block font-medium mb-2"> Content Type Name * </label>
+            <label class="block font-medium mb-2" for="name"> Content Type Name * </label>
             <input
-              id="name"
-              type="text"
-              pInputText
-              formControlName="name"
-              placeholder="Enter content type name (e.g., Article, Video, Podcast)"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="name"
+              id="name"
+              pInputText
+              placeholder="Enter content type name (e.g., Article, Video, Podcast)"
+              type="text"
             />
             @if (
               contentTypeForm.get('name')?.hasError('required') &&
@@ -55,26 +55,24 @@
 
           <div class="flex gap-2 justify-content-end pt-4">
             <p-button
-              type="button"
               label="Cancel"
               severity="secondary"
+              type="button"
+              [disabled]="isLoading()"
               [outlined]="true"
               (onClick)="navigateToContentTypesList()"
-              [disabled]="isLoading()"
-            >
-            </p-button>
+            />
 
             <p-button
+              icon="pi pi-check"
               type="submit"
-              [label]="this.isEditMode() ? 'Update Content Type' : 'Create Content Type'"
-              [loading]="isLoading()"
               [disabled]="
                 contentTypeForm.invalid ||
                 (isEditMode() && contentTypeForm.controls.name.dirty === false)
               "
-              icon="pi pi-check"
-            >
-            </p-button>
+              [label]="this.isEditMode() ? 'Update Content Type' : 'Create Content Type'"
+              [loading]="isLoading()"
+            />
           </div>
         </form>
       </ng-template>

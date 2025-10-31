@@ -13,15 +13,14 @@ import { ButtonModule, ButtonSeverity } from 'primeng/button';
 
       <div class="flex-shrink-0 ml-4">
         <p-button
-          [icon]="buttonIcon()"
-          [label]="buttonLabel()"
-          [severity]="buttonSeverity()"
-          [raised]="true"
           size="large"
           styleClass="px-4 py-2"
+          [icon]="buttonIcon()"
+          [label]="buttonLabel()"
+          [raised]="true"
+          [severity]="buttonSeverity()"
           (onClick)="buttonClick.emit()"
-        >
-        </p-button>
+        />
       </div>
     </div>
   `,

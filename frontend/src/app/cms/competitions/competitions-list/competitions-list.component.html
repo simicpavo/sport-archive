@@ -1,62 +1,62 @@
 <div class="competitions-management p-4 max-w-screen-xl mx-auto">
   <!-- Header Section -->
   <app-page-header
-    title="Competitions Management"
     buttonLabel="Add Competition"
     buttonSeverity="success"
+    title="Competitions Management"
     (buttonClick)="addCompetition()"
   />
 
   <!-- Data Table -->
   <div class="card">
     <p-table
-      [value]="competitions()"
+      class="p-datatable-striped"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      scrollHeight="60vh"
       [loading]="isLoading()"
       [paginator]="true"
       [rows]="10"
       [rowsPerPageOptions]="[5, 10, 25, 50]"
-      [showCurrentPageReport]="true"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      class="p-datatable-striped"
-      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
       [scrollable]="true"
-      scrollHeight="60vh"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+      [value]="competitions()"
     >
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="name" style="width: 15%">
             Name
-            <p-sortIcon field="name"></p-sortIcon>
+            <p-sortIcon field="name" />
           </th>
           <th pSortableColumn="season" style="width: 14%">
             Season
-            <p-sortIcon field="season"></p-sortIcon>
+            <p-sortIcon field="season" />
           </th>
           <th pSortableColumn="sportId" style="width: 14%">
             Sport
-            <p-sortIcon field="sportId"></p-sortIcon>
+            <p-sortIcon field="sportId" />
           </th>
           <th pSortableColumn="startDate" style="width: 12%">
             Start Date
-            <p-sortIcon field="startDate"></p-sortIcon>
+            <p-sortIcon field="startDate" />
           </th>
           <th pSortableColumn="endDate" style="width: 12%">
             End Date
-            <p-sortIcon field="endDate"></p-sortIcon>
+            <p-sortIcon field="endDate" />
           </th>
           <th pSortableColumn="createdAt" style="width: 12%">
             Created At
-            <p-sortIcon field="createdAt"></p-sortIcon>
+            <p-sortIcon field="createdAt" />
           </th>
           <th pSortableColumn="updatedAt" style="width: 12%">
             Updated At
-            <p-sortIcon field="updatedAt"></p-sortIcon>
+            <p-sortIcon field="updatedAt" />
           </th>
           <th style="width: 9%; min-width: 120px">Actions</th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-competition>
+      <ng-template let-competition pTemplate="body">
         <tr>
           <td>
             <span class="font-medium">{{ competition.name }}</span>
@@ -90,22 +90,22 @@
           <td>
             <div class="flex gap-2 align-items-center">
               <p-button
+                pTooltip="Edit Competition"
                 severity="success"
                 size="small"
-                pTooltip="Edit Competition"
                 tooltipPosition="top"
-                (onClick)="editCompetition(competition)"
                 [rounded]="true"
+                (onClick)="editCompetition(competition)"
               >
                 <i class="pi pi-pencil"></i>
               </p-button>
               <p-button
+                pTooltip="Delete Competition"
                 severity="danger"
                 size="small"
-                pTooltip="Delete Competition"
                 tooltipPosition="top"
-                (onClick)="deleteCompetition(competition)"
                 [rounded]="true"
+                (onClick)="deleteCompetition(competition)"
               >
                 <i class="pi pi-trash"></i>
               </p-button>
@@ -119,8 +119,8 @@
           <td colspan="8">
             <app-table-empty-message
               icon="pi pi-info-circle"
-              title="No Competitions Found"
               message="Click the 'Add Competition' button to create one."
+              title="No Competitions Found"
             />
           </td>
         </tr>

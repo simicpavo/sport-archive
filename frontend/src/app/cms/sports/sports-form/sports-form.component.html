@@ -20,15 +20,15 @@
       <ng-template pTemplate="content">
         <form [formGroup]="sportForm" (ngSubmit)="onSubmit()">
           <div class="field mb-4">
-            <label for="name" class="block font-medium mb-2"> Sport Name * </label>
+            <label class="block font-medium mb-2" for="name"> Sport Name * </label>
             <input
-              id="name"
-              type="text"
-              pInputText
-              formControlName="name"
-              placeholder="Enter sport name (e.g., Football, Basketball)"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="name"
+              id="name"
+              pInputText
+              placeholder="Enter sport name (e.g., Football, Basketball)"
+              type="text"
             />
             @if (
               sportForm.get('name')?.hasError('required') &&
@@ -57,25 +57,23 @@
           <!-- Action Buttons -->
           <div class="flex gap-2 justify-content-end pt-4">
             <p-button
-              type="button"
               label="Cancel"
               severity="secondary"
+              type="button"
+              [disabled]="isLoading()"
               [outlined]="true"
               (onClick)="navigateToSportsList()"
-              [disabled]="isLoading()"
-            >
-            </p-button>
+            />
 
             <p-button
+              icon="pi pi-check"
               type="submit"
-              [label]="this.isEditMode() ? 'Update Sport' : 'Create Sport'"
-              [loading]="isLoading()"
               [disabled]="
                 sportForm.invalid || (isEditMode() && sportForm.controls.name.dirty === false)
               "
-              icon="pi pi-check"
-            >
-            </p-button>
+              [label]="this.isEditMode() ? 'Update Sport' : 'Create Sport'"
+              [loading]="isLoading()"
+            />
           </div>
         </form>
       </ng-template>

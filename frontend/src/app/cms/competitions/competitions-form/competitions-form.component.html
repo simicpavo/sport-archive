@@ -22,14 +22,14 @@
       <ng-template pTemplate="content">
         <form [formGroup]="competitionForm" (ngSubmit)="onSubmit()">
           <div class="field mb-4">
-            <label for="name" class="block font-medium mb-2"> Competition Name </label>
+            <label class="block font-medium mb-2" for="name"> Competition Name </label>
             <input
-              id="name"
-              type="text"
-              pInputText
-              formControlName="name"
-              placeholder="Enter competition name (e.g., Premier League)"
               class="w-full"
+              formControlName="name"
+              id="name"
+              pInputText
+              placeholder="Enter competition name (e.g., Premier League)"
+              type="text"
             />
 
             @if (
@@ -56,25 +56,25 @@
               </span>
             }
 
-            <label for="season" class="block font-medium mb-2 mt-2"> Competition Season </label>
+            <label class="block font-medium mb-2 mt-2" for="season"> Competition Season </label>
             <input
-              id="season"
-              type="text"
-              pInputText
-              formControlName="season"
-              placeholder="Enter competition season (e.g., 2023/2024)"
               class="w-full"
+              formControlName="season"
+              id="season"
+              pInputText
+              placeholder="Enter competition season (e.g., 2023/2024)"
+              type="text"
             />
-            <label for="sportId" class="block font-medium mb-2 mt-2"> Sport </label>
+            <label class="block font-medium mb-2 mt-2" for="sportId"> Sport </label>
             <p-select
-              [options]="sports() || []"
+              class="w-full"
+              formControlName="sportId"
               optionLabel="name"
               optionValue="id"
               placeholder="Select Sport"
-              formControlName="sportId"
-              class="w-full"
-              [showClear]="true"
               [loading]="isLoading()"
+              [options]="sports() || []"
+              [showClear]="true"
             />
 
             @if (
@@ -89,25 +89,25 @@
               </span>
             }
 
-            <label for="startDate" class="block font-medium mb-2 mt-2"> Start Date </label>
+            <label class="block font-medium mb-2 mt-2" for="startDate"> Start Date </label>
             <p-datePicker
-              id="startDate"
-              dateFormat="yy.mm.dd"
-              hourFormat="24"
-              formControlName="startDate"
-              placeholder="Enter start date"
               class="w-full"
+              dateFormat="yy.mm.dd"
+              formControlName="startDate"
+              hourFormat="24"
+              id="startDate"
+              placeholder="Enter start date"
               [showIcon]="true"
             />
 
-            <label for="endDate" class="block font-medium mb-2 mt-2"> End Date </label>
+            <label class="block font-medium mb-2 mt-2" for="endDate"> End Date </label>
             <p-datePicker
-              id="endDate"
-              dateFormat="yy.mm.dd"
-              hourFormat="24"
-              formControlName="endDate"
-              placeholder="Enter end date"
               class="w-full"
+              dateFormat="yy.mm.dd"
+              formControlName="endDate"
+              hourFormat="24"
+              id="endDate"
+              placeholder="Enter end date"
               [showIcon]="true"
             />
           </div>
@@ -115,19 +115,17 @@
           <!-- Action Buttons -->
           <div class="flex gap-2 justify-content-end pt-4">
             <p-button
-              type="button"
               label="Cancel"
               severity="secondary"
+              type="button"
+              [disabled]="isLoading()"
               [outlined]="true"
               (onClick)="navigateToCompetitionsList()"
-              [disabled]="isLoading()"
-            >
-            </p-button>
+            />
 
             <p-button
+              icon="pi pi-check"
               type="submit"
-              [label]="this.isEditMode() ? 'Update Competition' : 'Create Competition'"
-              [loading]="isLoading()"
               [disabled]="
                 competitionForm.invalid ||
                 (isEditMode() &&
@@ -137,9 +135,9 @@
                   competitionForm.controls.endDate.dirty === false &&
                   competitionForm.controls.sportId.dirty === false)
               "
-              icon="pi pi-check"
-            >
-            </p-button>
+              [label]="this.isEditMode() ? 'Update Competition' : 'Create Competition'"
+              [loading]="isLoading()"
+            />
           </div>
         </form>
       </ng-template>

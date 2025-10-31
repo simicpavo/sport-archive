@@ -17,15 +17,15 @@
       <ng-template pTemplate="content">
         <form [formGroup]="recordsForm" (ngSubmit)="onSubmit()">
           <div class="field mb-4">
-            <label for="title" class="block font-medium mb-2"> Record Title </label>
+            <label class="block font-medium mb-2" for="title"> Record Title </label>
             <input
-              id="title"
-              type="text"
-              pInputText
-              formControlName="title"
-              placeholder="Enter record title (e.g., Match 1, Match 2)"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="title"
+              id="title"
+              pInputText
+              placeholder="Enter record title (e.g., Match 1, Match 2)"
+              type="text"
             />
             @if (
               recordsForm.get('title')?.hasError('required') &&
@@ -50,17 +50,17 @@
               </span>
             }
 
-            <label for="description" class="block font-medium mb-2 mt-2">
+            <label class="block font-medium mb-2 mt-2" for="description">
               Record Description
             </label>
             <input
-              id="description"
-              type="text"
-              pInputText
-              formControlName="description"
-              placeholder="Enter record description"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="description"
+              id="description"
+              pInputText
+              placeholder="Enter record description"
+              type="text"
             />
             @if (
               recordsForm.get('description')?.hasError('required') &&
@@ -85,16 +85,16 @@
               </span>
             }
 
-            <label for="sportId" class="block font-medium mb-2 mt-2"> Sport </label>
+            <label class="block font-medium mb-2 mt-2" for="sportId"> Sport </label>
             <p-select
-              [options]="sports() || []"
+              class="w-full"
+              formControlName="sportId"
               optionLabel="name"
               optionValue="id"
               placeholder="Select Sport"
-              formControlName="sportId"
-              class="w-full"
-              [showClear]="true"
               [loading]="isLoading()"
+              [options]="sports() || []"
+              [showClear]="true"
             />
             @if (
               recordsForm.get('sportId')?.hasError('required') &&
@@ -108,16 +108,16 @@
               </span>
             }
 
-            <label for="contentTypeId" class="block font-medium mb-2 mt-2"> Content Type </label>
+            <label class="block font-medium mb-2 mt-2" for="contentTypeId"> Content Type </label>
             <p-select
-              [options]="contentTypes() || []"
+              class="w-full"
+              formControlName="contentTypeId"
               optionLabel="name"
               optionValue="id"
               placeholder="Select Content Type"
-              formControlName="contentTypeId"
-              class="w-full"
-              [showClear]="true"
               [loading]="isLoading()"
+              [options]="contentTypes() || []"
+              [showClear]="true"
             />
             @if (
               recordsForm.get('sportId')?.hasError('required') &&
@@ -131,55 +131,53 @@
               </span>
             }
 
-            <label for="competitionId" class="block font-medium mb-2 mt-2"> Competition </label>
+            <label class="block font-medium mb-2 mt-2" for="competitionId"> Competition </label>
             <p-select
-              [options]="competitions() || []"
+              class="w-full"
+              formControlName="competitionId"
               optionLabel="name"
               optionValue="id"
               placeholder="Select Competition"
-              formControlName="competitionId"
-              class="w-full"
-              [showClear]="true"
               [loading]="isLoading()"
+              [options]="competitions() || []"
+              [showClear]="true"
             />
 
-            <label for="nationalTeamId" class="block font-medium mb-2 mt-2"> National Team </label>
+            <label class="block font-medium mb-2 mt-2" for="nationalTeamId"> National Team </label>
             <p-select
-              [options]="nationalTeams() || []"
+              class="w-full"
+              formControlName="nationalTeamId"
               optionLabel="name"
               optionValue="id"
               placeholder="Select National Team"
-              formControlName="nationalTeamId"
-              class="w-full"
-              [showClear]="true"
               [loading]="isLoading()"
+              [options]="nationalTeams() || []"
+              [showClear]="true"
             />
 
-            <label for="date" class="block font-medium mb-2 mt-2"> Date </label>
+            <label class="block font-medium mb-2 mt-2" for="date"> Date </label>
             <p-datePicker
-              id="date"
-              formControlName="date"
-              placeholder="Enter date"
               class="w-full"
+              formControlName="date"
+              id="date"
+              placeholder="Enter date"
               [showIcon]="true"
             />
           </div>
 
           <div class="flex gap-2 justify-content-end pt-4">
             <p-button
-              type="button"
               label="Cancel"
               severity="secondary"
+              type="button"
+              [disabled]="isLoading()"
               [outlined]="true"
               (onClick)="navigateToRecordsList()"
-              [disabled]="isLoading()"
-            >
-            </p-button>
+            />
 
             <p-button
+              icon="pi pi-check"
               type="submit"
-              [label]="this.isEditMode() ? 'Update Record' : 'Create Record'"
-              [loading]="isLoading()"
               [disabled]="
                 recordsForm.invalid ||
                 (isEditMode() &&
@@ -191,9 +189,9 @@
                   recordsForm.controls.competitionId.dirty === false &&
                   recordsForm.controls.date.dirty === false)
               "
-              icon="pi pi-check"
-            >
-            </p-button>
+              [label]="this.isEditMode() ? 'Update Record' : 'Create Record'"
+              [loading]="isLoading()"
+            />
           </div>
         </form>
       </ng-template>

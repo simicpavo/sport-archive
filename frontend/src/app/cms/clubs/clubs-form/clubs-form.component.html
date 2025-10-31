@@ -17,15 +17,15 @@
       <ng-template pTemplate="content">
         <form [formGroup]="clubForm" (ngSubmit)="onSubmit()">
           <div class="field mb-4">
-            <label for="name" class="block font-medium mb-2"> Club Name </label>
+            <label class="block font-medium mb-2" for="name"> Club Name </label>
             <input
-              id="name"
-              type="text"
-              pInputText
-              formControlName="name"
-              placeholder="Enter club name (e.g., Club A, Club B)"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="name"
+              id="name"
+              pInputText
+              placeholder="Enter club name (e.g., Club A, Club B)"
+              type="text"
             />
             @if (
               clubForm.get('name')?.hasError('required') &&
@@ -50,16 +50,16 @@
               </span>
             }
 
-            <label for="sportId" class="block font-medium mb-2 mt-2"> Sport </label>
+            <label class="block font-medium mb-2 mt-2" for="sportId"> Sport </label>
             <p-select
-              [options]="sports() || []"
+              class="w-full"
+              formControlName="sportId"
               optionLabel="name"
               optionValue="id"
               placeholder="Select Sport"
-              formControlName="sportId"
-              class="w-full"
-              [showClear]="true"
               [loading]="isLoading()"
+              [options]="sports() || []"
+              [showClear]="true"
             />
             @if (
               clubForm.get('sportId')?.hasError('required') &&
@@ -76,28 +76,26 @@
 
           <div class="flex gap-2 justify-content-end pt-4">
             <p-button
-              type="button"
               label="Cancel"
               severity="secondary"
+              type="button"
+              [disabled]="isLoading()"
               [outlined]="true"
               (onClick)="navigateToClubsList()"
-              [disabled]="isLoading()"
-            >
-            </p-button>
+            />
 
             <p-button
+              icon="pi pi-check"
               type="submit"
-              [label]="this.isEditMode() ? 'Update Club' : 'Create Club'"
-              [loading]="isLoading()"
               [disabled]="
                 clubForm.invalid ||
                 (isEditMode() &&
                   clubForm.controls.name.dirty === false &&
                   clubForm.controls.sportId.dirty === false)
               "
-              icon="pi pi-check"
-            >
-            </p-button>
+              [label]="this.isEditMode() ? 'Update Club' : 'Create Club'"
+              [loading]="isLoading()"
+            />
           </div>
         </form>
       </ng-template>

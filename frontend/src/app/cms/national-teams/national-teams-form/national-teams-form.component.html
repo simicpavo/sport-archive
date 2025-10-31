@@ -21,15 +21,15 @@
       <ng-template pTemplate="content">
         <form [formGroup]="nationalTeamForm" (ngSubmit)="onSubmit()">
           <div class="field mb-4">
-            <label for="name" class="block font-medium mb-2"> National Team Name </label>
+            <label class="block font-medium mb-2" for="name"> National Team Name </label>
             <input
-              id="name"
-              type="text"
-              pInputText
-              formControlName="name"
-              placeholder="Enter national team name (e.g., Team A, Team B)"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="name"
+              id="name"
+              pInputText
+              placeholder="Enter national team name (e.g., Team A, Team B)"
+              type="text"
             />
             @if (
               nationalTeamForm.get('name')?.hasError('required') &&
@@ -54,16 +54,16 @@
               </span>
             }
 
-            <label for="sportId" class="block font-medium mb-2 mt-2"> Sport </label>
+            <label class="block font-medium mb-2 mt-2" for="sportId"> Sport </label>
             <p-select
-              [options]="sports() || []"
+              class="w-full"
+              formControlName="sportId"
               optionLabel="name"
               optionValue="id"
               placeholder="Select Sport"
-              formControlName="sportId"
-              class="w-full"
-              [showClear]="true"
               [loading]="isLoading()"
+              [options]="sports() || []"
+              [showClear]="true"
             />
             @if (
               nationalTeamForm.get('sportId')?.hasError('required') &&
@@ -80,28 +80,26 @@
 
           <div class="flex gap-2 justify-content-end pt-4">
             <p-button
-              type="button"
               label="Cancel"
               severity="secondary"
+              type="button"
+              [disabled]="isLoading()"
               [outlined]="true"
               (onClick)="navigateToNationalTeamsList()"
-              [disabled]="isLoading()"
-            >
-            </p-button>
+            />
 
             <p-button
+              icon="pi pi-check"
               type="submit"
-              [label]="this.isEditMode() ? 'Update National Team' : 'Create National Team'"
-              [loading]="isLoading()"
               [disabled]="
                 nationalTeamForm.invalid ||
                 (isEditMode() &&
                   nationalTeamForm.controls.name.dirty === false &&
                   nationalTeamForm.controls.sportId.dirty === false)
               "
-              icon="pi pi-check"
-            >
-            </p-button>
+              [label]="this.isEditMode() ? 'Update National Team' : 'Create National Team'"
+              [loading]="isLoading()"
+            />
           </div>
         </form>
       </ng-template>

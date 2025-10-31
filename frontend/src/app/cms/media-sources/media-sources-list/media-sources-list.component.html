@@ -1,54 +1,54 @@
 <div class="media-sources-management p-4 max-w-screen-xl mx-auto">
   <!-- Header Section -->
   <app-page-header
-    title="Media Sources Management"
     buttonLabel="Add Media Source"
     buttonSeverity="success"
+    title="Media Sources Management"
     (buttonClick)="addMediaSource()"
   />
 
   <!-- Data Table -->
   <div class="card">
     <p-table
-      [value]="mediaSources() || []"
+      class="p-datatable-striped"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      scrollHeight="60vh"
       [loading]="isLoading()"
       [paginator]="true"
       [rows]="10"
       [rowsPerPageOptions]="[5, 10, 25, 50]"
-      [showCurrentPageReport]="true"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      class="p-datatable-striped"
-      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
       [scrollable]="true"
-      scrollHeight="60vh"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+      [value]="mediaSources() || []"
     >
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="baseUrl" style="width: 20%">
             Base URL
-            <p-sortIcon field="baseUrl"></p-sortIcon>
+            <p-sortIcon field="baseUrl" />
           </th>
           <th pSortableColumn="urlPath" style="width: 25%">
             URL Path
-            <p-sortIcon field="urlPath"></p-sortIcon>
+            <p-sortIcon field="urlPath" />
           </th>
           <th pSortableColumn="name" style="width: 15%">
             Name
-            <p-sortIcon field="name"></p-sortIcon>
+            <p-sortIcon field="name" />
           </th>
           <th pSortableColumn="createdAt" style="width: 15%">
             Created At
-            <p-sortIcon field="createdAt"></p-sortIcon>
+            <p-sortIcon field="createdAt" />
           </th>
           <th pSortableColumn="updatedAt" style="width: 15%">
             Updated At
-            <p-sortIcon field="updatedAt"></p-sortIcon>
+            <p-sortIcon field="updatedAt" />
           </th>
           <th style="width: 10%; min-width: 120px">Actions</th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-mediaSource>
+      <ng-template let-mediaSource pTemplate="body">
         <tr>
           <td>
             <span class="font-medium">{{ mediaSource.baseUrl }}</span>
@@ -72,22 +72,22 @@
           <td>
             <div class="flex gap-2 align-items-center">
               <p-button
+                pTooltip="Edit Media Source"
                 severity="success"
                 size="small"
-                pTooltip="Edit Media Source"
                 tooltipPosition="top"
-                (onClick)="editMediaSource(mediaSource)"
                 [rounded]="true"
+                (onClick)="editMediaSource(mediaSource)"
               >
                 <i class="pi pi-pencil"></i>
               </p-button>
               <p-button
+                pTooltip="Delete Media Source"
                 severity="danger"
                 size="small"
-                pTooltip="Delete Media Source"
                 tooltipPosition="top"
-                (onClick)="deleteMediaSource(mediaSource)"
                 [rounded]="true"
+                (onClick)="deleteMediaSource(mediaSource)"
               >
                 <i class="pi pi-trash"></i>
               </p-button>
@@ -101,8 +101,8 @@
           <td colspan="6">
             <app-table-empty-message
               icon="pi pi-info-circle"
-              title="No Media Sources Found"
               message="Click the 'Add Media Source' button to create one."
+              title="No Media Sources Found"
             />
           </td>
         </tr>

@@ -1,50 +1,50 @@
 <div class="records-management p-4 max-w-screen-xl mx-auto">
   <!-- Header Section -->
   <app-page-header
-    title="Records Management"
     buttonLabel="Add Record"
     buttonSeverity="success"
+    title="Records Management"
     (buttonClick)="addRecord()"
   />
 
   <!-- Data Table -->
   <div class="card">
     <p-table
-      [value]="records()"
+      class="p-datatable-striped"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      scrollHeight="60vh"
       [loading]="isLoading()"
       [paginator]="true"
       [rows]="10"
       [rowsPerPageOptions]="[5, 10, 25, 50]"
-      [showCurrentPageReport]="true"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      class="p-datatable-striped"
-      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
       [scrollable]="true"
-      scrollHeight="60vh"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+      [value]="records()"
     >
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="title" style="width: 25%">
             Title
-            <p-sortIcon field="title"></p-sortIcon>
+            <p-sortIcon field="title" />
           </th>
           <th pSortableColumn="description" style="width: 35%">
             Description
-            <p-sortIcon field="description"></p-sortIcon>
+            <p-sortIcon field="description" />
           </th>
           <th pSortableColumn="contentTypeId" style="width: 15%">
             Content Type
-            <p-sortIcon field="contentTypeId"></p-sortIcon>
+            <p-sortIcon field="contentTypeId" />
           </th>
           <th pSortableColumn="updatedAt" style="width: 15%">
             Updated At
-            <p-sortIcon field="updatedAt"></p-sortIcon>
+            <p-sortIcon field="updatedAt" />
           </th>
           <th style="width: 10%; min-width: 120px">Actions</th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-record>
+      <ng-template let-record pTemplate="body">
         <tr>
           <td>
             <span class="font-medium">{{ record.title }}</span>
@@ -64,22 +64,22 @@
           <td>
             <div class="flex gap-2 align-items-center">
               <p-button
+                pTooltip="Edit National Team"
                 severity="success"
                 size="small"
-                pTooltip="Edit National Team"
                 tooltipPosition="top"
-                (onClick)="editRecord(record)"
                 [rounded]="true"
+                (onClick)="editRecord(record)"
               >
                 <i class="pi pi-pencil"></i>
               </p-button>
               <p-button
+                pTooltip="Delete National Team"
                 severity="danger"
                 size="small"
-                pTooltip="Delete National Team"
                 tooltipPosition="top"
-                (onClick)="deleteRecord(record)"
                 [rounded]="true"
+                (onClick)="deleteRecord(record)"
               >
                 <i class="pi pi-trash"></i>
               </p-button>
@@ -93,8 +93,8 @@
           <td colspan="6">
             <app-table-empty-message
               icon="pi pi-info-circle"
-              title="No Records Found"
               message="Click the 'Add Record' button to create one."
+              title="No Records Found"
             />
           </td>
         </tr>
