@@ -1,0 +1,108 @@
+import { createFeature, createReducer, on } from '@ngrx/store';
+import { Record } from '../../shared/interfaces/record.interface';
+import { recordsActions } from './records.actions';
+
+export interface RecordsState {
+  records: Record[];
+  selectedRecord: Record | null;
+  loading: boolean;
+  error: unknown;
+  total: number;
+}
+
+export const initialState: RecordsState = {
+  records: [],
+  selectedRecord: null,
+  loading: false,
+  error: null,
+  total: 0,
+};
+
+export const recordsReducer = createReducer(
+  initialState,
+
+  on(recordsActions.loadRecords, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+
+  on(recordsActions.loadRecordsSuccess, (state, { response, record }) => ({
+    ...state,
+    loading: false,
+    ...(response && {
+      records: response.data,
+      total: response.meta.total,
+    }),
+    ...(record && {
+      selectedRecord: record,
+    }),
+    error: null,
+  })),
+
+  on(recordsActions.loadRecordsFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+  })),
+
+  on(recordsActions.createRecord, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+
+  on(recordsActions.createRecordSuccess, (state) => ({
+    ...state,
+    loading: false,
+    total: state.total + 1,
+    error: null,
+  })),
+
+  on(recordsActions.createRecordFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+  })),
+
+  on(recordsActions.updateRecord, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+
+  on(recordsActions.updateRecordSuccess, (state) => ({
+    ...state,
+    loading: false,
+    error: null,
+  })),
+
+  on(recordsActions.updateRecordFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+  })),
+
+  on(recordsActions.deleteRecord, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+
+  on(recordsActions.deleteRecordSuccess, (state) => ({
+    ...state,
+    loading: false,
+    error: null,
+  })),
+
+  on(recordsActions.deleteRecordFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+  })),
+);
+
+export const recordsFeature = createFeature({
+  name: 'records',
+  reducer: recordsReducer,
+});

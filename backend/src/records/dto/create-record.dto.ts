@@ -1,11 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  IsDateString,
-  IsNumber,
   IsArray,
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
 } from 'class-validator';
 
 export class CreateRecordDto {
@@ -19,7 +19,7 @@ export class CreateRecordDto {
   @IsNotEmpty()
   description: string;
 
-  @ApiPropertyOptional({ type: String, format: 'date', example: '2024-07-14' })
+  @ApiPropertyOptional({ example: '2024-07-14' })
   @IsDateString()
   @IsOptional()
   date?: string;

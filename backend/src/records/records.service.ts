@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateRecordDto } from './dto/create-record.dto';
-import { UpdateRecordDto } from './dto/update-record.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import type { Prisma } from '../../generated/prisma/client';
+import { CreateRecordDto } from './dto/create-record.dto';
+import { UpdateRecordDto } from './dto/update-record.dto';
 
 @Injectable()
 export class RecordsService {
@@ -123,13 +123,12 @@ export class RecordsService {
 
   async findAll() {
     return this.prisma.record.findMany({
-      include: {
-        sport: { select: { id: true, name: true } },
-        contentType: { select: { id: true, name: true } },
-        competition: { select: { id: true, name: true } },
-        nationalTeam: { select: { id: true, name: true } },
-        persons: { select: { id: true, firstName: true, lastName: true } },
-        clubs: { select: { id: true, name: true } },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        updatedAt: true,
+        contentType: { select: { name: true } },
       },
     });
   }
@@ -137,14 +136,6 @@ export class RecordsService {
   async findOne(id: string) {
     const record = await this.prisma.record.findUnique({
       where: { id },
-      include: {
-        sport: { select: { id: true, name: true } },
-        contentType: { select: { id: true, name: true } },
-        competition: { select: { id: true, name: true } },
-        nationalTeam: { select: { id: true, name: true } },
-        persons: { select: { id: true, firstName: true, lastName: true } },
-        clubs: { select: { id: true, name: true } },
-      },
     });
 
     if (!record) {

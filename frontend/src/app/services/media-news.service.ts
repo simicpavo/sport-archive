@@ -14,7 +14,7 @@ import {
 })
 export class MediaNewsService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${environment?.apiUrl || 'http://localhost:3000'}/media-news`;
+  private readonly baseUrl = `${environment?.apiUrl}/media-news`;
 
   getMediaNews(filters: MediaNewsFilters = {}): Observable<PaginatedMediaNews> {
     let params = new HttpParams();

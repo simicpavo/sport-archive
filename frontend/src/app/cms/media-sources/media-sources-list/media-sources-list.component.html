@@ -1,0 +1,114 @@
+<div class="media-sources-management p-4 max-w-screen-xl mx-auto">
+  <!-- Header Section -->
+  <app-page-header
+    title="Media Sources Management"
+    buttonLabel="Add Media Source"
+    buttonSeverity="success"
+    (buttonClick)="addMediaSource()"
+  />
+
+  <!-- Data Table -->
+  <div class="card">
+    <p-table
+      [value]="mediaSources() || []"
+      [loading]="isLoading()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      class="p-datatable-striped"
+      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+      [scrollable]="true"
+      scrollHeight="60vh"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="baseUrl" style="width: 20%">
+            Base URL
+            <p-sortIcon field="baseUrl"></p-sortIcon>
+          </th>
+          <th pSortableColumn="urlPath" style="width: 25%">
+            URL Path
+            <p-sortIcon field="urlPath"></p-sortIcon>
+          </th>
+          <th pSortableColumn="name" style="width: 15%">
+            Name
+            <p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th pSortableColumn="createdAt" style="width: 15%">
+            Created At
+            <p-sortIcon field="createdAt"></p-sortIcon>
+          </th>
+          <th pSortableColumn="updatedAt" style="width: 15%">
+            Updated At
+            <p-sortIcon field="updatedAt"></p-sortIcon>
+          </th>
+          <th style="width: 10%; min-width: 120px">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-mediaSource>
+        <tr>
+          <td>
+            <span class="font-medium">{{ mediaSource.baseUrl }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ mediaSource.urlPath }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ mediaSource.name }}</span>
+          </td>
+          <td>
+            <span class="text-sm text-color-secondary">
+              {{ mediaSource.createdAt | date: 'short' }}
+            </span>
+          </td>
+          <td>
+            <span class="text-sm text-color-secondary">
+              {{ mediaSource.updatedAt | date: 'short' }}
+            </span>
+          </td>
+          <td>
+            <div class="flex gap-2 align-items-center">
+              <p-button
+                severity="success"
+                size="small"
+                pTooltip="Edit Media Source"
+                tooltipPosition="top"
+                (onClick)="editMediaSource(mediaSource)"
+                [rounded]="true"
+              >
+                <i class="pi pi-pencil"></i>
+              </p-button>
+              <p-button
+                severity="danger"
+                size="small"
+                pTooltip="Delete Media Source"
+                tooltipPosition="top"
+                (onClick)="deleteMediaSource(mediaSource)"
+                [rounded]="true"
+              >
+                <i class="pi pi-trash"></i>
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6">
+            <app-table-empty-message
+              icon="pi pi-info-circle"
+              title="No Media Sources Found"
+              message="Click the 'Add Media Source' button to create one."
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p-confirmDialog />
+<p-toast />

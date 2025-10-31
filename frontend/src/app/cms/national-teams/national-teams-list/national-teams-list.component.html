@@ -1,0 +1,107 @@
+<div class="national-teams-management p-4 max-w-screen-xl mx-auto">
+  <!-- Header Section -->
+  <app-page-header
+    title="National Teams Management"
+    buttonLabel="Add National Team"
+    buttonSeverity="success"
+    (buttonClick)="addNationalTeam()"
+  />
+
+  <!-- Data Table -->
+  <div class="card">
+    <p-table
+      [value]="nationalTeams()"
+      [loading]="isLoading()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      class="p-datatable-striped"
+      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+      [scrollable]="true"
+      scrollHeight="60vh"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name" style="width: 25%">
+            Name
+            <p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th pSortableColumn="sportId" style="width: 25%">
+            Sport
+            <p-sortIcon field="sportId"></p-sortIcon>
+          </th>
+          <th pSortableColumn="createdAt" style="width: 20%">
+            Created At
+            <p-sortIcon field="createdAt"></p-sortIcon>
+          </th>
+          <th pSortableColumn="updatedAt" style="width: 20%">
+            Updated At
+            <p-sortIcon field="updatedAt"></p-sortIcon>
+          </th>
+          <th style="width: 10%; min-width: 120px">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-nationalTeam>
+        <tr>
+          <td>
+            <span class="font-medium">{{ nationalTeam.name }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ nationalTeam.sport.name }}</span>
+          </td>
+          <td>
+            <span class="text-sm text-color-secondary">
+              {{ nationalTeam.createdAt | date: 'short' }}
+            </span>
+          </td>
+          <td>
+            <span class="text-sm text-color-secondary">
+              {{ nationalTeam.updatedAt | date: 'short' }}
+            </span>
+          </td>
+          <td>
+            <div class="flex gap-2 align-items-center">
+              <p-button
+                severity="success"
+                size="small"
+                pTooltip="Edit National Team"
+                tooltipPosition="top"
+                (onClick)="editNationalTeam(nationalTeam)"
+                [rounded]="true"
+              >
+                <i class="pi pi-pencil"></i>
+              </p-button>
+              <p-button
+                severity="danger"
+                size="small"
+                pTooltip="Delete National Team"
+                tooltipPosition="top"
+                (onClick)="deleteNationalTeam(nationalTeam)"
+                [rounded]="true"
+              >
+                <i class="pi pi-trash"></i>
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">
+            <app-table-empty-message
+              icon="pi-users"
+              title="No National Teams Found"
+              message="Click the 'Add National Team' button to create one."
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p-confirmDialog />
+<p-toast />

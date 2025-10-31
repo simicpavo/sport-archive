@@ -12,19 +12,10 @@ import { UpdateMediaSourceDto } from './dto/update-media-source.dto';
 export class MediaSourceService {
   constructor(private prisma: PrismaService) {}
 
-  async create(
-    createMediaSourceDto: CreateMediaSourceDto,
-  ): Promise<PrismaMediaSource & { _count: { posts: number } }> {
+  async create(createMediaSourceDto: CreateMediaSourceDto) {
     try {
       return await this.prisma.mediaSource.create({
         data: createMediaSourceDto,
-        include: {
-          _count: {
-            select: {
-              posts: true,
-            },
-          },
-        },
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -38,35 +29,17 @@ export class MediaSourceService {
     }
   }
 
-  async findAll(): Promise<
-    (PrismaMediaSource & { _count: { posts: number } })[]
-  > {
+  async findAll(): Promise<PrismaMediaSource[]> {
     return this.prisma.mediaSource.findMany({
-      include: {
-        _count: {
-          select: {
-            posts: true,
-          },
-        },
-      },
       orderBy: {
         createdAt: 'desc',
       },
     });
   }
 
-  async findOne(
-    id: string,
-  ): Promise<PrismaMediaSource & { _count: { posts: number } }> {
+  async findOne(id: string): Promise<PrismaMediaSource> {
     const mediaSource = await this.prisma.mediaSource.findUnique({
       where: { id },
-      include: {
-        _count: {
-          select: {
-            posts: true,
-          },
-        },
-      },
     });
 
     if (!mediaSource) {
@@ -79,18 +52,11 @@ export class MediaSourceService {
   async update(
     id: string,
     updateMediaSourceDto: UpdateMediaSourceDto,
-  ): Promise<PrismaMediaSource & { _count: { posts: number } }> {
+  ): Promise<PrismaMediaSource> {
     try {
       return await this.prisma.mediaSource.update({
         where: { id },
         data: updateMediaSourceDto,
-        include: {
-          _count: {
-            select: {
-              posts: true,
-            },
-          },
-        },
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {

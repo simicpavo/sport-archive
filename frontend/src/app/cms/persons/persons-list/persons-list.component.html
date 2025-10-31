@@ -1,0 +1,130 @@
+<div class="persons-management p-4 max-w-screen-xl mx-auto">
+  <!-- Header Section -->
+  <app-page-header
+    title="Persons Management"
+    buttonLabel="Add Person"
+    buttonSeverity="success"
+    (buttonClick)="addPerson()"
+  />
+
+  <!-- Data Table -->
+  <div class="card">
+    <p-table
+      [value]="persons() || []"
+      [loading]="isLoading()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      class="p-datatable-striped"
+      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+      [scrollable]="true"
+      scrollHeight="60vh"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="firstName" style="width: 12.5%">
+            First Name
+            <p-sortIcon field="firstName"></p-sortIcon>
+          </th>
+          <th pSortableColumn="lastName" style="width: 12.5%">
+            Last Name
+            <p-sortIcon field="lastName"></p-sortIcon>
+          </th>
+          <th pSortableColumn="nickname" style="width: 10%">
+            Nickname
+            <p-sortIcon field="nickname"></p-sortIcon>
+          </th>
+          <th pSortableColumn="nationality" style="width: 12.5%">
+            Nationality
+            <p-sortIcon field="nationality"></p-sortIcon>
+          </th>
+          <th pSortableColumn="birthDate" style="width: 15%">
+            Birth Date
+            <p-sortIcon field="birthDate"></p-sortIcon>
+          </th>
+          <th pSortableColumn="createdAt" style="width: 13.75%">
+            Created At
+            <p-sortIcon field="createdAt"></p-sortIcon>
+          </th>
+          <th pSortableColumn="updatedAt" style="width: 13.75%">
+            Updated At
+            <p-sortIcon field="updatedAt"></p-sortIcon>
+          </th>
+          <th style="width: 10%; min-width: 120px">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-person>
+        <tr>
+          <td>
+            <span class="font-medium">{{ person.firstName }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ person.lastName }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ person.nickname }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ person.nationality }}</span>
+          </td>
+          <td>
+            <span class="text-sm text-color-secondary">
+              {{ person.birthDate | date: 'mediumDate' }}
+            </span>
+          </td>
+          <td>
+            <span class="text-sm text-color-secondary">
+              {{ person.createdAt | date: 'short' }}
+            </span>
+          </td>
+          <td>
+            <span class="text-sm text-color-secondary">
+              {{ person.updatedAt | date: 'short' }}
+            </span>
+          </td>
+          <td>
+            <div class="flex gap-2 align-items-center">
+              <p-button
+                severity="success"
+                size="small"
+                pTooltip="Edit Person"
+                tooltipPosition="top"
+                (onClick)="editPerson(person)"
+                [rounded]="true"
+              >
+                <i class="pi pi-pencil"></i>
+              </p-button>
+              <p-button
+                severity="danger"
+                size="small"
+                pTooltip="Delete Person"
+                tooltipPosition="top"
+                (onClick)="deletePerson(person)"
+                [rounded]="true"
+              >
+                <i class="pi pi-trash"></i>
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">
+            <app-table-empty-message
+              icon="pi pi-info-circle"
+              title="No Persons Found"
+              message="Click the 'Add Person' button to create one."
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<p-confirmDialog />
+<p-toast />
