@@ -1,8 +1,8 @@
-<div class="persons-form p-4 max-w-screen-lg mx-auto">
-  <div class="max-w-md mx-auto">
+<div class="persons-form mx-auto max-w-screen-lg p-4">
+  <div class="mx-auto max-w-md">
     <!-- Header -->
     <div class="mb-6 text-center">
-      <h2 class="text-3xl font-bold m-0 text-900">
+      <h2 class="text-900 m-0 text-3xl font-bold">
         {{ this.isEditMode() ? 'Edit Person' : 'Create New Person' }}
       </h2>
       <p class="text-color-secondary mt-2 text-lg">
@@ -20,7 +20,7 @@
       <ng-template pTemplate="content">
         <form [formGroup]="personForm" (ngSubmit)="onSubmit()">
           <div class="field mb-4">
-            <label class="block font-medium mb-2" for="firstName"> First Name </label>
+            <label class="mb-2 block font-medium" for="firstName"> First Name </label>
             <input
               autocomplete="off"
               class="w-full"
@@ -36,12 +36,12 @@
               personForm.get('firstName')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field is required!
               </span>
             }
-            <label class="block font-medium mb-2 mt-2" for="lastName"> Last Name </label>
+            <label class="mt-2 mb-2 block font-medium" for="lastName"> Last Name </label>
             <input
               autocomplete="off"
               class="w-full"
@@ -57,12 +57,12 @@
               personForm.get('lastName')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field is required!
               </span>
             }
-            <label class="block font-medium mb-2 mt-2" for="nickname"> Nickname </label>
+            <label class="mt-2 mb-2 block font-medium" for="nickname"> Nickname </label>
             <input
               autocomplete="off"
               class="w-full"
@@ -72,7 +72,7 @@
               placeholder="Enter nickname"
               type="text"
             />
-            <label class="block font-medium mb-2 mt-2" for="nationality"> Nationality </label>
+            <label class="mt-2 mb-2 block font-medium" for="nationality"> Nationality </label>
             <input
               autocomplete="off"
               class="w-full"
@@ -88,12 +88,12 @@
               personForm.get('nationality')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field is required!
               </span>
             }
-            <label class="block font-medium mb-2 mt-2" for="birthDate"> Birth Date </label>
+            <label class="mt-2 mb-2 block font-medium" for="birthDate"> Birth Date </label>
             <p-datePicker
               autocomplete="off"
               class="w-full"
@@ -108,7 +108,7 @@
               personForm.get('nickname')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field is required!
               </span>
@@ -116,7 +116,7 @@
           </div>
 
           <!-- Action Buttons -->
-          <div class="flex gap-2 justify-content-end pt-4">
+          <div class="justify-content-end flex gap-2 pt-4">
             <p-button
               label="Cancel"
               severity="secondary"

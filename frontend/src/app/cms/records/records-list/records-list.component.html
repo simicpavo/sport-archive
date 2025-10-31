@@ -1,4 +1,4 @@
-<div class="records-management p-4 max-w-screen-xl mx-auto">
+<div class="records-management mx-auto max-w-screen-xl p-4">
   <!-- Header Section -->
   <app-page-header
     buttonLabel="Add Record"
@@ -56,13 +56,13 @@
             <span class="font-medium">{{ record.contentType.name }}</span>
           </td>
           <td>
-            <span class="text-sm text-color-secondary">
+            <span class="text-color-secondary text-sm">
               {{ record.updatedAt | date: 'short' }}
             </span>
           </td>
 
           <td>
-            <div class="flex gap-2 align-items-center">
+            <div class="align-items-center flex gap-2">
               <p-button
                 pTooltip="Edit National Team"
                 severity="success"

@@ -4,10 +4,10 @@ import { Component, input } from '@angular/core';
   selector: 'app-table-empty-message',
   standalone: true,
   template: `
-    <div class="text-center py-8">
+    <div class="py-8 text-center">
       <div class="text-color-secondary">
-        <i [class]="'pi ' + icon + ' text-4xl mb-3 block'"></i>
-        <p class="text-lg mb-2 font-semibold">{{ title() }}</p>
+        <i [class]="'pi ' + icon + ' mb-3 block text-4xl'"></i>
+        <p class="mb-2 text-lg font-semibold">{{ title() }}</p>
         <p class="text-sm">{{ message() }}</p>
       </div>
     </div>
