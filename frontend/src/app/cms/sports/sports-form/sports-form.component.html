@@ -12,12 +12,7 @@
 
     <!-- Loading Spinner -->
     @if (isLoading()) {
-      <div class="flex justify-content-center mb-4">
-        <p-progressSpinner
-          strokeWidth="4"
-          [style]="{ width: '50px', height: '50px' }"
-        ></p-progressSpinner>
-      </div>
+      <app-loading-spinner />
     }
 
     <!-- Form Card -->
@@ -88,4 +83,4 @@
   </div>
 </div>
 
-<p-toast></p-toast>
+<p-toast />

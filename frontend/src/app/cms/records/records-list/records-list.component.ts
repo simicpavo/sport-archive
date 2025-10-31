@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ConfirmationService } from 'primeng/api';
@@ -9,6 +9,8 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
+import { PageHeaderComponent } from '../../../shared/components/header.component';
 import { Record } from '../../../shared/interfaces/record.interface';
 import { recordsActions } from '../../../store/records/records.actions';
 import { recordsFeature } from '../../../store/records/records.store';
@@ -24,6 +26,8 @@ import { recordsFeature } from '../../../store/records/records.store';
     ConfirmDialogModule,
     ToastModule,
     TooltipModule,
+    TableEmptyMessageComponent,
+    PageHeaderComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './records-list.component.html',
@@ -35,7 +39,6 @@ export class RecordsListComponent implements OnInit {
 
   readonly records = this.store.selectSignal(recordsFeature.selectRecords);
   readonly isLoading = this.store.selectSignal(recordsFeature.selectLoading);
-  readonly mutableRecords = computed(() => [...this.records()]);
 
   ngOnInit() {
     this.loadData();

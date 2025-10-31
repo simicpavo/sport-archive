@@ -25,14 +25,6 @@ export interface UpdateCompetitionDto {
   sportId?: string;
 }
 
-export interface FormState {
-  name: string;
-  season: string;
-  startDate: Date;
-  endDate: Date;
-  sportId: string;
-}
-
 export interface CompetitionResponse {
   data: Competition[];
   meta: {

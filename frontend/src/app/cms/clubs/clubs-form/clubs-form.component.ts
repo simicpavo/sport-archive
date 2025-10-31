@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { clubsActions } from '../../../store/clubs/clubs.actions';
 import { clubsFeature } from '../../../store/clubs/clubs.store';
 import { sportsActions } from '../../../store/sports/sports.actions';
@@ -24,8 +24,8 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     InputTextModule,
     ButtonModule,
     ToastModule,
-    ProgressSpinnerModule,
     SelectModule,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './clubs-form.component.html',
 })
@@ -53,7 +53,7 @@ export class ClubsFormComponent implements OnInit {
   constructor() {
     effect(() => {
       if (this.isEditMode() && this.selectedClub()) {
-        setTimeout(() => {
+        untracked(() => {
           this.clubForm.patchValue({
             name: this.selectedClub()?.name,
             sportId: this.selectedClub()?.sportId,

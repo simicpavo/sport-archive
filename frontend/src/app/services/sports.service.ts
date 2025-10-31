@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import {
   CreateSportDto,
   Sport,
@@ -13,7 +14,7 @@ import {
   providedIn: 'root',
 })
 export class SportsService {
-  private readonly apiUrl = 'http://localhost:3000/sports';
+  private readonly apiUrl = `${environment?.apiUrl}/sports`;
   private readonly http = inject(HttpClient);
 
   getSports(): Observable<SportsResponse> {

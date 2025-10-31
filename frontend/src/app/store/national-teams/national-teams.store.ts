@@ -89,12 +89,9 @@ export const nationalTeamsReducer = createReducer(
     error: null,
   })),
 
-  on(nationalTeamsActions.deleteNationalTeamSuccess, (state, { id }) => ({
+  on(nationalTeamsActions.deleteNationalTeamSuccess, (state) => ({
     ...state,
     loading: false,
-    nationalTeams: state.nationalTeams.filter((nt) => nt.id !== id),
-    total: state.total - 1,
-    selectedNationalTeam: state.selectedNationalTeam?.id === id ? null : state.selectedNationalTeam,
     error: null,
   })),
 

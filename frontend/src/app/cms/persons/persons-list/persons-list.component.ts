@@ -9,6 +9,8 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
+import { PageHeaderComponent } from '../../../shared/components/header.component';
 import { Person } from '../../../shared/interfaces/person.interface';
 import { personsActions } from '../../../store/persons/persons.actions';
 import { personsFeature } from '../../../store/persons/persons.store';
@@ -24,6 +26,8 @@ import { personsFeature } from '../../../store/persons/persons.store';
     ConfirmDialogModule,
     ToastModule,
     TooltipModule,
+    TableEmptyMessageComponent,
+    PageHeaderComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './persons-list.component.html',

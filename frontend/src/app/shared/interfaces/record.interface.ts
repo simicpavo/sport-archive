@@ -32,16 +32,6 @@ export interface UpdateRecordDto {
   nationalTeamId?: string;
 }
 
-export interface FormState {
-  title: string;
-  description: string;
-  date: Date;
-  sportId: string;
-  contentTypeId: string;
-  competitionId: string;
-  nationalTeamId: string;
-}
-
 export interface RecordResponse {
   data: Record[];
   meta: {

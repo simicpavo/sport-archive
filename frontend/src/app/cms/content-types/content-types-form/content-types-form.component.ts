@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { contentTypesActions } from '../../../store/content-types/content-types.actions';
 import { contentTypesFeature } from '../../../store/content-types/content-types.store';
 
@@ -21,7 +21,7 @@ import { contentTypesFeature } from '../../../store/content-types/content-types.
     InputTextModule,
     ButtonModule,
     ToastModule,
-    ProgressSpinnerModule,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './content-types-form.component.html',
 })
@@ -49,7 +49,7 @@ export class ContentTypesFormComponent implements OnInit {
   constructor() {
     effect(() => {
       if (this.selectedContentType() && this.isEditMode()) {
-        setTimeout(() => {
+        untracked(() => {
           this.contentTypeForm.patchValue({
             name: this.selectedContentType()!.name,
           });

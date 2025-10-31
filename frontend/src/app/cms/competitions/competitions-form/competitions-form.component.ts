@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -7,10 +7,9 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
-import { FormState } from '../../../shared/interfaces/competition.interface';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { competitionsActions } from '../../../store/competitions/competitions.actions';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
 import { sportsActions } from '../../../store/sports/sports.actions';
@@ -26,7 +25,7 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     InputTextModule,
     ButtonModule,
     ToastModule,
-    ProgressSpinnerModule,
+    LoadingSpinnerComponent,
     DatePickerModule,
     SelectModule,
   ],
@@ -57,12 +56,16 @@ export class CompetitionsFormComponent implements OnInit {
   constructor() {
     effect(() => {
       if (this.selectedCompetition() && this.isEditMode()) {
-        setTimeout(() => {
+        untracked(() => {
           this.competitionForm.patchValue({
             name: this.selectedCompetition()?.name,
             season: this.selectedCompetition()?.season,
-            startDate: this.selectedCompetition()?.startDate,
-            endDate: this.selectedCompetition()?.endDate,
+            startDate: this.selectedCompetition()?.startDate
+              ? new Date(this.selectedCompetition()!.startDate!)
+              : null,
+            endDate: this.selectedCompetition()?.endDate
+              ? new Date(this.selectedCompetition()!.endDate!)
+              : null,
             sportId: this.selectedCompetition()?.sportId,
           });
           this.competitionForm.markAsPristine();
@@ -92,31 +95,27 @@ export class CompetitionsFormComponent implements OnInit {
       return;
     }
 
-    const formValue = this.competitionForm.value as FormState;
+    const formValue = this.competitionForm.getRawValue();
+
+    const competitionData = {
+      name: formValue.name,
+      season: formValue.season,
+      startDate: formValue.startDate || undefined,
+      endDate: formValue.endDate || undefined,
+      sportId: formValue.sportId,
+    };
 
     if (this.isEditMode()) {
       this.store.dispatch(
         competitionsActions.updateCompetition({
           id: this.competitionId()!,
-          competition: {
-            name: formValue.name,
-            season: formValue.season,
-            startDate: formValue.startDate,
-            endDate: formValue.endDate,
-            sportId: formValue.sportId,
-          },
+          competition: competitionData,
         }),
       );
     } else {
       this.store.dispatch(
         competitionsActions.createCompetition({
-          competition: {
-            name: formValue.name,
-            season: formValue.season,
-            startDate: formValue.startDate,
-            endDate: formValue.endDate,
-            sportId: formValue.sportId,
-          },
+          competition: competitionData,
         }),
       );
     }

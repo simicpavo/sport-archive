@@ -2,9 +2,29 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { RecordsService } from '../../services/records.service';
+import { competitionsActions } from '../competitions/competitions.actions';
+import { contentTypesActions } from '../content-types/content-types.actions';
+import { nationalTeamsActions } from '../national-teams/national-teams.actions';
+import { sportsActions } from '../sports/sports.actions';
 import { recordsActions } from './records.actions';
+
+export const initializeRecordFormEffect = createEffect(
+  (actions$ = inject(Actions)) => {
+    return actions$.pipe(
+      ofType(recordsActions.initializeRecordForm),
+      mergeMap(({ recordId }) => [
+        sportsActions.loadSports({}),
+        competitionsActions.loadCompetitions({}),
+        nationalTeamsActions.loadNationalTeams({}),
+        contentTypesActions.loadContentTypes({}),
+        ...(recordId ? [recordsActions.loadRecords({ id: recordId })] : []),
+      ]),
+    );
+  },
+  { functional: true },
+);
 
 export const loadRecordsEffect = createEffect(
   (actions$ = inject(Actions), recordsService = inject(RecordsService)) => {
@@ -77,7 +97,10 @@ export const deleteRecordEffect = createEffect(
       ofType(recordsActions.deleteRecord),
       switchMap(({ id }) =>
         recordsService.deleteRecord(id).pipe(
-          map(() => recordsActions.deleteRecordSuccess({ id })),
+          mergeMap(() => [
+            recordsActions.deleteRecordSuccess({ id }),
+            recordsActions.loadRecords({}),
+          ]),
           catchError((error) => of(recordsActions.deleteRecordFailure({ error }))),
         ),
       ),

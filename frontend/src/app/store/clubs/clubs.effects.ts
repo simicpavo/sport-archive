@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { MessageService } from 'primeng/api';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { ClubsService } from '../../services/clubs.service';
 import { clubsActions } from './clubs.actions';
 
@@ -69,7 +69,7 @@ export const deleteClubEffect = createEffect(
       ofType(clubsActions.deleteClub),
       switchMap(({ id }) =>
         clubsService.deleteClub(id).pipe(
-          map(() => clubsActions.deleteClubSuccess({ id })),
+          mergeMap(() => [clubsActions.deleteClubSuccess({ id }), clubsActions.loadClubs({})]),
           catchError((error) => of(clubsActions.deleteClubFailure({ error }))),
         ),
       ),

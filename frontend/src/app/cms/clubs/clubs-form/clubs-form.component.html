@@ -10,12 +10,16 @@
     </div>
 
     @if (isLoading()) {
+      <<<<<<< HEAD
       <div class="flex justify-content-center mb-4">
         <p-progressSpinner
           strokeWidth="4"
           [style]="{ width: '50px', height: '50px' }"
         ></p-progressSpinner>
       </div>
+      =======
+      <app-loading-spinner />
+      >>>>>>> de7d38c612f00515c31e501adb883e4e75098fbb
     }
 
     <p-card [class.opacity-50]="isLoading()">
@@ -110,4 +114,4 @@
   </div>
 </div>
 
-<p-toast></p-toast>
+<p-toast />

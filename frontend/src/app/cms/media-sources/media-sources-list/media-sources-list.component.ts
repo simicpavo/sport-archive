@@ -9,6 +9,8 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
+import { PageHeaderComponent } from '../../../shared/components/header.component';
 import { MediaSource } from '../../../shared/interfaces/media-source.interface';
 import { mediaSourcesActions } from '../../../store/media-sources/media-sources.actions';
 import { mediaSourcesFeature } from '../../../store/media-sources/media-sources.store';
@@ -24,6 +26,8 @@ import { mediaSourcesFeature } from '../../../store/media-sources/media-sources.
     ConfirmDialogModule,
     ToastModule,
     TooltipModule,
+    TableEmptyMessageComponent,
+    PageHeaderComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './media-sources-list.component.html',

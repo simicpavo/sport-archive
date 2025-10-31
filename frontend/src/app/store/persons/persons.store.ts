@@ -89,12 +89,9 @@ export const personsReducer = createReducer(
     error: null,
   })),
 
-  on(personsActions.deletePersonSuccess, (state, { id }) => ({
+  on(personsActions.deletePersonSuccess, (state) => ({
     ...state,
     loading: false,
-    persons: state.persons.filter((p) => p.id !== id),
-    total: state.total - 1,
-    selectedPerson: state.selectedPerson?.id === id ? null : state.selectedPerson,
     error: null,
   })),
 

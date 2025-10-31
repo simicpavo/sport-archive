@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -7,19 +7,14 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
-import { FormState } from '../../../shared/interfaces/record.interface';
-import { competitionsActions } from '../../../store/competitions/competitions.actions';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
-import { contentTypesActions } from '../../../store/content-types/content-types.actions';
 import { contentTypesFeature } from '../../../store/content-types/content-types.store';
-import { nationalTeamsActions } from '../../../store/national-teams/national-teams.actions';
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
 import { recordsActions } from '../../../store/records/records.actions';
 import { recordsFeature } from '../../../store/records/records.store';
-import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
@@ -32,7 +27,7 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     InputTextModule,
     ButtonModule,
     ToastModule,
-    ProgressSpinnerModule,
+    LoadingSpinnerComponent,
     SelectModule,
     DatePickerModule,
   ],
@@ -56,11 +51,11 @@ export class RecordsFormComponent implements OnInit {
   readonly recordsForm = this.fb.group({
     title: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
     description: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
-    date: [null as Date | null],
+    date: this.fb.control<Date | null>(null),
     sportId: this.fb.nonNullable.control('', [Validators.required]),
-    competitionId: [''],
-    nationalTeamId: [''],
     contentTypeId: this.fb.nonNullable.control('', [Validators.required]),
+    competitionId: this.fb.control(''),
+    nationalTeamId: this.fb.control(''),
   });
 
   ngOnInit() {
@@ -70,11 +65,11 @@ export class RecordsFormComponent implements OnInit {
   constructor() {
     effect(() => {
       if (this.selectedRecord() && this.isEditMode()) {
-        setTimeout(() => {
+        untracked(() => {
           this.recordsForm.patchValue({
             title: this.selectedRecord()?.title,
             description: this.selectedRecord()?.description,
-            date: this.selectedRecord()?.date,
+            date: this.selectedRecord()?.date ? new Date(this.selectedRecord()!.date!) : null,
             sportId: this.selectedRecord()?.sportId,
             competitionId: this.selectedRecord()?.competitionId,
             nationalTeamId: this.selectedRecord()?.nationalTeamId,
@@ -90,14 +85,7 @@ export class RecordsFormComponent implements OnInit {
     const recordId = this.route.snapshot.paramMap.get('id');
     this.recordId.set(recordId);
 
-    this.store.dispatch(sportsActions.loadSports({}));
-    this.store.dispatch(competitionsActions.loadCompetitions({}));
-    this.store.dispatch(nationalTeamsActions.loadNationalTeams({}));
-    this.store.dispatch(contentTypesActions.loadContentTypes({}));
-
-    if (recordId) {
-      this.store.dispatch(recordsActions.loadRecords({ id: recordId }));
-    }
+    this.store.dispatch(recordsActions.initializeRecordForm({ recordId: recordId ?? undefined }));
   }
 
   onSubmit() {
@@ -106,35 +94,29 @@ export class RecordsFormComponent implements OnInit {
       return;
     }
 
-    const formValue = this.recordsForm.value as FormState;
+    const formValue = this.recordsForm.getRawValue();
+
+    const recordData = {
+      title: formValue.title,
+      description: formValue.description,
+      sportId: formValue.sportId,
+      competitionId: formValue.competitionId || undefined,
+      nationalTeamId: formValue.nationalTeamId || undefined,
+      contentTypeId: formValue.contentTypeId,
+      date: formValue.date || undefined,
+    };
 
     if (this.isEditMode()) {
       this.store.dispatch(
         recordsActions.updateRecord({
           id: this.recordId()!,
-          record: {
-            title: formValue.title,
-            description: formValue.description,
-            sportId: formValue.sportId,
-            competitionId: formValue.competitionId,
-            nationalTeamId: formValue.nationalTeamId,
-            contentTypeId: formValue.contentTypeId,
-            date: formValue.date,
-          },
+          record: recordData,
         }),
       );
     } else {
       this.store.dispatch(
         recordsActions.createRecord({
-          record: {
-            title: formValue.title,
-            description: formValue.description,
-            sportId: formValue.sportId,
-            competitionId: formValue.competitionId,
-            nationalTeamId: formValue.nationalTeamId,
-            contentTypeId: formValue.contentTypeId,
-            date: formValue.date,
-          },
+          record: recordData,
         }),
       );
     }
