@@ -1,7 +1,7 @@
-<div class="content-types-form p-4 max-w-screen-lg mx-auto">
-  <div class="max-w-md mx-auto">
+<div class="content-types-form mx-auto max-w-screen-lg p-4">
+  <div class="mx-auto max-w-md">
     <div class="mb-6 text-center">
-      <h2 class="text-3xl font-bold m-0 text-900">
+      <h2 class="text-900 m-0 text-3xl font-bold">
         {{ this.isEditMode() ? 'Edit Content Type' : 'Create New Content Type' }}
       </h2>
       <p class="text-color-secondary mt-2 text-lg">
@@ -19,15 +19,15 @@
       <ng-template pTemplate="content">
         <form [formGroup]="contentTypeForm" (ngSubmit)="onSubmit()">
           <div class="field mb-4">
-            <label for="name" class="block font-medium mb-2"> Content Type Name * </label>
+            <label class="mb-2 block font-medium" for="name"> Content Type Name * </label>
             <input
-              id="name"
-              type="text"
-              pInputText
-              formControlName="name"
-              placeholder="Enter content type name (e.g., Article, Video, Podcast)"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="name"
+              id="name"
+              pInputText
+              placeholder="Enter content type name (e.g., Article, Video, Podcast)"
+              type="text"
             />
             @if (
               contentTypeForm.get('name')?.hasError('required') &&
@@ -35,7 +35,7 @@
               contentTypeForm.get('name')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field is required!
               </span>
@@ -46,35 +46,33 @@
               contentTypeForm.get('name')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field must be at least 2 characters long!
               </span>
             }
           </div>
 
-          <div class="flex gap-2 justify-content-end pt-4">
+          <div class="justify-content-end flex gap-2 pt-4">
             <p-button
-              type="button"
               label="Cancel"
               severity="secondary"
+              type="button"
+              [disabled]="isLoading()"
               [outlined]="true"
               (onClick)="navigateToContentTypesList()"
-              [disabled]="isLoading()"
-            >
-            </p-button>
+            />
 
             <p-button
+              icon="pi pi-check"
               type="submit"
-              [label]="this.isEditMode() ? 'Update Content Type' : 'Create Content Type'"
-              [loading]="isLoading()"
               [disabled]="
                 contentTypeForm.invalid ||
                 (isEditMode() && contentTypeForm.controls.name.dirty === false)
               "
-              icon="pi pi-check"
-            >
-            </p-button>
+              [label]="this.isEditMode() ? 'Update Content Type' : 'Create Content Type'"
+              [loading]="isLoading()"
+            />
           </div>
         </form>
       </ng-template>
@@ -82,4 +80,4 @@
   </div>
 </div>
 
-<p-toast></p-toast>
+<p-toast />

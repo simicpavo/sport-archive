@@ -137,7 +137,9 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   }
 
   private observeScrollTrigger(): void {
-    if (!this.observer) return;
+    if (!this.observer) {
+      return;
+    }
 
     const scrollTrigger = document.getElementById('scroll-trigger');
     if (scrollTrigger) {

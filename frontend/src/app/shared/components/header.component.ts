@@ -6,22 +6,21 @@ import { ButtonModule, ButtonSeverity } from 'primeng/button';
   standalone: true,
   imports: [ButtonModule],
   template: `
-    <div class="flex justify-content-between align-items-start mb-5">
+    <div class="justify-content-between align-items-start mb-5 flex">
       <div class="flex-grow-1">
-        <h2 class="text-3xl font-bold m-0 text-900">{{ title() }}</h2>
+        <h2 class="text-900 m-0 text-3xl font-bold">{{ title() }}</h2>
       </div>
 
-      <div class="flex-shrink-0 ml-4">
+      <div class="ml-4 flex-shrink-0">
         <p-button
-          [icon]="buttonIcon()"
-          [label]="buttonLabel()"
-          [severity]="buttonSeverity()"
-          [raised]="true"
           size="large"
           styleClass="px-4 py-2"
+          [icon]="buttonIcon()"
+          [label]="buttonLabel()"
+          [raised]="true"
+          [severity]="buttonSeverity()"
           (onClick)="buttonClick.emit()"
-        >
-        </p-button>
+        />
       </div>
     </div>
   `,

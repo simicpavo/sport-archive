@@ -1,7 +1,7 @@
-<div class="national-teams-form p-4 max-w-screen-lg mx-auto">
-  <div class="max-w-md mx-auto">
+<div class="national-teams-form mx-auto max-w-screen-lg p-4">
+  <div class="mx-auto max-w-md">
     <div class="mb-6 text-center">
-      <h2 class="text-3xl font-bold m-0 text-900">
+      <h2 class="text-900 m-0 text-3xl font-bold">
         {{ this.isEditMode() ? 'Edit National Team' : 'Create New National Team' }}
       </h2>
       <p class="text-color-secondary mt-2 text-lg">
@@ -21,15 +21,15 @@
       <ng-template pTemplate="content">
         <form [formGroup]="nationalTeamForm" (ngSubmit)="onSubmit()">
           <div class="field mb-4">
-            <label for="name" class="block font-medium mb-2"> National Team Name </label>
+            <label class="mb-2 block font-medium" for="name"> National Team Name </label>
             <input
-              id="name"
-              type="text"
-              pInputText
-              formControlName="name"
-              placeholder="Enter national team name (e.g., Team A, Team B)"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="name"
+              id="name"
+              pInputText
+              placeholder="Enter national team name (e.g., Team A, Team B)"
+              type="text"
             />
             @if (
               nationalTeamForm.get('name')?.hasError('required') &&
@@ -37,7 +37,7 @@
               nationalTeamForm.get('name')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field is required!
               </span>
@@ -48,22 +48,22 @@
               nationalTeamForm.get('name')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field must be at least 2 characters long!
               </span>
             }
 
-            <label for="sportId" class="block font-medium mb-2 mt-2"> Sport </label>
+            <label class="mt-2 mb-2 block font-medium" for="sportId"> Sport </label>
             <p-select
-              [options]="sports() || []"
+              class="w-full"
+              formControlName="sportId"
               optionLabel="name"
               optionValue="id"
               placeholder="Select Sport"
-              formControlName="sportId"
-              class="w-full"
-              [showClear]="true"
               [loading]="isLoading()"
+              [options]="sports() || []"
+              [showClear]="true"
             />
             @if (
               nationalTeamForm.get('sportId')?.hasError('required') &&
@@ -71,37 +71,35 @@
               nationalTeamForm.get('sportId')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field is required!
               </span>
             }
           </div>
 
-          <div class="flex gap-2 justify-content-end pt-4">
+          <div class="justify-content-end flex gap-2 pt-4">
             <p-button
-              type="button"
               label="Cancel"
               severity="secondary"
+              type="button"
+              [disabled]="isLoading()"
               [outlined]="true"
               (onClick)="navigateToNationalTeamsList()"
-              [disabled]="isLoading()"
-            >
-            </p-button>
+            />
 
             <p-button
+              icon="pi pi-check"
               type="submit"
-              [label]="this.isEditMode() ? 'Update National Team' : 'Create National Team'"
-              [loading]="isLoading()"
               [disabled]="
                 nationalTeamForm.invalid ||
                 (isEditMode() &&
                   nationalTeamForm.controls.name.dirty === false &&
                   nationalTeamForm.controls.sportId.dirty === false)
               "
-              icon="pi pi-check"
-            >
-            </p-button>
+              [label]="this.isEditMode() ? 'Update National Team' : 'Create National Team'"
+              [loading]="isLoading()"
+            />
           </div>
         </form>
       </ng-template>

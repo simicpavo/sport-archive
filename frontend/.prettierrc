@@ -6,5 +6,6 @@
   "semi": true,
   "quoteProps": "preserve",
   "bracketSpacing": true,
-  "endOfLine": "crlf"
+  "endOfLine": "crlf",
+  "plugins": ["prettier-plugin-tailwindcss"]
 }

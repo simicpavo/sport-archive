@@ -15,7 +15,6 @@ export class CompetitionsService {
   private readonly http = inject(HttpClient);
 
   getCompetitions(): Observable<CompetitionResponse> {
-    console.log(environment.apiUrl);
     return this.http.get<Competition[]>(this.apiUrl).pipe(
       map((competitions: Competition[]) => ({
         data: competitions,

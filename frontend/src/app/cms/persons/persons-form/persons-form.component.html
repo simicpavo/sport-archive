@@ -1,8 +1,8 @@
-<div class="persons-form p-4 max-w-screen-lg mx-auto">
-  <div class="max-w-md mx-auto">
+<div class="persons-form mx-auto max-w-screen-lg p-4">
+  <div class="mx-auto max-w-md">
     <!-- Header -->
     <div class="mb-6 text-center">
-      <h2 class="text-3xl font-bold m-0 text-900">
+      <h2 class="text-900 m-0 text-3xl font-bold">
         {{ this.isEditMode() ? 'Edit Person' : 'Create New Person' }}
       </h2>
       <p class="text-color-secondary mt-2 text-lg">
@@ -20,15 +20,15 @@
       <ng-template pTemplate="content">
         <form [formGroup]="personForm" (ngSubmit)="onSubmit()">
           <div class="field mb-4">
-            <label for="firstName" class="block font-medium mb-2"> First Name </label>
+            <label class="mb-2 block font-medium" for="firstName"> First Name </label>
             <input
-              id="firstName"
-              type="text"
-              pInputText
-              formControlName="firstName"
-              placeholder="Enter first name"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="firstName"
+              id="firstName"
+              pInputText
+              placeholder="Enter first name"
+              type="text"
             />
             @if (
               personForm.get('firstName')?.hasError('required') &&
@@ -36,20 +36,20 @@
               personForm.get('firstName')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field is required!
               </span>
             }
-            <label for="lastName" class="block font-medium mb-2 mt-2"> Last Name </label>
+            <label class="mt-2 mb-2 block font-medium" for="lastName"> Last Name </label>
             <input
-              id="lastName"
-              type="text"
-              pInputText
-              formControlName="lastName"
-              placeholder="Enter last name"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="lastName"
+              id="lastName"
+              pInputText
+              placeholder="Enter last name"
+              type="text"
             />
             @if (
               personForm.get('lastName')?.hasError('required') &&
@@ -57,30 +57,30 @@
               personForm.get('lastName')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field is required!
               </span>
             }
-            <label for="nickname" class="block font-medium mb-2 mt-2"> Nickname </label>
+            <label class="mt-2 mb-2 block font-medium" for="nickname"> Nickname </label>
             <input
-              id="nickname"
-              type="text"
-              pInputText
+              autocomplete="off"
+              class="w-full"
               formControlName="nickname"
-              placeholder="Enter nickname"
-              class="w-full"
-              autocomplete="off"
-            />
-            <label for="nationality" class="block font-medium mb-2 mt-2"> Nationality </label>
-            <input
-              id="nationality"
-              type="text"
+              id="nickname"
               pInputText
-              formControlName="nationality"
-              placeholder="Enter nationality"
-              class="w-full"
+              placeholder="Enter nickname"
+              type="text"
+            />
+            <label class="mt-2 mb-2 block font-medium" for="nationality"> Nationality </label>
+            <input
               autocomplete="off"
+              class="w-full"
+              formControlName="nationality"
+              id="nationality"
+              pInputText
+              placeholder="Enter nationality"
+              type="text"
             />
             @if (
               personForm.get('nationality')?.hasError('required') &&
@@ -88,19 +88,19 @@
               personForm.get('nationality')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field is required!
               </span>
             }
-            <label for="birthDate" class="block font-medium mb-2 mt-2"> Birth Date </label>
+            <label class="mt-2 mb-2 block font-medium" for="birthDate"> Birth Date </label>
             <p-datePicker
-              id="birthDate"
-              type="date"
-              formControlName="birthDate"
-              placeholder="Enter birth date"
-              class="w-full"
               autocomplete="off"
+              class="w-full"
+              formControlName="birthDate"
+              id="birthDate"
+              placeholder="Enter birth date"
+              type="date"
             />
             @if (
               personForm.get('nickname')?.hasError('required') &&
@@ -108,7 +108,7 @@
               personForm.get('nickname')?.invalid
             ) {
               <span
-                class="mt-4 rounded-md py-3 px-4 block text-red-500 font-medium bg-[rgb(220,53,69)]/10 border-l-4 border-l-[#dc3545]"
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
               >
                 This field is required!
               </span>
@@ -116,21 +116,19 @@
           </div>
 
           <!-- Action Buttons -->
-          <div class="flex gap-2 justify-content-end pt-4">
+          <div class="justify-content-end flex gap-2 pt-4">
             <p-button
-              type="button"
               label="Cancel"
               severity="secondary"
+              type="button"
+              [disabled]="isLoading()"
               [outlined]="true"
               (onClick)="navigateToPersonsList()"
-              [disabled]="isLoading()"
-            >
-            </p-button>
+            />
 
             <p-button
+              icon="pi pi-check"
               type="submit"
-              [label]="this.isEditMode() ? 'Update Person' : 'Create Person'"
-              [loading]="isLoading()"
               [disabled]="
                 personForm.invalid ||
                 (isEditMode() &&
@@ -140,9 +138,9 @@
                   personForm.controls.birthDate.dirty === false &&
                   personForm.controls.nationality.dirty === false)
               "
-              icon="pi pi-check"
-            >
-            </p-button>
+              [label]="this.isEditMode() ? 'Update Person' : 'Create Person'"
+              [loading]="isLoading()"
+            />
           </div>
         </form>
       </ng-template>
