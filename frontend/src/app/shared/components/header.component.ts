@@ -26,7 +26,7 @@ import { ButtonModule, ButtonSeverity } from 'primeng/button';
   `,
 })
 export class PageHeaderComponent {
-  title = input.required<string>();
+  title = input<string>();
   buttonLabel = input.required<string>();
   buttonIcon = input<string>('pi pi-plus');
   buttonSeverity = input<ButtonSeverity>('success');
