@@ -1,106 +1,107 @@
-<div class="records-management mx-auto max-w-screen-xl p-4">
-  <!-- Header Section -->
-  <app-page-header
-    buttonLabel="Add Record"
-    buttonSeverity="success"
-    title="Records Management"
-    (buttonClick)="addRecord()"
-  />
+<app-navigation-sidebar pageTitle="Records Management">
+  <div class="records-management mx-auto max-w-screen-2xl">
+    <!-- Header Section -->
+    <app-page-header
+      buttonLabel="Add Record"
+      buttonSeverity="success"
+      (buttonClick)="addRecord()"
+    />
 
-  <!-- Data Table -->
-  <div class="card">
-    <p-table
-      class="p-datatable-striped"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      scrollHeight="60vh"
-      [loading]="isLoading()"
-      [paginator]="true"
-      [rows]="10"
-      [rowsPerPageOptions]="[5, 10, 25, 50]"
-      [scrollable]="true"
-      [showCurrentPageReport]="true"
-      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
-      [value]="records()"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="title" style="width: 25%">
-            Title
-            <p-sortIcon field="title" />
-          </th>
-          <th pSortableColumn="description" style="width: 35%">
-            Description
-            <p-sortIcon field="description" />
-          </th>
-          <th pSortableColumn="contentTypeId" style="width: 15%">
-            Content Type
-            <p-sortIcon field="contentTypeId" />
-          </th>
-          <th pSortableColumn="updatedAt" style="width: 15%">
-            Updated At
-            <p-sortIcon field="updatedAt" />
-          </th>
-          <th style="width: 10%; min-width: 120px">Actions</th>
-        </tr>
-      </ng-template>
+    <!-- Data Table -->
+    <div class="card">
+      <p-table
+        class="p-datatable-striped"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        scrollHeight="60vh"
+        [loading]="isLoading()"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 25, 50]"
+        [scrollable]="true"
+        [showCurrentPageReport]="true"
+        [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+        [value]="records()"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="title" style="width: 25%">
+              Title
+              <p-sortIcon field="title" />
+            </th>
+            <th pSortableColumn="description" style="width: 35%">
+              Description
+              <p-sortIcon field="description" />
+            </th>
+            <th pSortableColumn="contentTypeId" style="width: 15%">
+              Content Type
+              <p-sortIcon field="contentTypeId" />
+            </th>
+            <th pSortableColumn="updatedAt" style="width: 15%">
+              Updated At
+              <p-sortIcon field="updatedAt" />
+            </th>
+            <th style="width: 10%; min-width: 120px">Actions</th>
+          </tr>
+        </ng-template>
 
-      <ng-template let-record pTemplate="body">
-        <tr>
-          <td>
-            <span class="font-medium">{{ record.title }}</span>
-          </td>
-          <td>
-            <span class="font-medium">{{ record.description }}</span>
-          </td>
-          <td>
-            <span class="font-medium">{{ record.contentType.name }}</span>
-          </td>
-          <td>
-            <span class="text-color-secondary text-sm">
-              {{ record.updatedAt | date: 'short' }}
-            </span>
-          </td>
+        <ng-template let-record pTemplate="body">
+          <tr>
+            <td>
+              <span class="font-medium">{{ record.title }}</span>
+            </td>
+            <td>
+              <span class="font-medium">{{ record.description }}</span>
+            </td>
+            <td>
+              <span class="font-medium">{{ record.contentType.name }}</span>
+            </td>
+            <td>
+              <span class="text-color-secondary text-sm">
+                {{ record.updatedAt | date: 'short' }}
+              </span>
+            </td>
 
-          <td>
-            <div class="align-items-center flex gap-2">
-              <p-button
-                pTooltip="Edit National Team"
-                severity="success"
-                size="small"
-                tooltipPosition="top"
-                [rounded]="true"
-                (onClick)="editRecord(record)"
-              >
-                <i class="pi pi-pencil"></i>
-              </p-button>
-              <p-button
-                pTooltip="Delete National Team"
-                severity="danger"
-                size="small"
-                tooltipPosition="top"
-                [rounded]="true"
-                (onClick)="deleteRecord(record)"
-              >
-                <i class="pi pi-trash"></i>
-              </p-button>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
+            <td>
+              <div class="align-items-center flex gap-2">
+                <p-button
+                  pTooltip="Edit National Team"
+                  severity="success"
+                  size="small"
+                  tooltipPosition="top"
+                  [rounded]="true"
+                  (onClick)="editRecord(record)"
+                >
+                  <i class="pi pi-pencil"></i>
+                </p-button>
+                <p-button
+                  pTooltip="Delete National Team"
+                  severity="danger"
+                  size="small"
+                  tooltipPosition="top"
+                  [rounded]="true"
+                  (onClick)="deleteRecord(record)"
+                >
+                  <i class="pi pi-trash"></i>
+                </p-button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
 
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="6">
-            <app-table-empty-message
-              icon="pi pi-info-circle"
-              message="Click the 'Add Record' button to create one."
-              title="No Records Found"
-            />
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">
+              <app-table-empty-message
+                icon="pi pi-info-circle"
+                message="Click the 'Add Record' button to create one."
+                title="No Records Found"
+              />
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </div>
-</div>
+</app-navigation-sidebar>
 <p-confirmDialog />
 <p-toast />

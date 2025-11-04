@@ -1,107 +1,108 @@
-<div class="national-teams-management mx-auto max-w-screen-xl p-4">
-  <!-- Header Section -->
-  <app-page-header
-    buttonLabel="Add National Team"
-    buttonSeverity="success"
-    title="National Teams Management"
-    (buttonClick)="addNationalTeam()"
-  />
+<app-navigation-sidebar pageTitle="National Teams Management">
+  <div class="national-teams-management mx-auto max-w-screen-2xl">
+    <!-- Header Section -->
+    <app-page-header
+      buttonLabel="Add National Team"
+      buttonSeverity="success"
+      (buttonClick)="addNationalTeam()"
+    />
 
-  <!-- Data Table -->
-  <div class="card">
-    <p-table
-      class="p-datatable-striped"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      scrollHeight="60vh"
-      [loading]="isLoading()"
-      [paginator]="true"
-      [rows]="10"
-      [rowsPerPageOptions]="[5, 10, 25, 50]"
-      [scrollable]="true"
-      [showCurrentPageReport]="true"
-      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
-      [value]="nationalTeams()"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="name" style="width: 25%">
-            Name
-            <p-sortIcon field="name" />
-          </th>
-          <th pSortableColumn="sportId" style="width: 25%">
-            Sport
-            <p-sortIcon field="sportId" />
-          </th>
-          <th pSortableColumn="createdAt" style="width: 20%">
-            Created At
-            <p-sortIcon field="createdAt" />
-          </th>
-          <th pSortableColumn="updatedAt" style="width: 20%">
-            Updated At
-            <p-sortIcon field="updatedAt" />
-          </th>
-          <th style="width: 10%; min-width: 120px">Actions</th>
-        </tr>
-      </ng-template>
+    <!-- Data Table -->
+    <div class="card">
+      <p-table
+        class="p-datatable-striped"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        scrollHeight="60vh"
+        [loading]="isLoading()"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 25, 50]"
+        [scrollable]="true"
+        [showCurrentPageReport]="true"
+        [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+        [value]="nationalTeams()"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="name" style="width: 25%">
+              Name
+              <p-sortIcon field="name" />
+            </th>
+            <th pSortableColumn="sportId" style="width: 25%">
+              Sport
+              <p-sortIcon field="sportId" />
+            </th>
+            <th pSortableColumn="createdAt" style="width: 20%">
+              Created At
+              <p-sortIcon field="createdAt" />
+            </th>
+            <th pSortableColumn="updatedAt" style="width: 20%">
+              Updated At
+              <p-sortIcon field="updatedAt" />
+            </th>
+            <th style="width: 10%; min-width: 120px">Actions</th>
+          </tr>
+        </ng-template>
 
-      <ng-template let-nationalTeam pTemplate="body">
-        <tr>
-          <td>
-            <span class="font-medium">{{ nationalTeam.name }}</span>
-          </td>
-          <td>
-            <span class="font-medium">{{ nationalTeam.sport.name }}</span>
-          </td>
-          <td>
-            <span class="text-color-secondary text-sm">
-              {{ nationalTeam.createdAt | date: 'short' }}
-            </span>
-          </td>
-          <td>
-            <span class="text-color-secondary text-sm">
-              {{ nationalTeam.updatedAt | date: 'short' }}
-            </span>
-          </td>
-          <td>
-            <div class="align-items-center flex gap-2">
-              <p-button
-                pTooltip="Edit National Team"
-                severity="success"
-                size="small"
-                tooltipPosition="top"
-                [rounded]="true"
-                (onClick)="editNationalTeam(nationalTeam)"
-              >
-                <i class="pi pi-pencil"></i>
-              </p-button>
-              <p-button
-                pTooltip="Delete National Team"
-                severity="danger"
-                size="small"
-                tooltipPosition="top"
-                [rounded]="true"
-                (onClick)="deleteNationalTeam(nationalTeam)"
-              >
-                <i class="pi pi-trash"></i>
-              </p-button>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
+        <ng-template let-nationalTeam pTemplate="body">
+          <tr>
+            <td>
+              <span class="font-medium">{{ nationalTeam.name }}</span>
+            </td>
+            <td>
+              <span class="font-medium">{{ nationalTeam.sport.name }}</span>
+            </td>
+            <td>
+              <span class="text-color-secondary text-sm">
+                {{ nationalTeam.createdAt | date: 'short' }}
+              </span>
+            </td>
+            <td>
+              <span class="text-color-secondary text-sm">
+                {{ nationalTeam.updatedAt | date: 'short' }}
+              </span>
+            </td>
+            <td>
+              <div class="align-items-center flex gap-2">
+                <p-button
+                  pTooltip="Edit National Team"
+                  severity="success"
+                  size="small"
+                  tooltipPosition="top"
+                  [rounded]="true"
+                  (onClick)="editNationalTeam(nationalTeam)"
+                >
+                  <i class="pi pi-pencil"></i>
+                </p-button>
+                <p-button
+                  pTooltip="Delete National Team"
+                  severity="danger"
+                  size="small"
+                  tooltipPosition="top"
+                  [rounded]="true"
+                  (onClick)="deleteNationalTeam(nationalTeam)"
+                >
+                  <i class="pi pi-trash"></i>
+                </p-button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
 
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="5">
-            <app-table-empty-message
-              icon="pi-users"
-              message="Click the 'Add National Team' button to create one."
-              title="No National Teams Found"
-            />
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">
+              <app-table-empty-message
+                icon="pi-users"
+                message="Click the 'Add National Team' button to create one."
+                title="No National Teams Found"
+              />
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </div>
-</div>
+</app-navigation-sidebar>
 <p-confirmDialog />
 <p-toast />

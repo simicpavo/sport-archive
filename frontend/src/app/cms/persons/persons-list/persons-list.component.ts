@@ -11,6 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { PageHeaderComponent } from '../../../shared/components/header.component';
+import { NavigationSidebarComponent } from '../../../shared/components/navigation-sidebar.component';
 import { Person } from '../../../shared/interfaces/person.interface';
 import { personsActions } from '../../../store/persons/persons.actions';
 import { personsFeature } from '../../../store/persons/persons.store';
@@ -28,6 +29,7 @@ import { personsFeature } from '../../../store/persons/persons.store';
     TooltipModule,
     TableEmptyMessageComponent,
     PageHeaderComponent,
+    NavigationSidebarComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './persons-list.component.html',

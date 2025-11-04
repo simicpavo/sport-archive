@@ -11,6 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { PageHeaderComponent } from '../../../shared/components/header.component';
+import { NavigationSidebarComponent } from '../../../shared/components/navigation-sidebar.component';
 import { MediaSource } from '../../../shared/interfaces/media-source.interface';
 import { mediaSourcesActions } from '../../../store/media-sources/media-sources.actions';
 import { mediaSourcesFeature } from '../../../store/media-sources/media-sources.store';
@@ -28,6 +29,7 @@ import { mediaSourcesFeature } from '../../../store/media-sources/media-sources.
     TooltipModule,
     TableEmptyMessageComponent,
     PageHeaderComponent,
+    NavigationSidebarComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './media-sources-list.component.html',

@@ -11,6 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { PageHeaderComponent } from '../../../shared/components/header.component';
+import { NavigationSidebarComponent } from '../../../shared/components/navigation-sidebar.component';
 import { Record } from '../../../shared/interfaces/record.interface';
 import { recordsActions } from '../../../store/records/records.actions';
 import { recordsFeature } from '../../../store/records/records.store';
@@ -28,13 +29,14 @@ import { recordsFeature } from '../../../store/records/records.store';
     TooltipModule,
     TableEmptyMessageComponent,
     PageHeaderComponent,
+    NavigationSidebarComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './records-list.component.html',
 })
 export class RecordsListComponent implements OnInit {
   private readonly store = inject(Store);
-  private readonly router = inject(Router);
+  protected readonly router = inject(Router);
   private readonly confirmationService = inject(ConfirmationService);
 
   readonly records = this.store.selectSignal(recordsFeature.selectRecords);
