@@ -17,7 +17,7 @@ async function bootstrap() {
     origin: process.env.CORS_ORIGIN
       ? [
           process.env.CORS_ORIGIN,
-          process.env.CORS_ORIGIN.replace('://', '://www'),
+          process.env.CORS_ORIGIN.replace('://', '://www.'),
         ]
       : ['http://localhost:4200', 'http://localhost:4000'],
     credentials: true,
