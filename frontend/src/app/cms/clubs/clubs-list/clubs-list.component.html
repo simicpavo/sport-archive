@@ -1,9 +1,9 @@
-<div class="clubs-management mx-auto max-w-screen-xl p-4">
+<div class="clubs-management mx-auto max-w-screen-2xl">
   <!-- Header Section -->
   <app-page-header
     buttonLabel="Add Club"
     buttonSeverity="success"
-    title="Clubs Management"
+    title="Clubs"
     (buttonClick)="addClub()"
   />
 
@@ -53,10 +53,14 @@
             <span class="font-medium">{{ club.sport.name }}</span>
           </td>
           <td>
-            <span class="text-color-secondary text-sm"> {{ club.createdAt | date: 'short' }} </span>
+            <span class="text-color-secondary text-sm">
+              {{ club.createdAt | date: 'short' }}
+            </span>
           </td>
           <td>
-            <span class="text-color-secondary text-sm"> {{ club.updatedAt | date: 'short' }} </span>
+            <span class="text-color-secondary text-sm">
+              {{ club.updatedAt | date: 'short' }}
+            </span>
           </td>
           <td>
             <div class="align-items-center flex gap-2">

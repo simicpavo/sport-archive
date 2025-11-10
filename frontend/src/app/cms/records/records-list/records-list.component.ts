@@ -34,7 +34,7 @@ import { recordsFeature } from '../../../store/records/records.store';
 })
 export class RecordsListComponent implements OnInit {
   private readonly store = inject(Store);
-  private readonly router = inject(Router);
+  protected readonly router = inject(Router);
   private readonly confirmationService = inject(ConfirmationService);
 
   readonly records = this.store.selectSignal(recordsFeature.selectRecords);
