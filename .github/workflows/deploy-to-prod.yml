@@ -47,7 +47,7 @@ jobs:
           JWT_SECRET=${{ secrets.JWT_SECRET }}
           LOG_LEVEL=info
           CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
-          API_URL=http://${{ secrets.VPS_HOST }}:3000
+          API_URL=${{ vars.API_URL }}
           ENVEOF
 
           # Copy .env to VPS
@@ -70,13 +70,14 @@ jobs:
           sleep 30
 
           # Simple health check
-          if curl -f http://${{ secrets.VPS_HOST }}:3000/health; then
+          if curl -f ${{ vars.API_URL }}/health; then
             echo "✅ Backend is running"
           else
             echo "❌ Backend health check failed"
           fi
 
-          if curl -f http://${{ secrets.VPS_HOST }}:4000; then
+          # TODO: Add frontend URL variable
+          if curl -f https://sportchronica.com; then
             echo "✅ Frontend is running"
           else
             echo "❌ Frontend health check failed"
