@@ -19,125 +19,127 @@ import { DrawerModule } from 'primeng/drawer';
         <span class="text-xl font-semibold">Manage</span>
       </ng-template>
       <ng-template pTemplate="content">
-        <ul class="m-0 list-none p-0">
-          <li class="mb-3">
-            <a
-              class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
-              role="button"
-              tabindex="0"
-              (click)="navigateAndClose('')"
-              (keyup.enter)="navigateAndClose('')"
-              (keyup.space)="navigateAndClose('')"
-            >
-              <i class="pi pi-home mr-2"></i>
-              <span>Dashboard</span>
-            </a>
-          </li>
-          <li class="mb-3">
-            <a
-              class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
-              role="button"
-              tabindex="0"
-              (click)="navigateAndClose('/cms/records')"
-              (keyup.enter)="navigateAndClose('/cms/records')"
-              (keyup.space)="navigateAndClose('/cms/records')"
-            >
-              <i class="pi pi-book mr-2"></i>
-              <span>Records</span>
-            </a>
-          </li>
-          <li class="mb-3">
-            <a
-              class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
-              role="button"
-              tabindex="0"
-              (click)="navigateAndClose('/cms/clubs')"
-              (keyup.enter)="navigateAndClose('/cms/clubs')"
-              (keyup.space)="navigateAndClose('/cms/clubs')"
-            >
-              <i class="pi pi-building mr-2"></i>
-              <span>Clubs</span>
-            </a>
-          </li>
-          <li class="mb-3">
-            <a
-              class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
-              role="button"
-              tabindex="0"
-              (click)="navigateAndClose('/cms/sports')"
-              (keyup.enter)="navigateAndClose('/cms/sports')"
-              (keyup.space)="navigateAndClose('/cms/sports')"
-            >
-              <i class="pi pi-trophy mr-2"></i>
-              <span>Sports</span>
-            </a>
-          </li>
-          <li class="mb-3">
-            <a
-              class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
-              role="button"
-              tabindex="0"
-              (click)="navigateAndClose('/cms/national-teams')"
-              (keyup.enter)="navigateAndClose('/cms/national-teams')"
-              (keyup.space)="navigateAndClose('/cms/national-teams')"
-            >
-              <i class="pi pi-flag mr-2"></i>
-              <span>National Teams</span>
-            </a>
-          </li>
-          <li class="mb-3">
-            <a
-              class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
-              role="button"
-              tabindex="0"
-              (click)="navigateAndClose('/cms/competitions')"
-              (keyup.enter)="navigateAndClose('/cms/competitions')"
-              (keyup.space)="navigateAndClose('/cms/competitions')"
-            >
-              <i class="pi pi-calendar mr-2"></i>
-              <span>Competitions</span>
-            </a>
-          </li>
-          <li class="mb-3">
-            <a
-              class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
-              role="button"
-              tabindex="0"
-              (click)="navigateAndClose('/cms/content-types')"
-              (keyup.enter)="navigateAndClose('/cms/content-types')"
-              (keyup.space)="navigateAndClose('/cms/content-types')"
-            >
-              <i class="pi pi-pen-to-square mr-2"></i>
-              <span>Content Types</span>
-            </a>
-          </li>
-          <li class="mb-3">
-            <a
-              class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
-              role="button"
-              tabindex="0"
-              (click)="navigateAndClose('/cms/media-sources')"
-              (keyup.enter)="navigateAndClose('/cms/media-sources')"
-              (keyup.space)="navigateAndClose('/cms/media-sources')"
-            >
-              <i class="pi pi-link mr-2"></i>
-              <span>Media Sources</span>
-            </a>
-          </li>
-          <li class="mb-3">
-            <a
-              class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
-              role="button"
-              tabindex="0"
-              (click)="navigateAndClose('/cms/persons')"
-              (keyup.enter)="navigateAndClose('/cms/persons')"
-              (keyup.space)="navigateAndClose('/cms/persons')"
-            >
-              <i class="pi pi-user mr-2"></i>
-              <span>Persons</span>
-            </a>
-          </li>
-        </ul>
+        <div class="flex items-center">
+          <ul class="m-0 list-none p-0">
+            <li class="mb-3">
+              <a
+                class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
+                role="button"
+                tabindex="0"
+                (click)="navigateAndClose('')"
+                (keyup.enter)="navigateAndClose('')"
+                (keyup.space)="navigateAndClose('')"
+              >
+                <i class="pi pi-home mr-2"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li class="mb-3">
+              <a
+                class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
+                role="button"
+                tabindex="0"
+                (click)="navigateAndClose('/cms/records')"
+                (keyup.enter)="navigateAndClose('/cms/records')"
+                (keyup.space)="navigateAndClose('/cms/records')"
+              >
+                <i class="pi pi-book mr-2"></i>
+                <span>Records</span>
+              </a>
+            </li>
+            <li class="mb-3">
+              <a
+                class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
+                role="button"
+                tabindex="0"
+                (click)="navigateAndClose('/cms/clubs')"
+                (keyup.enter)="navigateAndClose('/cms/clubs')"
+                (keyup.space)="navigateAndClose('/cms/clubs')"
+              >
+                <i class="pi pi-building mr-2"></i>
+                <span>Clubs</span>
+              </a>
+            </li>
+            <li class="mb-3">
+              <a
+                class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
+                role="button"
+                tabindex="0"
+                (click)="navigateAndClose('/cms/sports')"
+                (keyup.enter)="navigateAndClose('/cms/sports')"
+                (keyup.space)="navigateAndClose('/cms/sports')"
+              >
+                <i class="pi pi-trophy mr-2"></i>
+                <span>Sports</span>
+              </a>
+            </li>
+            <li class="mb-3">
+              <a
+                class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
+                role="button"
+                tabindex="0"
+                (click)="navigateAndClose('/cms/national-teams')"
+                (keyup.enter)="navigateAndClose('/cms/national-teams')"
+                (keyup.space)="navigateAndClose('/cms/national-teams')"
+              >
+                <i class="pi pi-flag mr-2"></i>
+                <span>National Teams</span>
+              </a>
+            </li>
+            <li class="mb-3">
+              <a
+                class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
+                role="button"
+                tabindex="0"
+                (click)="navigateAndClose('/cms/competitions')"
+                (keyup.enter)="navigateAndClose('/cms/competitions')"
+                (keyup.space)="navigateAndClose('/cms/competitions')"
+              >
+                <i class="pi pi-calendar mr-2"></i>
+                <span>Competitions</span>
+              </a>
+            </li>
+            <li class="mb-3">
+              <a
+                class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
+                role="button"
+                tabindex="0"
+                (click)="navigateAndClose('/cms/content-types')"
+                (keyup.enter)="navigateAndClose('/cms/content-types')"
+                (keyup.space)="navigateAndClose('/cms/content-types')"
+              >
+                <i class="pi pi-pen-to-square mr-2"></i>
+                <span>Content Types</span>
+              </a>
+            </li>
+            <li class="mb-3">
+              <a
+                class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
+                role="button"
+                tabindex="0"
+                (click)="navigateAndClose('/cms/media-sources')"
+                (keyup.enter)="navigateAndClose('/cms/media-sources')"
+                (keyup.space)="navigateAndClose('/cms/media-sources')"
+              >
+                <i class="pi pi-link mr-2"></i>
+                <span>Media Sources</span>
+              </a>
+            </li>
+            <li class="mb-3">
+              <a
+                class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
+                role="button"
+                tabindex="0"
+                (click)="navigateAndClose('/cms/persons')"
+                (keyup.enter)="navigateAndClose('/cms/persons')"
+                (keyup.space)="navigateAndClose('/cms/persons')"
+              >
+                <i class="pi pi-user mr-2"></i>
+                <span>Persons</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </ng-template>
     </p-drawer>
 
