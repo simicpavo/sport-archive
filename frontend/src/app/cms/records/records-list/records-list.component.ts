@@ -11,7 +11,6 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { PageHeaderComponent } from '../../../shared/components/header.component';
-import { NavigationSidebarComponent } from '../../../shared/components/navigation-sidebar.component';
 import { Record } from '../../../shared/interfaces/record.interface';
 import { recordsActions } from '../../../store/records/records.actions';
 import { recordsFeature } from '../../../store/records/records.store';
@@ -29,7 +28,6 @@ import { recordsFeature } from '../../../store/records/records.store';
     TooltipModule,
     TableEmptyMessageComponent,
     PageHeaderComponent,
-    NavigationSidebarComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './records-list.component.html',

@@ -11,7 +11,6 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { PageHeaderComponent } from '../../../shared/components/header.component';
-import { NavigationSidebarComponent } from '../../../shared/components/navigation-sidebar.component';
 import { NationalTeam } from '../../../shared/interfaces/national-team.interface';
 import { nationalTeamsActions } from '../../../store/national-teams/national-teams.actions';
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
@@ -29,7 +28,6 @@ import { nationalTeamsFeature } from '../../../store/national-teams/national-tea
     TooltipModule,
     TableEmptyMessageComponent,
     PageHeaderComponent,
-    NavigationSidebarComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './national-teams-list.component.html',

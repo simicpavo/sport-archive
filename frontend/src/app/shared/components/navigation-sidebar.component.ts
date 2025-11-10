@@ -25,9 +25,22 @@ import { DrawerModule } from 'primeng/drawer';
               class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
               role="button"
               tabindex="0"
-              (click)="router.navigate(['/cms/records'])"
-              (keyup.enter)="router.navigate(['/cms/records'])"
-              (keyup.space)="router.navigate(['/cms/records'])"
+              (click)="navigateAndClose('')"
+              (keyup.enter)="navigateAndClose('')"
+              (keyup.space)="navigateAndClose('')"
+            >
+              <i class="pi pi-home mr-2"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="mb-3">
+            <a
+              class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
+              role="button"
+              tabindex="0"
+              (click)="navigateAndClose('/cms/records')"
+              (keyup.enter)="navigateAndClose('/cms/records')"
+              (keyup.space)="navigateAndClose('/cms/records')"
             >
               <i class="pi pi-book mr-2"></i>
               <span>Records</span>
@@ -38,9 +51,9 @@ import { DrawerModule } from 'primeng/drawer';
               class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
               role="button"
               tabindex="0"
-              (click)="router.navigate(['/cms/clubs'])"
-              (keyup.enter)="router.navigate(['/cms/clubs'])"
-              (keyup.space)="router.navigate(['/cms/clubs'])"
+              (click)="navigateAndClose('/cms/clubs')"
+              (keyup.enter)="navigateAndClose('/cms/clubs')"
+              (keyup.space)="navigateAndClose('/cms/clubs')"
             >
               <i class="pi pi-building mr-2"></i>
               <span>Clubs</span>
@@ -51,9 +64,9 @@ import { DrawerModule } from 'primeng/drawer';
               class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
               role="button"
               tabindex="0"
-              (click)="router.navigate(['/cms/sports'])"
-              (keyup.enter)="router.navigate(['/cms/sports'])"
-              (keyup.space)="router.navigate(['/cms/sports'])"
+              (click)="navigateAndClose('/cms/sports')"
+              (keyup.enter)="navigateAndClose('/cms/sports')"
+              (keyup.space)="navigateAndClose('/cms/sports')"
             >
               <i class="pi pi-trophy mr-2"></i>
               <span>Sports</span>
@@ -64,9 +77,9 @@ import { DrawerModule } from 'primeng/drawer';
               class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
               role="button"
               tabindex="0"
-              (click)="router.navigate(['/cms/national-teams'])"
-              (keyup.enter)="router.navigate(['/cms/national-teams'])"
-              (keyup.space)="router.navigate(['/cms/national-teams'])"
+              (click)="navigateAndClose('/cms/national-teams')"
+              (keyup.enter)="navigateAndClose('/cms/national-teams')"
+              (keyup.space)="navigateAndClose('/cms/national-teams')"
             >
               <i class="pi pi-flag mr-2"></i>
               <span>National Teams</span>
@@ -77,9 +90,9 @@ import { DrawerModule } from 'primeng/drawer';
               class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
               role="button"
               tabindex="0"
-              (click)="router.navigate(['/cms/competitions'])"
-              (keyup.enter)="router.navigate(['/cms/competitions'])"
-              (keyup.space)="router.navigate(['/cms/competitions'])"
+              (click)="navigateAndClose('/cms/competitions')"
+              (keyup.enter)="navigateAndClose('/cms/competitions')"
+              (keyup.space)="navigateAndClose('/cms/competitions')"
             >
               <i class="pi pi-calendar mr-2"></i>
               <span>Competitions</span>
@@ -90,9 +103,9 @@ import { DrawerModule } from 'primeng/drawer';
               class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
               role="button"
               tabindex="0"
-              (click)="router.navigate(['/cms/content-types'])"
-              (keyup.enter)="router.navigate(['/cms/content-types'])"
-              (keyup.space)="router.navigate(['/cms/content-types'])"
+              (click)="navigateAndClose('/cms/content-types')"
+              (keyup.enter)="navigateAndClose('/cms/content-types')"
+              (keyup.space)="navigateAndClose('/cms/content-types')"
             >
               <i class="pi pi-pen-to-square mr-2"></i>
               <span>Content Types</span>
@@ -103,9 +116,9 @@ import { DrawerModule } from 'primeng/drawer';
               class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
               role="button"
               tabindex="0"
-              (click)="router.navigate(['/cms/media-sources'])"
-              (keyup.enter)="router.navigate(['/cms/media-sources'])"
-              (keyup.space)="router.navigate(['/cms/media-sources'])"
+              (click)="navigateAndClose('/cms/media-sources')"
+              (keyup.enter)="navigateAndClose('/cms/media-sources')"
+              (keyup.space)="navigateAndClose('/cms/media-sources')"
             >
               <i class="pi pi-link mr-2"></i>
               <span>Media Sources</span>
@@ -116,25 +129,12 @@ import { DrawerModule } from 'primeng/drawer';
               class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
               role="button"
               tabindex="0"
-              (click)="router.navigate(['/cms/persons'])"
-              (keyup.enter)="router.navigate(['/cms/persons'])"
-              (keyup.space)="router.navigate(['/cms/persons'])"
+              (click)="navigateAndClose('/cms/persons')"
+              (keyup.enter)="navigateAndClose('/cms/persons')"
+              (keyup.space)="navigateAndClose('/cms/persons')"
             >
               <i class="pi pi-user mr-2"></i>
               <span>Persons</span>
-            </a>
-          </li>
-          <li class="mb-3">
-            <a
-              class="align-items-center border-round text-700 hover:surface-100 flex cursor-pointer p-3"
-              role="button"
-              tabindex="0"
-              (click)="router.navigate(['/cms/dashboard'])"
-              (keyup.enter)="router.navigate(['/cms/dashboard'])"
-              (keyup.space)="router.navigate(['/cms/dashboard'])"
-            >
-              <i class="pi pi-home mr-2"></i>
-              <span>Dashboard</span>
             </a>
           </li>
         </ul>
@@ -165,4 +165,9 @@ export class NavigationSidebarComponent {
   sidebarVisible = signal(false);
   pageTitle = input<string>();
   router = inject(Router);
+
+  navigateAndClose(path: string | string[]) {
+    this.sidebarVisible.set(false);
+    this.router.navigate(Array.isArray(path) ? path : [path]);
+  }
 }

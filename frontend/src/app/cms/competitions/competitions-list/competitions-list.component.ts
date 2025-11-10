@@ -11,7 +11,6 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { PageHeaderComponent } from '../../../shared/components/header.component';
-import { NavigationSidebarComponent } from '../../../shared/components/navigation-sidebar.component';
 import { Competition } from '../../../shared/interfaces/competition.interface';
 import { competitionsActions } from '../../../store/competitions/competitions.actions';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
@@ -29,7 +28,6 @@ import { competitionsFeature } from '../../../store/competitions/competitions.st
     TooltipModule,
     TableEmptyMessageComponent,
     PageHeaderComponent,
-    NavigationSidebarComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './competitions-list.component.html',

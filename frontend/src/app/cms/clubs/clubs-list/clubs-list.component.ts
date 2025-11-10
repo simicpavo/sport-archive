@@ -11,7 +11,6 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { PageHeaderComponent } from '../../../shared/components/header.component';
-import { NavigationSidebarComponent } from '../../../shared/components/navigation-sidebar.component';
 import { Club } from '../../../shared/interfaces/club.interface';
 import { clubsActions } from '../../../store/clubs/clubs.actions';
 import { clubsFeature } from '../../../store/clubs/clubs.store';
@@ -29,7 +28,6 @@ import { clubsFeature } from '../../../store/clubs/clubs.store';
     TooltipModule,
     PageHeaderComponent,
     TableEmptyMessageComponent,
-    NavigationSidebarComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './clubs-list.component.html',
