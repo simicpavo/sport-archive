@@ -1,95 +1,100 @@
 <div class="sports-management mx-auto max-w-screen-2xl">
-    <!-- Header Section -->
-    <app-page-header buttonLabel="Add Sport" buttonSeverity="success" (buttonClick)="addSport()" />
+  <!-- Header Section -->
+  <app-page-header
+    buttonLabel="Add Sport"
+    buttonSeverity="success"
+    title="Sports Management"
+    (buttonClick)="addSport()"
+  />
 
-    <!-- Data Table -->
-    <div class="card">
-      <p-table
-        class="p-datatable-striped"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        scrollHeight="60vh"
-        [loading]="isLoading()"
-        [paginator]="true"
-        [rows]="10"
-        [rowsPerPageOptions]="[5, 10, 25, 50]"
-        [scrollable]="true"
-        [showCurrentPageReport]="true"
-        [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
-        [value]="sports() || []"
-      >
-        <ng-template pTemplate="header">
-          <tr>
-            <th pSortableColumn="name" style="width: 35%">
-              Name
-              <p-sortIcon field="name" />
-            </th>
-            <th pSortableColumn="createdAt" style="width: 27.5%">
-              Created At
-              <p-sortIcon field="createdAt" />
-            </th>
-            <th pSortableColumn="updatedAt" style="width: 27.5%">
-              Updated At
-              <p-sortIcon field="updatedAt" />
-            </th>
-            <th style="width: 10%; min-width: 120px">Actions</th>
-          </tr>
-        </ng-template>
+  <!-- Data Table -->
+  <div class="card">
+    <p-table
+      class="p-datatable-striped"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      scrollHeight="60vh"
+      [loading]="isLoading()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [scrollable]="true"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+      [value]="sports() || []"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name" style="width: 35%">
+            Name
+            <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="createdAt" style="width: 27.5%">
+            Created At
+            <p-sortIcon field="createdAt" />
+          </th>
+          <th pSortableColumn="updatedAt" style="width: 27.5%">
+            Updated At
+            <p-sortIcon field="updatedAt" />
+          </th>
+          <th style="width: 10%; min-width: 120px">Actions</th>
+        </tr>
+      </ng-template>
 
-        <ng-template let-sport pTemplate="body">
-          <tr>
-            <td>
-              <span class="font-medium">{{ sport.name }}</span>
-            </td>
-            <td>
-              <span class="text-color-secondary text-sm">
-                {{ sport.createdAt | date: 'short' }}
-              </span>
-            </td>
-            <td>
-              <span class="text-color-secondary text-sm">
-                {{ sport.updatedAt | date: 'short' }}
-              </span>
-            </td>
-            <td>
-              <div class="align-items-center flex gap-2">
-                <p-button
-                  pTooltip="Edit Sport"
-                  severity="success"
-                  size="small"
-                  tooltipPosition="top"
-                  [rounded]="true"
-                  (onClick)="editSport(sport)"
-                >
-                  <i class="pi pi-pencil"></i>
-                </p-button>
-                <p-button
-                  pTooltip="Delete Sport"
-                  severity="danger"
-                  size="small"
-                  tooltipPosition="top"
-                  [rounded]="true"
-                  (onClick)="deleteSport(sport)"
-                >
-                  <i class="pi pi-trash"></i>
-                </p-button>
-              </div>
-            </td>
-          </tr>
-        </ng-template>
+      <ng-template let-sport pTemplate="body">
+        <tr>
+          <td>
+            <span class="font-medium">{{ sport.name }}</span>
+          </td>
+          <td>
+            <span class="text-color-secondary text-sm">
+              {{ sport.createdAt | date: 'short' }}
+            </span>
+          </td>
+          <td>
+            <span class="text-color-secondary text-sm">
+              {{ sport.updatedAt | date: 'short' }}
+            </span>
+          </td>
+          <td>
+            <div class="align-items-center flex gap-2">
+              <p-button
+                pTooltip="Edit Sport"
+                severity="success"
+                size="small"
+                tooltipPosition="top"
+                [rounded]="true"
+                (onClick)="editSport(sport)"
+              >
+                <i class="pi pi-pencil"></i>
+              </p-button>
+              <p-button
+                pTooltip="Delete Sport"
+                severity="danger"
+                size="small"
+                tooltipPosition="top"
+                [rounded]="true"
+                (onClick)="deleteSport(sport)"
+              >
+                <i class="pi pi-trash"></i>
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="4">
-              <app-table-empty-message
-                icon="pi pi-info-circle"
-                message="Click the 'Add Sport' button to create one."
-                title="No Sports Found"
-              />
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4">
+            <app-table-empty-message
+              icon="pi pi-info-circle"
+              message="Click the 'Add Sport' button to create one."
+              title="No Sports Found"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>
 <p-confirmDialog />
 <p-toast />

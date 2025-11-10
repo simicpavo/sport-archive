@@ -1,131 +1,132 @@
 <div class="competitions-management mx-auto max-w-screen-2xl">
-    <!-- Header Section -->
-    <app-page-header
-      buttonLabel="Add Competition"
-      buttonSeverity="success"
-      (buttonClick)="addCompetition()"
-    />
+  <!-- Header Section -->
+  <app-page-header
+    buttonLabel="Add Competition"
+    buttonSeverity="success"
+    title="Competitions Management"
+    (buttonClick)="addCompetition()"
+  />
 
-    <!-- Data Table -->
-    <div class="card">
-      <p-table
-        class="p-datatable-striped"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        scrollHeight="60vh"
-        [loading]="isLoading()"
-        [paginator]="true"
-        [rows]="10"
-        [rowsPerPageOptions]="[5, 10, 25, 50]"
-        [scrollable]="true"
-        [showCurrentPageReport]="true"
-        [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
-        [value]="competitions()"
-      >
-        <ng-template pTemplate="header">
-          <tr>
-            <th pSortableColumn="name" style="width: 15%">
-              Name
-              <p-sortIcon field="name" />
-            </th>
-            <th pSortableColumn="season" style="width: 14%">
-              Season
-              <p-sortIcon field="season" />
-            </th>
-            <th pSortableColumn="sportId" style="width: 14%">
-              Sport
-              <p-sortIcon field="sportId" />
-            </th>
-            <th pSortableColumn="startDate" style="width: 12%">
-              Start Date
-              <p-sortIcon field="startDate" />
-            </th>
-            <th pSortableColumn="endDate" style="width: 12%">
-              End Date
-              <p-sortIcon field="endDate" />
-            </th>
-            <th pSortableColumn="createdAt" style="width: 12%">
-              Created At
-              <p-sortIcon field="createdAt" />
-            </th>
-            <th pSortableColumn="updatedAt" style="width: 12%">
-              Updated At
-              <p-sortIcon field="updatedAt" />
-            </th>
-            <th style="width: 9%; min-width: 120px">Actions</th>
-          </tr>
-        </ng-template>
+  <!-- Data Table -->
+  <div class="card">
+    <p-table
+      class="p-datatable-striped"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      scrollHeight="60vh"
+      [loading]="isLoading()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 25, 50]"
+      [scrollable]="true"
+      [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '60rem', 'table-layout': 'fixed' }"
+      [value]="competitions()"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name" style="width: 15%">
+            Name
+            <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="season" style="width: 14%">
+            Season
+            <p-sortIcon field="season" />
+          </th>
+          <th pSortableColumn="sportId" style="width: 14%">
+            Sport
+            <p-sortIcon field="sportId" />
+          </th>
+          <th pSortableColumn="startDate" style="width: 12%">
+            Start Date
+            <p-sortIcon field="startDate" />
+          </th>
+          <th pSortableColumn="endDate" style="width: 12%">
+            End Date
+            <p-sortIcon field="endDate" />
+          </th>
+          <th pSortableColumn="createdAt" style="width: 12%">
+            Created At
+            <p-sortIcon field="createdAt" />
+          </th>
+          <th pSortableColumn="updatedAt" style="width: 12%">
+            Updated At
+            <p-sortIcon field="updatedAt" />
+          </th>
+          <th style="width: 9%; min-width: 120px">Actions</th>
+        </tr>
+      </ng-template>
 
-        <ng-template let-competition pTemplate="body">
-          <tr>
-            <td>
-              <span class="font-medium">{{ competition.name }}</span>
-            </td>
-            <td>
-              <span class="font-medium">{{ competition.season }}</span>
-            </td>
-            <td>
-              <span class="font-medium">{{ competition.sport.name }}</span>
-            </td>
-            <td>
-              <span class="text-color-secondary text-sm">
-                {{ competition.startDate | date: 'mediumDate' }}
-              </span>
-            </td>
-            <td>
-              <span class="text-color-secondary text-sm">
-                {{ competition.endDate | date: 'mediumDate' }}
-              </span>
-            </td>
-            <td>
-              <span class="text-color-secondary text-sm">
-                {{ competition.createdAt | date: 'short' }}
-              </span>
-            </td>
-            <td>
-              <span class="text-color-secondary text-sm">
-                {{ competition.updatedAt | date: 'short' }}
-              </span>
-            </td>
-            <td>
-              <div class="align-items-center flex gap-2">
-                <p-button
-                  pTooltip="Edit Competition"
-                  severity="success"
-                  size="small"
-                  tooltipPosition="top"
-                  [rounded]="true"
-                  (onClick)="editCompetition(competition)"
-                >
-                  <i class="pi pi-pencil"></i>
-                </p-button>
-                <p-button
-                  pTooltip="Delete Competition"
-                  severity="danger"
-                  size="small"
-                  tooltipPosition="top"
-                  [rounded]="true"
-                  (onClick)="deleteCompetition(competition)"
-                >
-                  <i class="pi pi-trash"></i>
-                </p-button>
-              </div>
-            </td>
-          </tr>
-        </ng-template>
+      <ng-template let-competition pTemplate="body">
+        <tr>
+          <td>
+            <span class="font-medium">{{ competition.name }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ competition.season }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ competition.sport.name }}</span>
+          </td>
+          <td>
+            <span class="text-color-secondary text-sm">
+              {{ competition.startDate | date: 'mediumDate' }}
+            </span>
+          </td>
+          <td>
+            <span class="text-color-secondary text-sm">
+              {{ competition.endDate | date: 'mediumDate' }}
+            </span>
+          </td>
+          <td>
+            <span class="text-color-secondary text-sm">
+              {{ competition.createdAt | date: 'short' }}
+            </span>
+          </td>
+          <td>
+            <span class="text-color-secondary text-sm">
+              {{ competition.updatedAt | date: 'short' }}
+            </span>
+          </td>
+          <td>
+            <div class="align-items-center flex gap-2">
+              <p-button
+                pTooltip="Edit Competition"
+                severity="success"
+                size="small"
+                tooltipPosition="top"
+                [rounded]="true"
+                (onClick)="editCompetition(competition)"
+              >
+                <i class="pi pi-pencil"></i>
+              </p-button>
+              <p-button
+                pTooltip="Delete Competition"
+                severity="danger"
+                size="small"
+                tooltipPosition="top"
+                [rounded]="true"
+                (onClick)="deleteCompetition(competition)"
+              >
+                <i class="pi pi-trash"></i>
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="8">
-              <app-table-empty-message
-                icon="pi pi-info-circle"
-                message="Click the 'Add Competition' button to create one."
-                title="No Competitions Found"
-              />
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">
+            <app-table-empty-message
+              icon="pi pi-info-circle"
+              message="Click the 'Add Competition' button to create one."
+              title="No Competitions Found"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>
 <p-confirmDialog />
 <p-toast />

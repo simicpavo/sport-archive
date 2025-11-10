@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
@@ -151,9 +151,6 @@ import { DrawerModule } from 'primeng/drawer';
         [text]="true"
         (onClick)="sidebarVisible.set(true)"
       />
-      <div class="align-items-center flex gap-3">
-        <h1 class="text-900 m-0 text-4xl font-bold">{{ pageTitle() }}</h1>
-      </div>
     </div>
 
     <div class="p-4">
@@ -163,7 +160,6 @@ import { DrawerModule } from 'primeng/drawer';
 })
 export class NavigationSidebarComponent {
   sidebarVisible = signal(false);
-  pageTitle = input<string>();
   router = inject(Router);
 
   navigateAndClose(path: string | string[]) {
