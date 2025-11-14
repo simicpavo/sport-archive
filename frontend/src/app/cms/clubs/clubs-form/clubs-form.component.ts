@@ -15,7 +15,7 @@ import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
-  selector: 'app-national-teams-form',
+  selector: 'app-clubs-form',
   standalone: true,
   imports: [
     CommonModule,
