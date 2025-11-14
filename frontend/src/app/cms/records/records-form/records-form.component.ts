@@ -1,5 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, OnInit, signal, untracked } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  OnInit,
+  output,
+  signal,
+  untracked,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -8,8 +18,10 @@ import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
+import { CreateRecordDto } from '../../../shared/interfaces/record.interface';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
 import { contentTypesFeature } from '../../../store/content-types/content-types.store';
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
@@ -18,7 +30,7 @@ import { recordsFeature } from '../../../store/records/records.store';
 import { sportsFeature } from '../../../store/sports/sports.store';
 
 @Component({
-  selector: 'app-national-teams-form',
+  selector: 'app-records-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -30,10 +42,15 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     LoadingSpinnerComponent,
     SelectModule,
     DatePickerModule,
+    TextareaModule,
   ],
   templateUrl: './records-form.component.html',
 })
 export class RecordsFormComponent implements OnInit {
+  initialData = input<{ title?: string; description?: string } | null>(null);
+  recordSaved = output<CreateRecordDto>();
+  recordCancelled = output<void>();
+
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
@@ -64,6 +81,15 @@ export class RecordsFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
+      const initial = this.initialData();
+      if (initial) {
+        untracked(() => {
+          this.recordsForm.patchValue({
+            title: initial.title || '',
+            description: initial.description || '',
+          });
+        });
+      }
       if (this.selectedRecord() && this.isEditMode()) {
         untracked(() => {
           this.recordsForm.patchValue({
@@ -113,12 +139,18 @@ export class RecordsFormComponent implements OnInit {
           record: recordData,
         }),
       );
+    } else if (this.initialData()) {
+      this.recordSaved.emit(recordData);
     } else {
-      this.store.dispatch(
-        recordsActions.createRecord({
-          record: recordData,
-        }),
-      );
+      this.store.dispatch(recordsActions.createRecord({ record: recordData }));
+    }
+  }
+
+  cancelClick(): void {
+    if (this.initialData()) {
+      this.recordCancelled.emit();
+    } else {
+      this.navigateToRecordsList();
     }
   }
 
