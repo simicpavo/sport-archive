@@ -16,7 +16,7 @@ import { clubsActions } from '../../../store/clubs/clubs.actions';
 import { clubsFeature } from '../../../store/clubs/clubs.store';
 
 @Component({
-  selector: 'app-content-types-list',
+  selector: 'app-clubs-list',
   standalone: true,
   imports: [
     CommonModule,

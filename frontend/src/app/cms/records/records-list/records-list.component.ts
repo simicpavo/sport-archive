@@ -16,7 +16,7 @@ import { recordsActions } from '../../../store/records/records.actions';
 import { recordsFeature } from '../../../store/records/records.store';
 
 @Component({
-  selector: 'app-content-types-list',
+  selector: 'app-records-list',
   standalone: true,
   imports: [
     CommonModule,
