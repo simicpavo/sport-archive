@@ -150,7 +150,7 @@ export class RecordsFormComponent implements OnInit {
     if (this.initialData()) {
       this.recordCancelled.emit();
     } else {
-      this.navigateToRecordsList();
+      this.router.navigate(['/cms/records']);
     }
   }
 
@@ -158,9 +158,5 @@ export class RecordsFormComponent implements OnInit {
     Object.keys(this.recordsForm.controls).forEach((key) => {
       this.recordsForm.get(key)?.markAsTouched();
     });
-  }
-
-  protected navigateToRecordsList() {
-    this.router.navigate(['/cms/records']);
   }
 }
