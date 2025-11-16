@@ -143,6 +143,9 @@ export class RecordsFormComponent implements OnInit {
       this.recordSaved.emit(recordData);
     } else {
       this.store.dispatch(recordsActions.createRecord({ record: recordData }));
+      setTimeout(() => {
+        this.router.navigate(['/cms/records']);
+      }, 100);
     }
   }
 
