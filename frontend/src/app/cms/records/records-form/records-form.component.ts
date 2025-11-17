@@ -109,12 +109,6 @@ export class RecordsFormComponent implements OnInit {
         });
         this.recordsForm.markAsPristine();
       }
-      if (this.isLoading() && this.isSaving()) {
-        untracked(() => {
-          this.isSaving.set(false);
-          this.closeDialog.emit();
-        });
-      }
     });
   }
 
