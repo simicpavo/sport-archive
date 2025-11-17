@@ -204,8 +204,10 @@
   @if (selectedNewsItem(); as article) {
     <app-records-form
       [initialData]="{ title: article.title, description: article.content }"
-      (recordCancelled)="closeDialog()"
+      (closeDialog)="closeDialog()"
+      (recordSaveFailure)="onSaveRecordFailure()"
       (recordSaved)="onSaveRecord($event)"
     />
   }
 </p-dialog>
+<p-toast />

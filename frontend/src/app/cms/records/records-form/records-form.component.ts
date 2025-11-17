@@ -13,6 +13,7 @@ import {
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -45,18 +46,22 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     TextareaModule,
   ],
   templateUrl: './records-form.component.html',
+  providers: [MessageService],
 })
 export class RecordsFormComponent implements OnInit {
   initialData = input<{ title?: string; description?: string } | null>(null);
   recordSaved = output<CreateRecordDto>();
-  recordCancelled = output<void>();
+  closeDialog = output<void>();
+  recordSaveFailure = output<void>();
 
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly messageService = inject(MessageService);
 
   readonly isLoading = this.store.selectSignal(recordsFeature.selectLoading);
+  readonly isSaving = signal<boolean>(false);
   readonly recordId = signal<string | null>(null);
   readonly isEditMode = computed(() => this.recordId() !== null);
   readonly selectedRecord = this.store.selectSignal(recordsFeature.selectSelectedRecord);
@@ -104,6 +109,12 @@ export class RecordsFormComponent implements OnInit {
         });
         this.recordsForm.markAsPristine();
       }
+      if (this.isLoading() && this.isSaving()) {
+        untracked(() => {
+          this.isSaving.set(false);
+          this.closeDialog.emit();
+        });
+      }
     });
   }
 
@@ -120,6 +131,7 @@ export class RecordsFormComponent implements OnInit {
       return;
     }
 
+    this.isSaving.set(true);
     const formValue = this.recordsForm.getRawValue();
 
     const recordData = {
@@ -141,6 +153,14 @@ export class RecordsFormComponent implements OnInit {
       );
     } else if (this.initialData()) {
       this.recordSaved.emit(recordData);
+      this.isSaving.set(false);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Record saved successfully',
+        life: 3000,
+      });
+      this.closeDialog.emit();
     } else {
       this.store.dispatch(recordsActions.createRecord({ record: recordData }));
       setTimeout(() => {
@@ -151,7 +171,7 @@ export class RecordsFormComponent implements OnInit {
 
   cancelClick(): void {
     if (this.initialData()) {
-      this.recordCancelled.emit();
+      this.closeDialog.emit();
     } else {
       this.router.navigate(['/cms/records']);
     }

@@ -207,7 +207,7 @@
                   recordsForm.controls.date.dirty === false)
               "
               [label]="this.isEditMode() ? 'Update Record' : 'Create Record'"
-              [loading]="isLoading()"
+              [loading]="isSaving()"
             />
           </div>
         </form>

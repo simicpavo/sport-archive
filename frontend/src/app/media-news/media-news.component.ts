@@ -11,12 +11,14 @@ import {
   signal,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
+import { Toast } from 'primeng/toast';
 import { Subscription } from 'rxjs';
 import { RecordsFormComponent } from '../cms/records/records-form/records-form.component';
 import { MediaNews, TimeFilter } from '../models/media-news.interface';
@@ -39,6 +41,7 @@ import { recordsActions } from '../store/records/records.actions';
     DividerModule,
     DialogModule,
     RecordsFormComponent,
+    Toast,
   ],
   templateUrl: './media-news.component.html',
 })
@@ -51,6 +54,7 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   private observer?: IntersectionObserver;
   private lastLoadTime = 0;
   private readonly LOAD_THROTTLE_MS = 1000;
+  private readonly messageService = inject(MessageService);
 
   news = this.store.selectSignal(newsFeature.selectNews);
   loading = this.store.selectSignal(newsFeature.selectLoading);
@@ -187,5 +191,14 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
     this.store.dispatch(recordsActions.createRecord({ record: recordData }));
     this.showDialog.set(false);
     this.selectedNewsItem.set(null);
+  }
+
+  onSaveRecordFailure(): void {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Failed to save record',
+      life: 3000,
+    });
   }
 }
