@@ -43,4 +43,4 @@ export interface MediaNewsFilters {
   sortOrder?: 'asc' | 'desc';
 }
 
-export type TimeFilter = '6h' | '12h' | '24h' | 'all';
+export type TimeFilter = '6h' | '12h' | '24h' | 'recent';

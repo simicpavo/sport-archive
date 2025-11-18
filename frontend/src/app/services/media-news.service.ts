@@ -67,7 +67,7 @@ export class MediaNewsService {
           startDate: new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString(),
           endDate: now.toISOString(),
         };
-      case 'all':
+      case 'recent':
       default:
         return {};
     }
@@ -84,7 +84,7 @@ export class MediaNewsService {
           sortBy: 'totalEngagements',
           sortOrder: 'desc',
         };
-      case 'all':
+      case 'recent':
       default:
         return {
           sortBy: 'createdAt',

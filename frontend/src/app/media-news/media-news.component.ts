@@ -70,7 +70,7 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   formatEngagements = formatEngagements;
 
   timeFilters: { label: string; value: TimeFilter }[] = [
-    { label: 'All', value: 'all' },
+    { label: 'Recent', value: 'recent' },
     { label: 'Last 24h', value: '24h' },
     { label: 'Last 12h', value: '12h' },
     { label: 'Last 6h', value: '6h' },
