@@ -27,7 +27,7 @@ export const initialState: NewsState = {
     sortBy: 'createdAt',
     sortOrder: 'desc',
   },
-  selectedFilter: 'all',
+  selectedFilter: 'recent',
   error: null,
   total: 0,
   totalPages: 0,

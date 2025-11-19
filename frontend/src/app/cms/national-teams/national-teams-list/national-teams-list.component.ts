@@ -16,7 +16,7 @@ import { nationalTeamsActions } from '../../../store/national-teams/national-tea
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
 
 @Component({
-  selector: 'app-content-types-list',
+  selector: 'app-national-teams-list',
   standalone: true,
   imports: [
     CommonModule,
