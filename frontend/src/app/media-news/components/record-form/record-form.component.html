@@ -1,0 +1,183 @@
+<div class="records-form mx-auto max-w-screen-lg p-2">
+  <p-card>
+    <ng-template pTemplate="content">
+      <form [formGroup]="recordsForm" (ngSubmit)="onSubmit()">
+        <div class="mx-auto">
+          <div class="field mb-4">
+            <label class="mb-2 block font-medium" for="title"> Record Title </label>
+            <input
+              autocomplete="off"
+              class="w-full"
+              formControlName="title"
+              id="title"
+              pInputText
+              placeholder="Enter record title"
+              type="text"
+            />
+            @if (
+              recordsForm.get('title')?.hasError('required') &&
+              recordsForm.get('title')?.dirty &&
+              recordsForm.get('title')?.invalid
+            ) {
+              <span
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
+              >
+                This field is required!
+              </span>
+            }
+            @if (
+              recordsForm.get('title')?.hasError('minlength') &&
+              recordsForm.get('title')?.dirty &&
+              recordsForm.get('title')?.invalid
+            ) {
+              <span
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
+              >
+                This field must be at least 2 characters long!
+              </span>
+            }
+
+            <label class="mt-4 mb-2 block font-medium" for="description">
+              Record Description
+            </label>
+            <textarea
+              autoResize="true"
+              class="w-full"
+              formControlName="description"
+              id="description"
+              pTextarea
+              placeholder="Enter record description"
+            ></textarea>
+            @if (
+              recordsForm.get('description')?.hasError('required') &&
+              recordsForm.get('description')?.dirty &&
+              recordsForm.get('description')?.invalid
+            ) {
+              <span
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
+              >
+                This field is required!
+              </span>
+            }
+            @if (
+              recordsForm.get('description')?.hasError('minlength') &&
+              recordsForm.get('description')?.dirty &&
+              recordsForm.get('description')?.invalid
+            ) {
+              <span
+                class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
+              >
+                This field must be at least 2 characters long!
+              </span>
+            }
+          </div>
+
+          <div class="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label class="mt-2 mb-2 block font-medium" for="sportId"> Sport </label>
+              <p-select
+                class="w-full"
+                formControlName="sportId"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Select Sport"
+                [options]="sports() || []"
+                [showClear]="true"
+              />
+              @if (
+                recordsForm.get('sportId')?.hasError('required') &&
+                recordsForm.get('sportId')?.dirty &&
+                recordsForm.get('sportId')?.invalid
+              ) {
+                <span
+                  class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
+                >
+                  This field is required!
+                </span>
+              }
+            </div>
+
+            <div>
+              <label class="mt-2 mb-2 block font-medium" for="contentTypeId"> Content Type </label>
+              <p-select
+                class="w-full"
+                formControlName="contentTypeId"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Select Content Type"
+                [options]="contentTypes() || []"
+                [showClear]="true"
+              />
+              @if (
+                recordsForm.get('contentTypeId')?.hasError('required') &&
+                recordsForm.get('contentTypeId')?.dirty &&
+                recordsForm.get('contentTypeId')?.invalid
+              ) {
+                <span
+                  class="mt-4 block rounded-md border-l-4 border-l-[#dc3545] bg-[rgb(220,53,69)]/10 px-4 py-3 font-medium text-red-500"
+                >
+                  This field is required!
+                </span>
+              }
+            </div>
+
+            <div>
+              <label class="mt-2 mb-2 block font-medium" for="competitionId"> Competition </label>
+              <p-select
+                class="w-full"
+                formControlName="competitionId"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Select Competition"
+                [options]="competitions() || []"
+                [showClear]="true"
+              />
+            </div>
+
+            <div>
+              <label class="mt-2 mb-2 block font-medium" for="nationalTeamId">
+                National Team
+              </label>
+              <p-select
+                class="w-full"
+                formControlName="nationalTeamId"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Select National Team"
+                [options]="nationalTeams() || []"
+                [showClear]="true"
+              />
+            </div>
+          </div>
+
+          <label class="mt-4 mb-2 block font-medium" for="date"> Date </label>
+          <p-datePicker
+            class="mb-2 w-full"
+            formControlName="date"
+            id="date"
+            placeholder="Enter date"
+            [showIcon]="true"
+          />
+        </div>
+
+        <div class="flex justify-end gap-2 pt-4">
+          <p-button
+            label="Cancel"
+            severity="secondary"
+            type="button"
+            [disabled]="isSaving()"
+            [outlined]="true"
+            (onClick)="onCancel()"
+          />
+          <p-button
+            icon="pi pi-check"
+            label="Save Record"
+            type="submit"
+            [disabled]="recordsForm.invalid"
+            [loading]="isSaving()"
+          />
+        </div>
+      </form>
+    </ng-template>
+  </p-card>
+</div>
