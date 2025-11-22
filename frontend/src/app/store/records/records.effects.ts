@@ -48,12 +48,17 @@ export const loadRecordsEffect = createEffect(
 );
 
 export const createRecordEffect = createEffect(
-  (actions$ = inject(Actions), recordsService = inject(RecordsService)) => {
+  (
+    actions$ = inject(Actions),
+    router = inject(Router),
+    recordsService = inject(RecordsService),
+  ) => {
     return actions$.pipe(
       ofType(recordsActions.createRecord),
       switchMap(({ record }) =>
         recordsService.createRecord(record).pipe(
           map(() => {
+            router.navigate(['/cms/records']);
             return recordsActions.createRecordSuccess();
           }),
           catchError((error) => of(recordsActions.createRecordFailure({ error }))),
@@ -130,7 +135,7 @@ export const showSuccessMessageEffect = createEffect(
           severity: 'success',
           summary: 'Success',
           detail: message,
-          life: 3000,
+          life: 5000,
         });
       }),
     );
