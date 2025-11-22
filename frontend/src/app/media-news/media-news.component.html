@@ -193,7 +193,7 @@
   }
 </div>
 
-<!-- Save Article Dialog -->
+<!-- Save-article dialog -->
 <p-dialog
   [breakpoints]="{ '960px': '65vw', '640px': '75vw' }"
   [modal]="true"
@@ -202,12 +202,6 @@
   (visibleChange)="showDialog.set($event)"
 >
   @if (selectedNewsItem(); as article) {
-    <app-records-form
-      [initialData]="{ title: article.title, description: article.content }"
-      (closeDialog)="closeDialog()"
-      (recordSaveFailure)="onSaveRecordFailure()"
-      (recordSaved)="onSaveRecord($event)"
-    />
+    <app-record-form [newsItem]="article" (closed)="closeDialog()" />
   }
 </p-dialog>
-<p-toast />
