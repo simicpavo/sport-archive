@@ -7,7 +7,6 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
-import { ToastModule } from 'primeng/toast';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { clubsActions } from '../../../store/clubs/clubs.actions';
 import { clubsFeature } from '../../../store/clubs/clubs.store';
@@ -23,7 +22,6 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     CardModule,
     InputTextModule,
     ButtonModule,
-    ToastModule,
     SelectModule,
     LoadingSpinnerComponent,
   ],
@@ -33,7 +31,7 @@ export class ClubsFormComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  protected readonly router = inject(Router);
 
   readonly isLoading = this.store.selectSignal(clubsFeature.selectLoading);
   readonly clubId = signal<string | null>(null);
@@ -101,9 +99,5 @@ export class ClubsFormComponent implements OnInit {
     Object.keys(this.clubForm.controls).forEach((key) => {
       this.clubForm.get(key)?.markAsTouched();
     });
-  }
-
-  protected navigateToClubsList() {
-    this.router.navigate(['/cms/clubs']);
   }
 }

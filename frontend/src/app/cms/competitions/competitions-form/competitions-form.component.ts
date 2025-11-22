@@ -8,7 +8,6 @@ import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
-import { ToastModule } from 'primeng/toast';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { competitionsActions } from '../../../store/competitions/competitions.actions';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
@@ -24,7 +23,6 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     CardModule,
     InputTextModule,
     ButtonModule,
-    ToastModule,
     LoadingSpinnerComponent,
     DatePickerModule,
     SelectModule,
@@ -35,7 +33,7 @@ export class CompetitionsFormComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  protected readonly router = inject(Router);
 
   readonly isLoading = this.store.selectSignal(competitionsFeature.selectLoading);
   readonly competitionId = signal<string | null>(null);
@@ -125,9 +123,5 @@ export class CompetitionsFormComponent implements OnInit {
     Object.keys(this.competitionForm.controls).forEach((key) => {
       this.competitionForm.get(key)?.markAsTouched();
     });
-  }
-
-  protected navigateToCompetitionsList() {
-    this.router.navigate(['/cms/competitions']);
   }
 }

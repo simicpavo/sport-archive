@@ -6,7 +6,6 @@ import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { contentTypesActions } from '../../../store/content-types/content-types.actions';
 import { contentTypesFeature } from '../../../store/content-types/content-types.store';
@@ -20,7 +19,6 @@ import { contentTypesFeature } from '../../../store/content-types/content-types.
     CardModule,
     InputTextModule,
     ButtonModule,
-    ToastModule,
     LoadingSpinnerComponent,
   ],
   templateUrl: './content-types-form.component.html',
@@ -29,7 +27,7 @@ export class ContentTypesFormComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  protected readonly router = inject(Router);
 
   readonly isLoading = this.store.selectSignal(contentTypesFeature.selectLoading);
   readonly contentTypeId = signal<string | null>(null);
@@ -94,9 +92,5 @@ export class ContentTypesFormComponent implements OnInit {
     Object.keys(this.contentTypeForm.controls).forEach((key) => {
       this.contentTypeForm.get(key)?.markAsTouched();
     });
-  }
-
-  protected navigateToContentTypesList() {
-    this.router.navigate(['/cms/content-types']);
   }
 }

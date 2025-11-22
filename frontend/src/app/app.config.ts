@@ -1,6 +1,7 @@
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import {
   ApplicationConfig,
+  importProvidersFrom,
   isDevMode,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
@@ -16,6 +17,7 @@ import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 
+import { ToastModule } from 'primeng/toast';
 import * as clubsEffects from './store/clubs/clubs.effects';
 import { clubsReducer } from './store/clubs/clubs.store';
 import * as competitionsEffects from './store/competitions/competitions.effects';
@@ -37,6 +39,8 @@ import { sportsReducer } from './store/sports/sports.store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    importProvidersFrom(ToastModule),
+    MessageService,
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
@@ -77,6 +81,5 @@ export const appConfig: ApplicationConfig = {
       mediaSourcesEffects,
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    MessageService,
   ],
 };

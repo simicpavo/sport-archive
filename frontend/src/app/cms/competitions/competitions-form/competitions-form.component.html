@@ -120,7 +120,7 @@
               type="button"
               [disabled]="isLoading()"
               [outlined]="true"
-              (onClick)="navigateToCompetitionsList()"
+              (onClick)="this.router.navigate(['/cms/competitions'])"
             />
 
             <p-button
@@ -144,5 +144,3 @@
     </p-card>
   </div>
 </div>
-
-<p-toast />

@@ -7,7 +7,6 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { personsActions } from '../../../store/persons/persons.actions';
 import { personsFeature } from '../../../store/persons/persons.store';
@@ -21,7 +20,6 @@ import { personsFeature } from '../../../store/persons/persons.store';
     CardModule,
     InputTextModule,
     ButtonModule,
-    ToastModule,
     LoadingSpinnerComponent,
     DatePickerModule,
   ],
@@ -31,7 +29,7 @@ export class PersonsFormComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  protected readonly router = inject(Router);
 
   readonly isLoading = this.store.selectSignal(personsFeature.selectLoading);
   readonly personId = signal<string | null>(null);
@@ -114,9 +112,5 @@ export class PersonsFormComponent implements OnInit {
     Object.keys(this.personForm.controls).forEach((key) => {
       this.personForm.get(key)?.markAsTouched();
     });
-  }
-
-  protected navigateToPersonsList() {
-    this.router.navigate(['/cms/persons']);
   }
 }

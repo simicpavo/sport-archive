@@ -7,7 +7,6 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { PageHeaderComponent } from '../../../shared/components/header.component';
@@ -24,7 +23,6 @@ import { mediaSourcesFeature } from '../../../store/media-sources/media-sources.
     ButtonModule,
     TagModule,
     ConfirmDialogModule,
-    ToastModule,
     TooltipModule,
     TableEmptyMessageComponent,
     PageHeaderComponent,
