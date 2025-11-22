@@ -1,28 +1,16 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  OnInit,
-  output,
-  signal,
-  untracked,
-} from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, effect, inject, OnInit, untracked } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
-import { ToastModule } from 'primeng/toast';
+import { RecordFormService } from '../../../services/forms/record-form.service';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
-import { CreateRecordDto } from '../../../shared/interfaces/record.interface';
 import { competitionsFeature } from '../../../store/competitions/competitions.store';
 import { contentTypesFeature } from '../../../store/content-types/content-types.store';
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
@@ -39,46 +27,31 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     CardModule,
     InputTextModule,
     ButtonModule,
-    ToastModule,
     LoadingSpinnerComponent,
     SelectModule,
     DatePickerModule,
     TextareaModule,
   ],
   templateUrl: './records-form.component.html',
-  providers: [MessageService],
+  providers: [RecordFormService],
 })
 export class RecordsFormComponent implements OnInit {
-  initialData = input<{ title?: string; description?: string } | null>(null);
-  recordSaved = output<CreateRecordDto>();
-  closeDialog = output<void>();
-  recordSaveFailure = output<void>();
-
   private readonly store = inject(Store);
-  private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly messageService = inject(MessageService);
+  protected readonly router = inject(Router);
+  private readonly recordFormService = inject(RecordFormService);
 
   readonly isLoading = this.store.selectSignal(recordsFeature.selectLoading);
-  readonly isSaving = signal<boolean>(false);
-  readonly recordId = signal<string | null>(null);
-  readonly isEditMode = computed(() => this.recordId() !== null);
+  readonly isSaving = this.store.selectSignal(recordsFeature.selectSaving);
   readonly selectedRecord = this.store.selectSignal(recordsFeature.selectSelectedRecord);
+  readonly recordId = this.recordFormService.recordId;
+  readonly isEditMode = this.recordFormService.isEditMode;
   readonly sports = this.store.selectSignal(sportsFeature.selectSports);
   readonly contentTypes = this.store.selectSignal(contentTypesFeature.selectContentTypes);
   readonly competitions = this.store.selectSignal(competitionsFeature.selectCompetitions);
   readonly nationalTeams = this.store.selectSignal(nationalTeamsFeature.selectNationalTeams);
 
-  readonly recordsForm = this.fb.group({
-    title: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
-    description: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
-    date: this.fb.control<Date | null>(null),
-    sportId: this.fb.nonNullable.control('', [Validators.required]),
-    contentTypeId: this.fb.nonNullable.control('', [Validators.required]),
-    competitionId: this.fb.control(''),
-    nationalTeamId: this.fb.control(''),
-  });
+  readonly recordsForm = this.recordFormService.recordsForm;
 
   ngOnInit() {
     this.loadRecordData();
@@ -86,15 +59,6 @@ export class RecordsFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const initial = this.initialData();
-      if (initial) {
-        untracked(() => {
-          this.recordsForm.patchValue({
-            title: initial.title || '',
-            description: initial.description || '',
-          });
-        });
-      }
       if (this.selectedRecord() && this.isEditMode()) {
         untracked(() => {
           this.recordsForm.patchValue({
@@ -120,60 +84,6 @@ export class RecordsFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.markAllFieldsAsTouched();
-    if (!this.recordsForm.valid) {
-      return;
-    }
-
-    this.isSaving.set(true);
-    const formValue = this.recordsForm.getRawValue();
-
-    const recordData = {
-      title: formValue.title,
-      description: formValue.description,
-      sportId: formValue.sportId,
-      competitionId: formValue.competitionId || undefined,
-      nationalTeamId: formValue.nationalTeamId || undefined,
-      contentTypeId: formValue.contentTypeId,
-      date: formValue.date || undefined,
-    };
-
-    if (this.isEditMode()) {
-      this.store.dispatch(
-        recordsActions.updateRecord({
-          id: this.recordId()!,
-          record: recordData,
-        }),
-      );
-    } else if (this.initialData()) {
-      this.recordSaved.emit(recordData);
-      this.isSaving.set(false);
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Success',
-        detail: 'Record saved successfully',
-        life: 3000,
-      });
-      this.closeDialog.emit();
-    } else {
-      this.store.dispatch(recordsActions.createRecord({ record: recordData }));
-      setTimeout(() => {
-        this.router.navigate(['/cms/records']);
-      }, 100);
-    }
-  }
-
-  cancelClick(): void {
-    if (this.initialData()) {
-      this.closeDialog.emit();
-    } else {
-      this.router.navigate(['/cms/records']);
-    }
-  }
-
-  private markAllFieldsAsTouched() {
-    Object.keys(this.recordsForm.controls).forEach((key) => {
-      this.recordsForm.get(key)?.markAsTouched();
-    });
+    this.recordFormService.submit();
   }
 }

@@ -187,9 +187,9 @@
               label="Cancel"
               severity="secondary"
               type="button"
-              [disabled]="isLoading()"
+              [disabled]="isSaving()"
               [outlined]="true"
-              (onClick)="cancelClick()"
+              (onClick)="this.router.navigate(['/cms/records'])"
             />
 
             <p-button
@@ -215,5 +215,3 @@
     </p-card>
   </div>
 </div>
-
-<p-toast />
