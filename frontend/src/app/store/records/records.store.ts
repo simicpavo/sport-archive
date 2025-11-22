@@ -6,6 +6,7 @@ export interface RecordsState {
   records: Record[];
   selectedRecord: Record | null;
   loading: boolean;
+  saving: boolean;
   error: unknown;
   total: number;
 }
@@ -14,6 +15,7 @@ export const initialState: RecordsState = {
   records: [],
   selectedRecord: null,
   loading: false,
+  saving: false,
   error: null,
   total: 0,
 };
@@ -48,38 +50,38 @@ export const recordsReducer = createReducer(
 
   on(recordsActions.createRecord, (state) => ({
     ...state,
-    loading: true,
+    saving: true,
     error: null,
   })),
 
   on(recordsActions.createRecordSuccess, (state) => ({
     ...state,
-    loading: false,
+    saving: false,
     total: state.total + 1,
     error: null,
   })),
 
   on(recordsActions.createRecordFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    saving: false,
     error,
   })),
 
   on(recordsActions.updateRecord, (state) => ({
     ...state,
-    loading: true,
+    saving: true,
     error: null,
   })),
 
   on(recordsActions.updateRecordSuccess, (state) => ({
     ...state,
-    loading: false,
+    saving: false,
     error: null,
   })),
 
   on(recordsActions.updateRecordFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    saving: false,
     error,
   })),
 
