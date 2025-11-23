@@ -48,26 +48,25 @@ export class RecordFormComponent implements OnInit {
   readonly competitions = this.store.selectSignal(competitionsFeature.selectCompetitions);
   readonly nationalTeams = this.store.selectSignal(nationalTeamsFeature.selectNationalTeams);
 
+  constructor() {
+    effect(() => {
+      const item = this.newsItem();
+      if (item) {
+        this.recordsForm.patchValue({
+          title: item.title ?? '',
+          description: item.content ?? '',
+        });
+        this.recordsForm.markAsPristine();
+      }
+    });
+  }
+
   ngOnInit() {
     this.store.dispatch(
       recordsActions.initializeRecordForm({
         recordId: undefined,
       }),
     );
-  }
-
-  constructor() {
-    effect(() => {
-      const item = this.newsItem();
-      if (!item) {
-        return;
-      }
-      this.recordsForm.patchValue({
-        title: item.title ?? '',
-        description: item.content ?? '',
-      });
-      this.recordsForm.markAsPristine();
-    });
   }
 
   onSubmit() {
