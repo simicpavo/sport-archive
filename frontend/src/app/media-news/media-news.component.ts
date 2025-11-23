@@ -17,7 +17,6 @@ import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
-import { Subscription } from 'rxjs';
 import { MediaNews, TimeFilter } from '../models/media-news.interface';
 import { formatDate } from '../shared/utils/format-date';
 import { formatEngagements } from '../shared/utils/format-engagements';
@@ -43,7 +42,6 @@ import { RecordFormComponent } from './components/record-form/record-form.compon
 export class MediaNewsComponent implements OnInit, OnDestroy {
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
 
-  private subscriptions = new Subscription();
   private store = inject(Store);
   private platformId = inject(PLATFORM_ID);
   private observer?: IntersectionObserver;
@@ -95,7 +93,6 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
     this.observer?.disconnect();
   }
 
