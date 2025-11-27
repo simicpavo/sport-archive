@@ -51,6 +51,7 @@ export class RecordFormComponent implements OnInit {
   constructor() {
     effect(() => {
       const item = this.newsItem();
+
       if (item) {
         this.recordsForm.patchValue({
           title: item.title ?? '',
@@ -62,6 +63,7 @@ export class RecordFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.recordFormService.redirectToCms.set(false);
     this.store.dispatch(
       recordsActions.initializeRecordForm({
         recordId: undefined,

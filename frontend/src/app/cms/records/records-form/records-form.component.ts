@@ -54,6 +54,7 @@ export class RecordsFormComponent implements OnInit {
   readonly recordsForm = this.recordFormService.recordsForm;
 
   ngOnInit() {
+    this.recordFormService.redirectToCms.set(true);
     this.loadRecordData();
   }
 

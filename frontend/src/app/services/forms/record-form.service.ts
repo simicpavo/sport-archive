@@ -12,6 +12,7 @@ export class RecordFormService {
 
   readonly recordId = signal<string | null>(null);
   readonly isEditMode = computed(() => this.recordId() !== null);
+  readonly redirectToCms = signal<boolean>(false);
 
   public readonly recordsForm = this.fb.group({
     title: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
@@ -49,7 +50,9 @@ export class RecordFormService {
         }),
       );
     } else {
-      this.store.dispatch(recordsActions.createRecord({ record: recordData }));
+      this.store.dispatch(
+        recordsActions.createRecord({ record: recordData, redirectToCms: this.redirectToCms() }),
+      );
     }
   }
 
