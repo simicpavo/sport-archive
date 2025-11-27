@@ -26,6 +26,16 @@ export const initializeRecordFormEffect = createEffect(
   { functional: true },
 );
 
+export const closeRecordDialogOnSuccessEffect = createEffect(
+  (actions$ = inject(Actions)) => {
+    return actions$.pipe(
+      ofType(recordsActions.createRecordSuccess),
+      map(() => recordsActions.changeRecordDialogVisibility({ isVisible: false })),
+    );
+  },
+  { functional: true },
+);
+
 export const loadRecordsEffect = createEffect(
   (actions$ = inject(Actions), recordsService = inject(RecordsService)) => {
     return actions$.pipe(
@@ -55,10 +65,12 @@ export const createRecordEffect = createEffect(
   ) => {
     return actions$.pipe(
       ofType(recordsActions.createRecord),
-      switchMap(({ record }) =>
+      switchMap(({ record, redirectToCms }) =>
         recordsService.createRecord(record).pipe(
           map(() => {
-            router.navigate(['/cms/records']);
+            if (redirectToCms) {
+              router.navigate(['/cms/records']);
+            }
             return recordsActions.createRecordSuccess();
           }),
           catchError((error) => of(recordsActions.createRecordFailure({ error }))),

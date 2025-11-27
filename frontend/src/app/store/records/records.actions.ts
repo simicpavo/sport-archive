@@ -11,11 +11,13 @@ export const recordsActions = createActionGroup({
   events: {
     initializeRecordForm: props<{ recordId?: string }>(),
 
+    changeRecordDialogVisibility: props<{ isVisible: boolean }>(),
+
     loadRecords: props<{ id?: string }>(),
     loadRecordsSuccess: props<{ response?: RecordResponse; record?: Record }>(),
     loadRecordsFailure: props<{ error: unknown }>(),
 
-    createRecord: props<{ record: CreateRecordDto }>(),
+    createRecord: props<{ record: CreateRecordDto; redirectToCms?: boolean }>(),
     createRecordSuccess: emptyProps(),
     createRecordFailure: props<{ error: unknown }>(),
 

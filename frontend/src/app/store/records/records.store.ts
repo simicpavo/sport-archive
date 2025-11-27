@@ -9,6 +9,7 @@ export interface RecordsState {
   saving: boolean;
   error: unknown;
   total: number;
+  recordDialogVisible: boolean;
 }
 
 export const initialState: RecordsState = {
@@ -18,6 +19,7 @@ export const initialState: RecordsState = {
   saving: false,
   error: null,
   total: 0,
+  recordDialogVisible: false,
 };
 
 export const recordsReducer = createReducer(
@@ -57,7 +59,6 @@ export const recordsReducer = createReducer(
   on(recordsActions.createRecordSuccess, (state) => ({
     ...state,
     saving: false,
-    total: state.total + 1,
     error: null,
   })),
 
@@ -101,6 +102,11 @@ export const recordsReducer = createReducer(
     ...state,
     loading: false,
     error,
+  })),
+
+  on(recordsActions.changeRecordDialogVisibility, (state, { isVisible }) => ({
+    ...state,
+    recordDialogVisible: isVisible,
   })),
 );
 
