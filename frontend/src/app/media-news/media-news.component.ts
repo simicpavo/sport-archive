@@ -22,6 +22,8 @@ import { formatDate } from '../shared/utils/format-date';
 import { formatEngagements } from '../shared/utils/format-engagements';
 import { NewsActions } from '../store/news/news.actions';
 import { newsFeature } from '../store/news/news.store';
+import { recordsActions } from '../store/records/records.actions';
+import { recordsFeature } from '../store/records/records.store';
 import { RecordFormComponent } from './components/record-form/record-form.component';
 
 @Component({
@@ -38,9 +40,11 @@ import { RecordFormComponent } from './components/record-form/record-form.compon
     RecordFormComponent,
   ],
   templateUrl: './media-news.component.html',
+  providers: [RecordFormComponent],
 })
 export class MediaNewsComponent implements OnInit, OnDestroy {
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
+  @ViewChild(RecordFormComponent, { static: false }) recordForm!: RecordFormComponent;
 
   private store = inject(Store);
   private platformId = inject(PLATFORM_ID);
@@ -55,8 +59,8 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   selectedFilter = this.store.selectSignal(newsFeature.selectSelectedFilter);
   error = this.store.selectSignal(newsFeature.selectError);
   total = this.store.selectSignal(newsFeature.selectTotal);
+  dialogVisible = this.store.selectSignal(recordsFeature.selectRecordDialogVisible);
 
-  showDialog = signal(false);
   selectedNewsItem = signal<MediaNews | null>(null);
   formatDate = formatDate;
   formatEngagements = formatEngagements;
@@ -94,6 +98,7 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.observer?.disconnect();
+    this.store.dispatch(recordsActions.changeRecordDialogVisibility({ isVisible: false }));
   }
 
   loadInitialNews(): void {
@@ -170,11 +175,15 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
 
   onSaveArticle(newsItem: MediaNews): void {
     this.selectedNewsItem.set(newsItem);
-    this.showDialog.set(true);
+
+    this.store.dispatch(recordsActions.changeRecordDialogVisibility({ isVisible: true }));
   }
 
   closeDialog(): void {
-    this.showDialog.set(false);
-    this.selectedNewsItem.set(null);
+    this.recordForm?.recordsForm.reset({
+      title: this.selectedNewsItem()?.title || '',
+      description: this.selectedNewsItem()?.content || '',
+    });
+    this.store.dispatch(recordsActions.changeRecordDialogVisibility({ isVisible: false }));
   }
 }
