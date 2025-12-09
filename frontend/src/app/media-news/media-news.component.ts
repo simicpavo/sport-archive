@@ -178,11 +178,6 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   }
 
   closeDialog(): void {
-    // this.recordForm?.recordsForm.reset({
-    //   title: this.selectedNewsItem()?.title || '',
-    //   description: this.selectedNewsItem()?.content || '',
-    // });
-
     this.store.dispatch(recordsActions.changeRecordDialogVisibility({ isVisible: false }));
   }
 }
