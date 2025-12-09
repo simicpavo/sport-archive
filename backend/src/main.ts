@@ -19,11 +19,8 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-
     .setTitle('Sports API')
-
     .setVersion('1.0')
-
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
