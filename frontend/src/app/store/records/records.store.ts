@@ -5,21 +5,21 @@ import { recordsActions } from './records.actions';
 export interface RecordsState {
   records: Record[];
   selectedRecord: Record | null;
+  total: number;
   loading: boolean;
   saving: boolean;
-  error: unknown;
-  total: number;
   recordDialogVisible: boolean;
+  error: unknown;
 }
 
 export const initialState: RecordsState = {
   records: [],
   selectedRecord: null,
+  total: 0,
   loading: false,
   saving: false,
-  error: null,
-  total: 0,
   recordDialogVisible: false,
+  error: null,
 };
 
 export const recordsReducer = createReducer(
