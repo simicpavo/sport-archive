@@ -42,10 +42,11 @@ export class RecordFormService {
       date: formValue.date || undefined,
     };
 
-    if (this.isEditMode()) {
+    const recordId = this.recordId();
+    if (this.isEditMode() && recordId) {
       this.store.dispatch(
         recordsActions.updateRecord({
-          id: this.recordId()!,
+          id: recordId,
           record: recordData,
         }),
       );
