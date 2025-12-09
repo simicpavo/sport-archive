@@ -5,17 +5,21 @@ import { recordsActions } from './records.actions';
 export interface RecordsState {
   records: Record[];
   selectedRecord: Record | null;
-  loading: boolean;
-  error: unknown;
   total: number;
+  loading: boolean;
+  saving: boolean;
+  recordDialogVisible: boolean;
+  error: unknown;
 }
 
 export const initialState: RecordsState = {
   records: [],
   selectedRecord: null,
-  loading: false,
-  error: null,
   total: 0,
+  loading: false,
+  saving: false,
+  recordDialogVisible: false,
+  error: null,
 };
 
 export const recordsReducer = createReducer(
@@ -48,38 +52,37 @@ export const recordsReducer = createReducer(
 
   on(recordsActions.createRecord, (state) => ({
     ...state,
-    loading: true,
+    saving: true,
     error: null,
   })),
 
   on(recordsActions.createRecordSuccess, (state) => ({
     ...state,
-    loading: false,
-    total: state.total + 1,
+    saving: false,
     error: null,
   })),
 
   on(recordsActions.createRecordFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    saving: false,
     error,
   })),
 
   on(recordsActions.updateRecord, (state) => ({
     ...state,
-    loading: true,
+    saving: true,
     error: null,
   })),
 
   on(recordsActions.updateRecordSuccess, (state) => ({
     ...state,
-    loading: false,
+    saving: false,
     error: null,
   })),
 
   on(recordsActions.updateRecordFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    saving: false,
     error,
   })),
 
@@ -99,6 +102,11 @@ export const recordsReducer = createReducer(
     ...state,
     loading: false,
     error,
+  })),
+
+  on(recordsActions.changeRecordDialogVisibility, (state, { isVisible }) => ({
+    ...state,
+    recordDialogVisible: isVisible,
   })),
 );
 

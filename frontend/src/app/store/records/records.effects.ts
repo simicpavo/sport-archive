@@ -55,10 +55,12 @@ export const createRecordEffect = createEffect(
   ) => {
     return actions$.pipe(
       ofType(recordsActions.createRecord),
-      switchMap(({ record }) =>
+      switchMap(({ record, redirectToCms }) =>
         recordsService.createRecord(record).pipe(
           map(() => {
-            router.navigate(['/cms/records']);
+            if (redirectToCms) {
+              router.navigate(['/cms/records']);
+            }
             return recordsActions.createRecordSuccess();
           }),
           catchError((error) => of(recordsActions.createRecordFailure({ error }))),
@@ -109,6 +111,16 @@ export const deleteRecordEffect = createEffect(
   { functional: true },
 );
 
+export const closeRecordDialogOnSuccessEffect = createEffect(
+  (actions$ = inject(Actions)) => {
+    return actions$.pipe(
+      ofType(recordsActions.createRecordSuccess),
+      map(() => recordsActions.changeRecordDialogVisibility({ isVisible: false })),
+    );
+  },
+  { functional: true },
+);
+
 export const showSuccessMessageEffect = createEffect(
   (actions$ = inject(Actions), messageService = inject(MessageService)) => {
     return actions$.pipe(
@@ -135,7 +147,7 @@ export const showSuccessMessageEffect = createEffect(
           severity: 'success',
           summary: 'Success',
           detail: message,
-          life: 3000,
+          life: 5000,
         });
       }),
     );

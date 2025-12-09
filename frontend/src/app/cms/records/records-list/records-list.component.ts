@@ -7,7 +7,6 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { PageHeaderComponent } from '../../../shared/components/header.component';
@@ -16,7 +15,7 @@ import { recordsActions } from '../../../store/records/records.actions';
 import { recordsFeature } from '../../../store/records/records.store';
 
 @Component({
-  selector: 'app-content-types-list',
+  selector: 'app-records-list',
   standalone: true,
   imports: [
     CommonModule,
@@ -24,7 +23,6 @@ import { recordsFeature } from '../../../store/records/records.store';
     ButtonModule,
     TagModule,
     ConfirmDialogModule,
-    ToastModule,
     TooltipModule,
     TableEmptyMessageComponent,
     PageHeaderComponent,

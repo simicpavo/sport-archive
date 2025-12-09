@@ -6,7 +6,6 @@ import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { mediaSourcesActions } from '../../../store/media-sources/media-sources.actions';
 import { mediaSourcesFeature } from '../../../store/media-sources/media-sources.store';
@@ -20,7 +19,6 @@ import { mediaSourcesFeature } from '../../../store/media-sources/media-sources.
     CardModule,
     InputTextModule,
     ButtonModule,
-    ToastModule,
     LoadingSpinnerComponent,
   ],
   templateUrl: './media-sources-form.component.html',
@@ -29,7 +27,7 @@ export class MediaSourcesFormComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  protected readonly router = inject(Router);
 
   readonly isLoading = this.store.selectSignal(mediaSourcesFeature.selectLoading);
   readonly mediaSourceId = signal<string | null>(null);
@@ -108,9 +106,5 @@ export class MediaSourcesFormComponent implements OnInit {
     Object.keys(this.mediaSourceForm.controls).forEach((key) => {
       this.mediaSourceForm.get(key)?.markAsTouched();
     });
-  }
-
-  protected navigateToMediaSourcesList() {
-    this.router.navigate(['/cms/media-sources']);
   }
 }

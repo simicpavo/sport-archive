@@ -7,7 +7,6 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableEmptyMessageComponent } from '../../../shared/components/empty-message.component';
 import { PageHeaderComponent } from '../../../shared/components/header.component';
@@ -24,7 +23,6 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     ButtonModule,
     TagModule,
     ConfirmDialogModule,
-    ToastModule,
     TooltipModule,
     TableEmptyMessageComponent,
     PageHeaderComponent,
@@ -36,7 +34,6 @@ export class SportsListComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly router = inject(Router);
   private readonly confirmationService = inject(ConfirmationService);
-
   readonly sports = this.store.selectSignal(sportsFeature.selectSports);
   readonly isLoading = this.store.selectSignal(sportsFeature.selectLoading);
 

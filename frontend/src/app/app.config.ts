@@ -12,7 +12,6 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import Material from '@primeuix/themes/material';
-import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 
@@ -34,9 +33,11 @@ import * as recordsEffects from './store/records/records.effects';
 import { recordsReducer } from './store/records/records.store';
 import * as sportsEffects from './store/sports/sports.effects';
 import { sportsReducer } from './store/sports/sports.store';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    MessageService,
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
@@ -77,6 +78,5 @@ export const appConfig: ApplicationConfig = {
       mediaSourcesEffects,
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    MessageService,
   ],
 };

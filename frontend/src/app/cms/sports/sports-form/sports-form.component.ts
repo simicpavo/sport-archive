@@ -6,7 +6,6 @@ import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { sportsActions } from '../../../store/sports/sports.actions';
 import { sportsFeature } from '../../../store/sports/sports.store';
@@ -20,7 +19,6 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     CardModule,
     InputTextModule,
     ButtonModule,
-    ToastModule,
     LoadingSpinnerComponent,
   ],
   templateUrl: './sports-form.component.html',
@@ -29,7 +27,7 @@ export class SportsFormComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  protected readonly router = inject(Router);
 
   readonly isLoading = this.store.selectSignal(sportsFeature.selectLoading);
   readonly sportId = signal<string | null>(null);
@@ -87,9 +85,5 @@ export class SportsFormComponent implements OnInit {
     Object.keys(this.sportForm.controls).forEach((key) => {
       this.sportForm.get(key)?.markAsTouched();
     });
-  }
-
-  protected navigateToSportsList() {
-    this.router.navigate(['/cms/sports']);
   }
 }

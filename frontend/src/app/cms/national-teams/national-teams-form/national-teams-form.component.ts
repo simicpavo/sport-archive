@@ -7,7 +7,6 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
-import { ToastModule } from 'primeng/toast';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner.component';
 import { nationalTeamsActions } from '../../../store/national-teams/national-teams.actions';
 import { nationalTeamsFeature } from '../../../store/national-teams/national-teams.store';
@@ -23,7 +22,6 @@ import { sportsFeature } from '../../../store/sports/sports.store';
     CardModule,
     InputTextModule,
     ButtonModule,
-    ToastModule,
     LoadingSpinnerComponent,
     SelectModule,
   ],
@@ -33,7 +31,7 @@ export class NationalTeamsFormComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  protected readonly router = inject(Router);
 
   readonly isLoading = this.store.selectSignal(nationalTeamsFeature.selectLoading);
   readonly nationalTeamId = signal<string | null>(null);
@@ -105,9 +103,5 @@ export class NationalTeamsFormComponent implements OnInit {
     Object.keys(this.nationalTeamForm.controls).forEach((key) => {
       this.nationalTeamForm.get(key)?.markAsTouched();
     });
-  }
-
-  protected navigateToNationalTeamsList() {
-    this.router.navigate(['/cms/national-teams']);
   }
 }

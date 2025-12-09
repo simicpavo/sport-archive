@@ -118,13 +118,22 @@
           <!-- Read Article button -->
           <div class="flex items-center justify-between">
             <div class="text-sm text-gray-500">{{ formatDate(newsItem.createdAt) }}</div>
-            <button
-              class="rounded bg-teal-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600"
-              type="button"
-              (click)="onReadMore(newsItem)"
-            >
-              Read Article
-            </button>
+            <div class="flex gap-2">
+              <button
+                class="rounded bg-gray-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600"
+                type="button"
+                (click)="onSaveArticle(newsItem)"
+              >
+                Save Article
+              </button>
+              <button
+                class="rounded bg-teal-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600"
+                type="button"
+                (click)="onReadMore(newsItem)"
+              >
+                Read Article
+              </button>
+            </div>
           </div>
         </article>
       }
@@ -183,3 +192,17 @@
     </div>
   }
 </div>
+
+<!-- Save-article dialog -->
+@if (dialogVisible()) {
+  <p-dialog
+    [breakpoints]="{ '960px': '65vw', '640px': '75vw' }"
+    [closable]="true"
+    [modal]="true"
+    [style]="{ width: '65vw' }"
+    [visible]="dialogVisible()"
+    (visibleChange)="closeDialog()"
+  >
+    <app-record-form [newsItem]="selectedNewsItem()" (closed)="closeDialog()" />
+  </p-dialog>
+}
