@@ -194,15 +194,15 @@
 </div>
 
 <!-- Save-article dialog -->
-<p-dialog
-  [breakpoints]="{ '960px': '65vw', '640px': '75vw' }"
-  [closable]="true"
-  [modal]="true"
-  [style]="{ width: '65vw' }"
-  [visible]="dialogVisible()"
-  (visibleChange)="closeDialog()"
->
-  @if (selectedNewsItem(); as article) {
-    <app-record-form [newsItem]="article" (closed)="closeDialog()" />
-  }
-</p-dialog>
+@if (dialogVisible()) {
+  <p-dialog
+    [breakpoints]="{ '960px': '65vw', '640px': '75vw' }"
+    [closable]="true"
+    [modal]="true"
+    [style]="{ width: '65vw' }"
+    [visible]="dialogVisible()"
+    (visibleChange)="closeDialog()"
+  >
+    <app-record-form [newsItem]="selectedNewsItem()" (closed)="closeDialog()" />
+  </p-dialog>
+}

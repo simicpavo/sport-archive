@@ -40,11 +40,9 @@ import { RecordFormComponent } from './components/record-form/record-form.compon
     RecordFormComponent,
   ],
   templateUrl: './media-news.component.html',
-  providers: [RecordFormComponent],
 })
 export class MediaNewsComponent implements OnInit, OnDestroy {
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
-  @ViewChild(RecordFormComponent, { static: false }) recordForm!: RecordFormComponent;
 
   private store = inject(Store);
   private platformId = inject(PLATFORM_ID);
@@ -180,10 +178,11 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   }
 
   closeDialog(): void {
-    this.recordForm?.recordsForm.reset({
-      title: this.selectedNewsItem()?.title || '',
-      description: this.selectedNewsItem()?.content || '',
-    });
+    // this.recordForm?.recordsForm.reset({
+    //   title: this.selectedNewsItem()?.title || '',
+    //   description: this.selectedNewsItem()?.content || '',
+    // });
+
     this.store.dispatch(recordsActions.changeRecordDialogVisibility({ isVisible: false }));
   }
 }
