@@ -200,7 +200,7 @@
   [modal]="true"
   [style]="{ width: '65vw' }"
   [visible]="dialogVisible()"
-  (onHide)="closeDialog()"
+  (visibleChange)="closeDialog()"
 >
   @if (selectedNewsItem(); as article) {
     <app-record-form [newsItem]="article" (closed)="closeDialog()" />
