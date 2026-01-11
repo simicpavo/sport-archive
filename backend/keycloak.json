@@ -1,0 +1,9 @@
+{
+  "realm": "sport-archive",
+  "auth-server-url": "http://localhost:8081/",
+  "ssl-required": "external",
+  "resource": "sport-archive-api",
+  "bearer-only": true,
+  "confidential-port": 0
+}
+
