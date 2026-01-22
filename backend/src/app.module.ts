@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { CronModule } from './chron/chron.module';
 import { ClubsModule } from './clubs/clubs.module';
 import { CompetitionsModule } from './competitions/competitions.module';
@@ -17,6 +20,7 @@ import { SportsModule } from './sports/sports.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    AuthModule,
     PrismaModule,
     SportsModule,
     PersonsModule,
@@ -30,6 +34,12 @@ import { SportsModule } from './sports/sports.module';
     MediaNewsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}
