@@ -25,10 +25,6 @@ export class NavigationSidebarComponent {
     this.keycloak.login();
   }
 
-  register() {
-    this.keycloak.register();
-  }
-
   logout() {
     this.keycloak.logout({ redirectUri: window.location.origin });
   }
