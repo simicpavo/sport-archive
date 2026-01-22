@@ -119,13 +119,15 @@
           <div class="flex items-center justify-between">
             <div class="text-sm text-gray-500">{{ formatDate(newsItem.createdAt) }}</div>
             <div class="flex gap-2">
-              <button
-                class="rounded bg-gray-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600"
-                type="button"
-                (click)="onSaveArticle(newsItem)"
-              >
-                Save Article
-              </button>
+              @if (keycloak.authenticated) {
+                <button
+                  class="rounded bg-gray-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600"
+                  type="button"
+                  (click)="onSaveArticle(newsItem)"
+                >
+                  Save Article
+                </button>
+              }
               <button
                 class="rounded bg-teal-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600"
                 type="button"
