@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { CmsAuthGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
   {
@@ -12,6 +13,7 @@ export const routes: Routes = [
       },
       {
         path: 'cms',
+        canActivate: [CmsAuthGuard],
         loadChildren: () => import('./cms/cms.routes').then((m) => m.cmsRoutes),
       },
     ],
