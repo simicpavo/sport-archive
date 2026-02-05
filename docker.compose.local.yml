@@ -29,11 +29,16 @@ services:
     restart: unless-stopped
     env_file:
       - .env.local
-    command: ["start"]
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
     depends_on:
       - postgres
     networks:
       - app-network
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
     ports:
       - "127.0.0.1:8081:8080"
 
