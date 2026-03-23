@@ -1,28 +1,37 @@
-# Base image
-FROM node:22-bookworm-slim
+# Stage 1: Build
+FROM node:22-bookworm-slim AS build
 
-# Create app directory
 WORKDIR /usr/src/app
 
-# Install app dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # Install playwright dependencies
 RUN npx playwright install-deps chromium
 RUN npx playwright install
 
-# Copy app source code
 COPY . .
 
-# Generate Prisma client
 RUN npx prisma generate
-
-# Build the app
 RUN npm run build
 
-# Expose port
+# Stage 2: Production
+FROM node:22-bookworm-slim
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+# Install playwright for runtime scraping
+RUN npx playwright install-deps chromium
+RUN npx playwright install
+
+# Copy built app and Prisma artifacts
+COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/generated ./generated
+COPY --from=build /usr/src/app/prisma ./prisma
+
 EXPOSE 3000
 
-# Run migrations before starting the application
-CMD sh -c "npx prisma migrate deploy && npm run start:prod"
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main"]
