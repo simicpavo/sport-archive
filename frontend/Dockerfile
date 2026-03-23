@@ -1,24 +1,26 @@
 # Stage 1: Build Angular Application with SSR
 FROM node:20-alpine AS build
 
-# Accept build argument for API URL
+# Accept build arguments for API and Keycloak URLs
 ARG API_URL
+ARG KEYCLOAK_URL
 
 WORKDIR /app
 
-# Copy root package.json and frontend package.json
-COPY ../package*.json ./
-COPY ./package*.json ./frontend/
+# Copy root and frontend package files
+COPY package*.json ./
+COPY frontend/package*.json ./frontend/
 
 # Install dependencies for the workspace
 RUN npm install
 
 # Copy frontend source code
-COPY . ./frontend
+COPY frontend/ ./frontend/
 WORKDIR /app/frontend
 
-# Replace API_URL placeholder with actual value
+# Replace placeholders with actual values
 RUN sed -i "s|API_URL|${API_URL}|g" src/environments/environment.prod.ts
+RUN sed -i "s|KEYCLOAK_URL|${KEYCLOAK_URL}|g" src/environments/environment.prod.ts
 
 # Build the Angular app with SSR (builds both browser and server bundles)
 RUN npm run build --configuration=production

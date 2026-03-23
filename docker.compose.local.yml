@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:17-alpine
     env_file:
       - .env.local
     ports:
@@ -48,3 +48,4 @@ volumes:
 networks:
   app-network:
     driver: bridge
+
