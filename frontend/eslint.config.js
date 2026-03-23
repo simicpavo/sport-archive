@@ -9,6 +9,11 @@ module.exports = tseslint.config(
   {
     ignores: ['.angular/**', 'dist/**', 'node_modules/**', 'src/server.ts'],
     files: ['**/*.ts'],
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: __dirname,
+      },
+    },
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
@@ -79,7 +84,7 @@ module.exports = tseslint.config(
         },
       ],
       '@angular-eslint/template/prefer-self-closing-tags': 'warn',
-      '@angular-eslint/template/cyclomatic-complexity': ['warn', { maxComplexity: 15 }],
+      '@angular-eslint/template/cyclomatic-complexity': ['warn', { maxComplexity: 16 }],
     },
   },
 );

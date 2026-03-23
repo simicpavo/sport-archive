@@ -136,13 +136,36 @@
   <div
     class="align-items-center surface-0 border-bottom-1 surface-border sticky top-0 z-5 flex gap-3 p-4"
   >
-    <p-button
-      icon="pi pi-bars"
-      severity="secondary"
-      [rounded]="true"
-      [text]="true"
-      (onClick)="sidebarVisible.set(true)"
-    />
+    <div class="flex gap-2">
+      @if (keycloak.authenticated) {
+        <p-button
+          icon="pi pi-bars"
+          severity="secondary"
+          [rounded]="true"
+          [text]="true"
+          (onClick)="sidebarVisible.set(true)"
+        />
+      }
+    </div>
+
+    <div class="align-items-center ml-auto flex gap-2">
+      @if (!keycloak.authenticated) {
+        <p-button
+          label="Login"
+          styleClass="px-3 py-2 border-round"
+          [text]="true"
+          (onClick)="login()"
+        />
+      } @else {
+        <p-button
+          label="Logout"
+          severity="danger"
+          styleClass="px-3 py-2 border-round"
+          [text]="true"
+          (onClick)="logout()"
+        />
+      }
+    </div>
   </div>
 
   <div class="p-4">

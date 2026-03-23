@@ -17,6 +17,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
+import { keycloak as keycloakInstance } from '../keycloak';
 import { MediaNews, TimeFilter } from '../models/media-news.interface';
 import { formatDate } from '../shared/utils/format-date';
 import { formatEngagements } from '../shared/utils/format-engagements';
@@ -49,6 +50,7 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   private observer?: IntersectionObserver;
   private lastLoadTime = 0;
   private readonly LOAD_THROTTLE_MS = 1000;
+  keycloak = keycloakInstance;
 
   news = this.store.selectSignal(newsFeature.selectNews);
   loading = this.store.selectSignal(newsFeature.selectLoading);

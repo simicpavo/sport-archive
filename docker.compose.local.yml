@@ -1,12 +1,14 @@
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:17-alpine
     env_file:
       - .env.local
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -19,6 +21,31 @@ services:
       - postgres
     volumes:
       - ./pgadmin-servers.json:/pgadmin4/servers.json
+    networks:
+      - app-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    restart: unless-stopped
+    env_file:
+      - .env.local
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    ports:
+      - "127.0.0.1:8081:8080"
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
+

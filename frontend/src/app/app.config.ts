@@ -1,4 +1,9 @@
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withFetch,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import {
   ApplicationConfig,
   isDevMode,
@@ -15,6 +20,8 @@ import Material from '@primeuix/themes/material';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 
+import { MessageService } from 'primeng/api';
+import { AuthInterceptor } from './auth.interceptor';
 import * as clubsEffects from './store/clubs/clubs.effects';
 import { clubsReducer } from './store/clubs/clubs.store';
 import * as competitionsEffects from './store/competitions/competitions.effects';
@@ -33,15 +40,15 @@ import * as recordsEffects from './store/records/records.effects';
 import { recordsReducer } from './store/records/records.store';
 import * as sportsEffects from './store/sports/sports.effects';
 import { sportsReducer } from './store/sports/sports.store';
-import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     MessageService,
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptorsFromDi()),
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {

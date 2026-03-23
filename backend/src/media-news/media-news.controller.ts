@@ -1,5 +1,6 @@
 import { Controller, Delete, Get, Param, Query } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Public } from '../auth/public.decorator';
 import { PaginationDto } from './dto/pagination.dto';
 import { MediaNewsService } from './media-news.service';
 
@@ -8,6 +9,7 @@ import { MediaNewsService } from './media-news.service';
 export class MediaNewsController {
   constructor(private readonly mediaNewsService: MediaNewsService) {}
 
+  @Public()
   @Get()
   @ApiOperation({
     summary: 'Get news articles with pagination and filtering',
@@ -22,6 +24,7 @@ export class MediaNewsController {
     return this.mediaNewsService.findAll(paginationDto);
   }
 
+  @Public()
   @Get(':id')
   @ApiOperation({
     summary: 'Get news article by ID',
