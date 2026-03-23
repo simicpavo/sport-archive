@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm install --include=dev --ignore-scripts
 
 # Install playwright dependencies
-RUN npx playwright install chromium-deps chromium
+RUN npx playwright install-deps chromium
 RUN npx playwright install chromium
 
 COPY . .
@@ -24,7 +24,7 @@ COPY package*.json ./
 RUN npm install --omit=dev --ignore-scripts
 
 # Install playwright for runtime scraping
-RUN npx playwright install chromium-deps chromium
+RUN npx playwright install-deps chromium
 RUN npx playwright install chromium
 
 # Copy built app and Prisma artifacts
