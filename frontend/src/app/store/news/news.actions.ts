@@ -15,5 +15,6 @@ export const NewsActions = createActionGroup({
 
     // Filters and state management
     applyTimeFilter: props<{ timeFilter: TimeFilter }>(),
+    applySearchQuery: props<{ query: string }>(),
   },
 });

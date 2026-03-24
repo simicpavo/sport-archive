@@ -1,6 +1,14 @@
-import { createFeature, createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { MediaNews, MediaNewsFilters, TimeFilter } from '../../models/media-news.interface';
 import { NewsActions } from './news.actions';
+
+function normalizeForSearch(value: string): string {
+  return value
+    .toLocaleLowerCase('hr-HR')
+    .replace(/[đĐ]/g, 'd')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
 
 export interface NewsState {
   news: MediaNews[];
@@ -10,6 +18,7 @@ export interface NewsState {
   currentPage: number;
   filters: MediaNewsFilters;
   selectedFilter: TimeFilter;
+  searchQuery: string;
   error: unknown;
   total: number;
   totalPages: number;
@@ -28,6 +37,7 @@ export const initialState: NewsState = {
     sortOrder: 'desc',
   },
   selectedFilter: 'recent',
+  searchQuery: '',
   error: null,
   total: 0,
   totalPages: 0,
@@ -105,9 +115,35 @@ export const newsReducer = createReducer(
       sortOrder: 'desc',
     },
   })),
+
+  on(NewsActions.applySearchQuery, (state, { query }) => ({
+    ...state,
+    searchQuery: query.trim(),
+  })),
 );
 
 export const newsFeature = createFeature({
   name: 'news',
   reducer: newsReducer,
 });
+
+export const selectFilteredNews = createSelector(
+  newsFeature.selectNews,
+  newsFeature.selectSearchQuery,
+  (news, query) => {
+    const normalizedQuery = normalizeForSearch(query);
+
+    if (!normalizedQuery) {
+      return news;
+    }
+
+    return news.filter((item) => {
+      const normalizedTitle = normalizeForSearch(item.title);
+      const normalizedContent = normalizeForSearch(item.content);
+
+      return (
+        normalizedTitle.includes(normalizedQuery) || normalizedContent.includes(normalizedQuery)
+      );
+    });
+  },
+);
