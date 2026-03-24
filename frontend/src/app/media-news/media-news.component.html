@@ -19,6 +19,32 @@
         </button>
       }
     </div>
+
+    <div class="mx-auto mt-5 max-w-xl">
+      <div class="relative block">
+        <i
+          class="pi pi-search pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"
+        ></i>
+        <input
+          class="w-full rounded-lg border border-gray-700 bg-gray-800 py-2 pr-16 pl-10 text-white placeholder:text-gray-500"
+          id="news-search"
+          pInputText
+          placeholder="Search articles..."
+          type="search"
+          [value]="searchQuery()"
+          (input)="onSearchQueryChange($event)"
+        />
+        @if (searchQuery()) {
+          <button
+            class="absolute top-1/2 right-3 -translate-y-1/2 text-sm text-gray-400 transition-colors hover:text-white"
+            type="button"
+            (click)="clearSearchQuery()"
+          >
+            Clear
+          </button>
+        }
+      </div>
+    </div>
   </div>
 
   <!-- Error state -->
@@ -54,9 +80,9 @@
   }
 
   <!-- News list -->
-  @if (!loading() && news().length > 0) {
+  @if (!loading() && filteredNews().length > 0) {
     <div class="mx-auto max-w-4xl space-y-6">
-      @for (newsItem of news(); track newsItem.id) {
+      @for (newsItem of filteredNews(); track newsItem.id) {
         <article class="hover:bg-gray-750 rounded-lg bg-gray-800 p-6 transition-colors">
           <!-- Article header -->
           <div class="mb-4 flex items-center gap-3">
@@ -159,7 +185,7 @@
   }
 
   <!-- End of content message -->
-  @if (!loading() && !hasMore() && news().length > 0) {
+  @if (!loading() && !searchQuery() && !hasMore() && news().length > 0) {
     <div class="my-12 text-center">
       <div class="text-gray-500">🎯 You've reached the end! That's all the news for now.</div>
       @if (total() > 0) {
@@ -171,23 +197,27 @@
   }
 
   <!-- Empty state -->
-  @if (!loading() && news().length === 0) {
+  @if (!loading() && filteredNews().length === 0) {
     <div class="mx-auto max-w-4xl py-12 text-center">
       <div class="rounded-lg bg-gray-800 p-12">
         <div class="mb-4 text-6xl">📭</div>
         <h3 class="mb-4 text-xl font-semibold text-white">No news found</h3>
-        <p class="mb-6 text-gray-400">
-          It seems like there's no sports news available for the selected time period. Try adjusting
-          your filter or check back later for fresh content!
-        </p>
+        @if (searchQuery()) {
+          <p class="mb-6 text-gray-400">
+            No results for "{{ searchQuery() }}" in currently loaded articles. Try a different term
+            or load more news.
+          </p>
+        } @else {
+          <p class="mb-6 text-gray-400">
+            It seems like there's no sports news available for the selected time period. Try
+            adjusting your filter or check back later for fresh content!
+          </p>
+        }
         <button
           class="rounded bg-teal-500 px-4 py-2 font-medium text-white transition-colors hover:bg-teal-600"
           [disabled]="loading()"
           (click)="loadInitialNews()"
         >
-          @if (loading()) {
-            <div class="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
-          }
           🔄 Refresh
         </button>
       </div>
