@@ -8,7 +8,8 @@ export class MediaNewsService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(paginationDto: PaginationDto) {
-    const { page, take, sortBy, sortOrder, startDate, endDate } = paginationDto;
+    const { page, take, sortBy, sortOrder, startDate, endDate, searchTerm } =
+      paginationDto;
     const skip = (page - 1) * take;
 
     // Build date filters only if dates are provided
@@ -20,9 +21,19 @@ export class MediaNewsService {
       dateFilters.lte = new Date(endDate);
     }
 
-    // Only include createdAt in where clause if we have date filters
-    const where =
-      Object.keys(dateFilters).length > 0 ? { createdAt: dateFilters } : {};
+    const where: Prisma.MediaNewsWhereInput = {};
+
+    if (Object.keys(dateFilters).length > 0) {
+      where.createdAt = dateFilters;
+    }
+
+    const normalizedSearchTerm = searchTerm?.trim();
+    if (normalizedSearchTerm) {
+      where.OR = [
+        { title: { contains: normalizedSearchTerm, mode: 'insensitive' } },
+        { content: { contains: normalizedSearchTerm, mode: 'insensitive' } },
+      ];
+    }
 
     const [news, total] = await this.prisma.$transaction([
       this.prisma.mediaNews.findMany({

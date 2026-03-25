@@ -2,14 +2,6 @@ import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { MediaNews, MediaNewsFilters, TimeFilter } from '../../models/media-news.interface';
 import { NewsActions } from './news.actions';
 
-function normalizeForSearch(value: string): string {
-  return value
-    .toLocaleLowerCase('hr-HR')
-    .replace(/[đĐ]/g, 'd')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-}
-
 export interface NewsState {
   news: MediaNews[];
   loading: boolean;
@@ -33,6 +25,7 @@ export const initialState: NewsState = {
   filters: {
     page: 1,
     take: 10,
+    searchTerm: '',
     sortBy: 'createdAt',
     sortOrder: 'desc',
   },
@@ -60,6 +53,7 @@ export const newsReducer = createReducer(
     const newFilters = {
       page: 1,
       take: state.filters.take || 10,
+      searchTerm: state.searchQuery,
       sortBy: state.filters.sortBy || 'createdAt',
       sortOrder: state.filters.sortOrder || 'desc',
       ...filters,
@@ -111,6 +105,7 @@ export const newsReducer = createReducer(
     filters: {
       page: 1,
       take: state.filters.take || 10,
+      searchTerm: state.searchQuery,
       sortBy: 'createdAt',
       sortOrder: 'desc',
     },
@@ -118,7 +113,16 @@ export const newsReducer = createReducer(
 
   on(NewsActions.applySearchQuery, (state, { query }) => ({
     ...state,
+    loading: true,
+    loadingMore: false,
+    currentPage: 1,
+    hasMore: true,
     searchQuery: query.trim(),
+    filters: {
+      ...state.filters,
+      page: 1,
+      searchTerm: query.trim(),
+    },
   })),
 );
 
@@ -127,23 +131,4 @@ export const newsFeature = createFeature({
   reducer: newsReducer,
 });
 
-export const selectFilteredNews = createSelector(
-  newsFeature.selectNews,
-  newsFeature.selectSearchQuery,
-  (news, query) => {
-    const normalizedQuery = normalizeForSearch(query);
-
-    if (!normalizedQuery) {
-      return news;
-    }
-
-    return news.filter((item) => {
-      const normalizedTitle = normalizeForSearch(item.title);
-      const normalizedContent = normalizeForSearch(item.content);
-
-      return (
-        normalizedTitle.includes(normalizedQuery) || normalizedContent.includes(normalizedQuery)
-      );
-    });
-  },
-);
+export const selectFilteredNews = createSelector(newsFeature.selectNews, (news) => news);
