@@ -7,7 +7,7 @@
     <div class="flex justify-center gap-2">
       @for (filter of timeFilters; track filter.value) {
         <button
-          class="rounded px-4 py-2 font-medium transition-colors"
+          class="cursor-pointer rounded px-4 py-2 font-medium transition-colors"
           [class.bg-gray-700]="selectedFilter() !== filter.value"
           [class.bg-teal-500]="selectedFilter() === filter.value"
           [class.hover:bg-gray-600]="selectedFilter() !== filter.value"
@@ -36,7 +36,7 @@
         />
         @if (searchQuery()) {
           <button
-            class="absolute top-1/2 right-3 -translate-y-1/2 text-sm text-gray-400 transition-colors hover:text-white"
+            class="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-sm text-gray-400 transition-colors hover:text-white"
             type="button"
             (click)="clearSearchQuery()"
           >
@@ -147,7 +147,7 @@
             <div class="flex gap-2">
               @if (keycloak.authenticated) {
                 <button
-                  class="rounded bg-gray-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600"
+                  class="cursor-pointer rounded bg-gray-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600"
                   type="button"
                   (click)="onSaveArticle(newsItem)"
                 >
@@ -155,7 +155,7 @@
                 </button>
               }
               <button
-                class="rounded bg-teal-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600"
+                class="cursor-pointer rounded bg-teal-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-600"
                 type="button"
                 (click)="onReadMore(newsItem)"
               >
@@ -214,7 +214,7 @@
           </p>
         }
         <button
-          class="rounded bg-teal-500 px-4 py-2 font-medium text-white transition-colors hover:bg-teal-600"
+          class="cursor-pointer rounded bg-teal-500 px-4 py-2 font-medium text-white transition-colors hover:bg-teal-600"
           [disabled]="loading()"
           (click)="loadInitialNews()"
         >
