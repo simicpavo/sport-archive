@@ -1,4 +1,4 @@
-import { createFeature, createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { MediaNews, MediaNewsFilters, TimeFilter } from '../../models/media-news.interface';
 import { NewsActions } from './news.actions';
 
@@ -10,6 +10,7 @@ export interface NewsState {
   currentPage: number;
   filters: MediaNewsFilters;
   selectedFilter: TimeFilter;
+  searchQuery: string;
   error: unknown;
   total: number;
   totalPages: number;
@@ -24,10 +25,12 @@ export const initialState: NewsState = {
   filters: {
     page: 1,
     take: 10,
+    searchTerm: '',
     sortBy: 'createdAt',
     sortOrder: 'desc',
   },
   selectedFilter: 'recent',
+  searchQuery: '',
   error: null,
   total: 0,
   totalPages: 0,
@@ -50,6 +53,7 @@ export const newsReducer = createReducer(
     const newFilters = {
       page: 1,
       take: state.filters.take || 10,
+      searchTerm: state.searchQuery,
       sortBy: state.filters.sortBy || 'createdAt',
       sortOrder: state.filters.sortOrder || 'desc',
       ...filters,
@@ -101,8 +105,23 @@ export const newsReducer = createReducer(
     filters: {
       page: 1,
       take: state.filters.take || 10,
+      searchTerm: state.searchQuery,
       sortBy: 'createdAt',
       sortOrder: 'desc',
+    },
+  })),
+
+  on(NewsActions.applySearchQuery, (state, { query }) => ({
+    ...state,
+    loading: true,
+    loadingMore: false,
+    currentPage: 1,
+    hasMore: true,
+    searchQuery: query.trim(),
+    filters: {
+      ...state.filters,
+      page: 1,
+      searchTerm: query.trim(),
     },
   })),
 );
@@ -111,3 +130,5 @@ export const newsFeature = createFeature({
   name: 'news',
   reducer: newsReducer,
 });
+
+export const selectFilteredNews = createSelector(newsFeature.selectNews, (news) => news);

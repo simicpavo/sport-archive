@@ -38,6 +38,7 @@ export interface MediaNewsFilters {
   take?: number;
   startDate?: string;
   endDate?: string;
+  searchTerm?: string;
   orderBy?: string;
   sortBy?: 'totalEngagements' | 'createdAt';
   sortOrder?: 'asc' | 'desc';

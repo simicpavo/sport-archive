@@ -15,6 +15,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
+import { InputTextModule } from 'primeng/inputtext';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { keycloak as keycloakInstance } from '../keycloak';
@@ -22,7 +23,7 @@ import { MediaNews, TimeFilter } from '../models/media-news.interface';
 import { formatDate } from '../shared/utils/format-date';
 import { formatEngagements } from '../shared/utils/format-engagements';
 import { NewsActions } from '../store/news/news.actions';
-import { newsFeature } from '../store/news/news.store';
+import { newsFeature, selectFilteredNews } from '../store/news/news.store';
 import { recordsActions } from '../store/records/records.actions';
 import { recordsFeature } from '../store/records/records.store';
 import { RecordFormComponent } from './components/record-form/record-form.component';
@@ -37,6 +38,7 @@ import { RecordFormComponent } from './components/record-form/record-form.compon
     SkeletonModule,
     TagModule,
     DividerModule,
+    InputTextModule,
     DialogModule,
     RecordFormComponent,
   ],
@@ -53,10 +55,12 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
   keycloak = keycloakInstance;
 
   news = this.store.selectSignal(newsFeature.selectNews);
+  filteredNews = this.store.selectSignal(selectFilteredNews);
   loading = this.store.selectSignal(newsFeature.selectLoading);
   loadingMore = this.store.selectSignal(newsFeature.selectLoadingMore);
   hasMore = this.store.selectSignal(newsFeature.selectHasMore);
   selectedFilter = this.store.selectSignal(newsFeature.selectSelectedFilter);
+  searchQuery = this.store.selectSignal(newsFeature.selectSearchQuery);
   error = this.store.selectSignal(newsFeature.selectError);
   total = this.store.selectSignal(newsFeature.selectTotal);
   dialogVisible = this.store.selectSignal(recordsFeature.selectRecordDialogVisible);
@@ -107,6 +111,15 @@ export class MediaNewsComponent implements OnInit, OnDestroy {
 
   onTimeFilterChange(filter: TimeFilter): void {
     this.store.dispatch(NewsActions.applyTimeFilter({ timeFilter: filter }));
+  }
+
+  onSearchQueryChange(event: Event): void {
+    const target = event.target as HTMLInputElement | null;
+    this.store.dispatch(NewsActions.applySearchQuery({ query: target?.value ?? '' }));
+  }
+
+  clearSearchQuery(): void {
+    this.store.dispatch(NewsActions.applySearchQuery({ query: '' }));
   }
 
   loadMoreNews(): void {

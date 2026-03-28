@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { catchError, map, of, switchMap, withLatestFrom } from 'rxjs';
+import { catchError, debounceTime, map, of, switchMap, withLatestFrom } from 'rxjs';
 import { MediaNewsService } from '../../services/media-news.service';
 import { NewsActions } from './news.actions';
 import { newsFeature, NewsState } from './news.store';
@@ -50,14 +50,56 @@ export const loadNewsEffect = createEffect(
 );
 
 export const applyTimeFilterEffect = createEffect(
-  (actions$ = inject(Actions), mediaNewsService = inject(MediaNewsService)) => {
+  (
+    actions$ = inject(Actions),
+    mediaNewsService = inject(MediaNewsService),
+    store = inject(Store<{ news: NewsState }>),
+  ) => {
     return actions$.pipe(
       ofType(NewsActions.applyTimeFilter),
-      switchMap(({ timeFilter }) =>
-        mediaNewsService.getMediaNewsWithTimeFilter(timeFilter, { page: 1, take: 10 }).pipe(
-          map((response) => NewsActions.loadNewsSuccess({ response, isLoadMore: false })),
-          catchError((error) => of(NewsActions.loadNewsFailure({ error }))),
-        ),
+      withLatestFrom(store.select(newsFeature.selectSearchQuery)),
+      switchMap(([{ timeFilter }, searchQuery]) =>
+        mediaNewsService
+          .getMediaNewsWithTimeFilter(timeFilter, {
+            page: 1,
+            take: 10,
+            searchTerm: searchQuery || undefined,
+          })
+          .pipe(
+            map((response) => NewsActions.loadNewsSuccess({ response, isLoadMore: false })),
+            catchError((error) => of(NewsActions.loadNewsFailure({ error }))),
+          ),
+      ),
+    );
+  },
+  { functional: true },
+);
+
+export const applySearchQueryEffect = createEffect(
+  (
+    actions$ = inject(Actions),
+    mediaNewsService = inject(MediaNewsService),
+    store = inject(Store<{ news: NewsState }>),
+  ) => {
+    return actions$.pipe(
+      ofType(NewsActions.applySearchQuery),
+      map(({ query }) => query.trim()),
+      debounceTime(250),
+      withLatestFrom(
+        store.select(newsFeature.selectSelectedFilter),
+        store.select(newsFeature.selectFilters),
+      ),
+      switchMap(([query, selectedFilter, filters]) =>
+        mediaNewsService
+          .getMediaNewsWithTimeFilter(selectedFilter, {
+            ...filters,
+            page: 1,
+            searchTerm: query || undefined,
+          })
+          .pipe(
+            map((response) => NewsActions.loadNewsSuccess({ response, isLoadMore: false })),
+            catchError((error) => of(NewsActions.loadNewsFailure({ error }))),
+          ),
       ),
     );
   },

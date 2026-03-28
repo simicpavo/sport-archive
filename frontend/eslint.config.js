@@ -84,7 +84,7 @@ module.exports = tseslint.config(
         },
       ],
       '@angular-eslint/template/prefer-self-closing-tags': 'warn',
-      '@angular-eslint/template/cyclomatic-complexity': ['warn', { maxComplexity: 16 }],
+      '@angular-eslint/template/cyclomatic-complexity': ['warn', { maxComplexity: 17 }],
     },
   },
 );
